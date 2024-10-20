@@ -1,5 +1,11 @@
 import java.util.HashMap;
 import java.util.Map;
+
+/**
+ * Class LetterPointValues assigned points to each tile letter
+ * @version 1
+ * @author Andrew Roberts
+ */
 public class LetterPointValues {
     private static final Map<Character, Integer> letterPoints = new HashMap<>();
 
@@ -32,6 +38,11 @@ public class LetterPointValues {
         letterPoints.put('Z', 10);
     }
 
+    /**
+     * Return the point value of a lettered tile
+     * @param letter the letter of the tile
+     * @return the point value
+     */
     public static int getPointValue(char letter){
         return letterPoints.get(Character.toUpperCase(letter));
     }

@@ -1,5 +1,10 @@
 import java.util.*;
-
+/**
+ * Main class of scrabble game. Handles play, exchange, pass, and if the game continues or not.
+ * @version 1
+ * @author Andrew Roberts
+ * @author Nick Fuda
+ */
 public class Game {
     private static Board gameBoard;
     private static List<Player> players;
@@ -9,9 +14,13 @@ public class Game {
     private Scanner scanner;
     private int successiveScorelessTurns;
     private List<String> wordsInPlay;
-    private String dictionaryFilePath = "E:\\SYSC 3110 Labs\\SYSC3110_Group33_F24\\src\\scrabblewords.txt"; // change to appropriate file path
+    private String dictionaryFilePath = "C:\\Users\\npfud\\Desktop\\School\\Sysc3110\\Scrabble v1\\src\\scrabblewords.txt"; // change to appropriate file path
     private int turnNumber;
 
+    /**
+     * Constructor for Game class
+     * @param numPlayers the number of players who will be playing the game
+     */
     public Game(int numPlayers) {
         gameBoard = new Board();
         gameBag = new Bag();
@@ -32,9 +41,12 @@ public class Game {
         currentPlayerIndex = 0;
     }
 
+    /**
+     * Method start initializes the game and checks if it is over.
+     */
     public void start() {
         System.out.println("Welcome to \"Not Scrabble\"");
-
+        //Checks if game is over. If not, repeat
         while (!gameOver) {
             takeTurn();
             checkGameOver();
@@ -42,14 +54,19 @@ public class Game {
         displayScores();
     }
 
+    /**
+     * Method takeTurn() allows players to choose to Pass, Exchange Tiles, or Play their turn.
+     */
     private void takeTurn() {
         Player currentPlayer = players.get(currentPlayerIndex);
         System.out.println(currentPlayer.getName() + " 's turn");
 
+        //Display board and score
         gameBoard.displayBoard();
         currentPlayer.showTiles();
         System.out.println(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
 
+        //Ask player to make choice for their turn
         boolean validChoice = false;
         do {
             System.out.println("Please type Pass, Exchange or Play if you would like to pass your turn, exchange tiles or play tiles respectively");
@@ -86,27 +103,38 @@ public class Game {
         } while (!validChoice);
     }
 
+    /**
+     * Method to handle if the player wishes to exchange a tile on their turn
+     * @param currentPlayer the player whose turn it is
+     */
     private void handleExchange(Player currentPlayer) {
         System.out.println("Please enter the tiles you wish to exchange, separated by a comma");
 
+        //Players enter the tiles to exchange
         String[] exchangeTiles = scanner.nextLine().split(",");
         for (int i = 0; i < exchangeTiles.length; i++) {
             exchangeTiles[i] = exchangeTiles[i].trim();
         }
 
         int numTilesToDraw = 0;
+        //Determine how many tiles to replace, remove tiles from rack
         for (String tileLetter : exchangeTiles) {
             if (currentPlayer.removeTile(tileLetter)) {
                 numTilesToDraw++;
             } else {
-                System.out.println("you don't have this tile: " + tileLetter);
+                System.out.println("You don't have this tile: " + tileLetter);
             }
         }
+        //Draw tiles from game bag
         currentPlayer.drawTiles(gameBag, numTilesToDraw);
         currentPlayer.showTiles();
 
     }
 
+    /**
+     * Method to handle the play condition and word when a player chooses "Play" on their turn
+     * @param currentPlayer the player whose turn it is
+     */
     private void handlePlay(Player currentPlayer) {
         gameBoard.displayBoard();
         currentPlayer.showTiles();
@@ -114,7 +142,7 @@ public class Game {
 
         while (!validInput) {
             // get tile letter and position from player
-            System.out.println("Please enter tiles and positions (e.g. R:A6, R:A8, E:A9");
+            System.out.println("Please enter tiles and positions (e.g. R:A6, R:A8, E:A9)");
             String input = scanner.nextLine();
             String[] tilePositionCords = input.split(",");
 
@@ -127,13 +155,13 @@ public class Game {
             for (String tileInfo : tilePositionCords) {
                 String[] info = tileInfo.split(":");
                 if (info.length != 2) {
-                    System.out.println("invalid format, please use Tile:Position format");
+                    System.out.println("Invalid format, please use Tile:Position format");
                     break;
                 }
                 // check if entered tile letter is a letter
                 char tileLetter = info[0].trim().toUpperCase().charAt(0);
                 if (!Character.isLetter(tileLetter)) {
-                    System.out.println("invalid tile letter: " + tileLetter);
+                    System.out.println("Invalid tile letter: " + tileLetter);
                     break;
                 }
                 Position position = gameBoard.parsePosition(info[1]);
@@ -216,15 +244,21 @@ public class Game {
         }
     }
 
+    /**
+     * Method checkGameOver() checks if the players want to end the game or if game is naturally over
+     */
 
     private void checkGameOver() {
+        //If no tiles left to be played in the game
         if (players.get(currentPlayerIndex).isRackEmpty() && gameBag.isEmpty()) {
             gameOver = true;
 
         } else if (successiveScorelessTurns >= 6) {
+            //If players are skipping consecutively, give them the option to end the game
             boolean validChoice = false;
             System.out.println(successiveScorelessTurns + " scoreless turns have passed, would you like to continue the game? Type Yes or No");
 
+            //if not yes or no, demand a valid command
             while (!validChoice) {
                 String continuePlaying = scanner.nextLine();
                 if (continuePlaying.equalsIgnoreCase("yes")) {
@@ -242,6 +276,7 @@ public class Game {
         }
     }
 
+
     private void revertTiles(Map<Tile, Position> tilesToPlay) {
         for (Map.Entry<Tile, Position> tile : tilesToPlay.entrySet()) {
             Position position = tile.getValue();
@@ -249,22 +284,33 @@ public class Game {
         }
     }
 
+    /**
+     * Method displayScores() will display each player's score and also choose the winenr based on the highest score
+     */
     private void displayScores() {
+        //Make winner variable the first player by default
         Player winner = players.get(currentPlayerIndex);
-
         System.out.println("Game over! Final scores:");
+        //Print each player's score
         for (Player player : players) {
             if (player.getScore() > winner.getScore()) {
                 winner = player;
             }
             System.out.println(player.getName() + ": " + player.getScore());
         }
+        //Print winner and score
         System.out.println("The winner is " + winner.getName() + " with a score of " + winner.getScore() + "!");
     }
 
+    /**
+     * Method calculateScore() will calculate the score for each word played.
+     * @param wordsFormed the words that are formed by the player
+     * @return the score
+     */
     private int calculateScore(List<String> wordsFormed) {
+        //Initial Score is 0
         int score = 0;
-
+        //Calculate each word of the score
         for (String word : wordsFormed) {
             for (char letter : word.toCharArray()) {
                 score += LetterPointValues.getPointValue(letter);

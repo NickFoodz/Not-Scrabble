@@ -1,6 +1,9 @@
 import java.io.IOException;
-/*
-Main class to play "Not Scrabble". An educational project
+/**
+ * Main class to play "Not Scrabble". An educational project
+ * @version 1
+ * @author Nick Fuda
+ * @author Andrew Roberts
  */
 public class Main {
 //    static Board gameBoard;
@@ -8,7 +11,7 @@ public class Main {
     public static void main(String[] args) {
 //        gameBoard = new Board();
 //        gameBoard.displayBoard();
-//        String filePath = "E:\\SYSC 3110 Labs\\SYSC3110_Group33_F24\\src\\scrabblewords.txt"; // Update this to your file path
+//        String filePath = "C:\Users\npfud\Desktop\School\Sysc3110\src/scrabblewords.txt"; // Update this to your file path
 //        String userInput =  "throw"; // The word to search for, replace this once user input is gathered in an input class
 //
 //        System.out.println("Current working directory: " + System.getProperty("user.dir"));
@@ -28,7 +31,7 @@ public class Main {
 //        for (Tile entry : gameBag.getTiles()){
 //            System.out.println(entry.getLetter() + ", " + entry.getPointValue());
 //        }
-        Game testGame = new Game(3);
+        Game testGame = new Game(2);
         testGame.start();
     }
 }

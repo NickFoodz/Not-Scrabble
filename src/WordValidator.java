@@ -2,15 +2,31 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class WordValidator checks if a word placement is valid on the board
+ * @version 1
+ * @author Andrew Roberts
+ * @author Nick Fuda
+ */
 public class WordValidator {
     private Board board;
     private String dictionaryFilePath;
 
+    /**
+     * Constructor for class WordValidator
+     * @param board the game board
+     * @param dictionaryFilePath the path to the dictionary (scrabblewords.txt)
+     */
     public WordValidator(Board board, String dictionaryFilePath) {
         this.board = board;
         this.dictionaryFilePath = dictionaryFilePath;
     }
 
+    /**
+     * Checks if word posiitons are beside or above/below each other
+     * @param positions the positions to place the tiles
+     * @return true if aligned, false if not
+     */
     public boolean arePositionsAligned(List<Position> positions) {
         boolean sameRow = true;
         boolean sameCol = true;
@@ -32,6 +48,11 @@ public class WordValidator {
         return sameRow || sameCol;
     }
 
+    /**
+     * Checks if letters are connected to other tiles (cannot be floating)
+     * @param positions the positions of the tiles to be placed
+     * @return true if connected, false if not
+     */
     public boolean isConnectedToAdjacentTiles(List<Position> positions) {
         for (Position pos : positions) {
             int row = pos.getRow();
@@ -47,6 +68,11 @@ public class WordValidator {
         return false;
     }
 
+    /**
+     * Checks if the word is valid (calling parser class) by checking dictionary.
+     * @param wordList the word to check
+     * @return true if the word is valid, false otherwise
+     */
     public boolean isValidWord(List<String> wordList) {
         for (String word : wordList) {
             try {

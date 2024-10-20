@@ -1,13 +1,19 @@
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * Class Player represents a player in "Not Scrabble" games. Deals with actions
+ * such as drawing tiles
+ * @version 1
+ * @author Andrew Roberts
+ */
 public class Player {
     private String name; // the player's name
     private ArrayList<Tile> rack; //the tiles the player currently holds
     private int score; //the players score
 
     /**
-     * creates new player object with corresponding name
+     * Creates new player object with corresponding name
      *
      * @param name the name of the player
      */
@@ -88,18 +94,31 @@ public class Player {
     public boolean isRackEmpty() {
         return rack.isEmpty();
     }
-public Tile getTile(String tileLetter){
-    Iterator<Tile> iterator = this.getRack().iterator();
 
-    while (iterator.hasNext()) {
-        Tile currentTile = iterator.next();
-        if (String.valueOf(currentTile.getLetter()).equalsIgnoreCase(tileLetter)) {
-            return currentTile; // tile found
+
+    /**
+     * get tile from rack
+     * @param tileLetter the letter of the desired tile
+     * @return the desired tile on the rack or null if not in rack
+     */
+    public Tile getTile(String tileLetter){
+        Iterator<Tile> iterator = this.getRack().iterator();
+
+        while (iterator.hasNext()) {
+            Tile currentTile = iterator.next();
+            if (String.valueOf(currentTile.getLetter()).equalsIgnoreCase(tileLetter)) {
+                return currentTile; // tile found
         }
     }
 
-    return null; // tile not found
-}
+        return null; // tile not found
+    }
+
+    /**
+     * Find a tile on the rack
+     * @param tileLetter the letter of the tile to search for
+     * @return true if the tile is on the rack, false otherwise
+     */
     public boolean findTile(String tileLetter) {
         Iterator<Tile> iterator = this.getRack().iterator();
 
@@ -113,6 +132,11 @@ public Tile getTile(String tileLetter){
         return false; // tile not found
     }
 
+    /**
+     * Removes tile from rack, during exchange or play
+     * @param tileLetter the letter of the tile to remove
+     * @return true if the tile was removed, false if not or not in rack.
+     */
     public boolean removeTile(String tileLetter) {
         Iterator<Tile> iterator = this.getRack().iterator();
 

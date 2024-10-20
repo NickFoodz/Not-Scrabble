@@ -1,5 +1,8 @@
-/*
-Represents the Board in a game of scrabble, with 15 rows and columns
+/**
+ * Represents the Board in a game of scrabble, with 15 rows and columns
+ * @version 1
+ * @author Nick Fuda
+ * @author Andrew Roberts
  */
 
 import java.util.ArrayList;
@@ -13,7 +16,9 @@ public class Board {
         initializeBoard();
     }
 
-    //Initialize board with empty spaces
+    /**
+     * Initialize the board with empty spaces and an array for tile positions
+     */
     private void initializeBoard() {
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
@@ -22,6 +27,9 @@ public class Board {
         }
     }
 
+    /**
+     *  Display the board in the console
+     */
     public void displayBoard() {
         System.out.print("\t  "); // Initial spacing for column headers
         for (char j = 'A'; j < 'P'; j++) {
@@ -51,6 +59,12 @@ public class Board {
         }
     }
 
+    /**
+     * Get position of the tile
+     * @param row the row of the tile
+     * @param col the column of the tile
+     * @return the position
+     */
     public Position getPosition(int row, int col) {
         if (row < 0 || row >= 15 || col < 0 || col >= 15) {
             return null;
@@ -58,6 +72,13 @@ public class Board {
         return board[row][col];
     }
 
+    /**
+     * Place a tile in the position given
+     * @param tile the tile to place
+     * @param row the row to place in
+     * @param col the column to place in
+     * @return true if placed, false if not
+     */
     public boolean placeTile(Tile tile, int row, int col) {
         // checks if row and column provided are within board boundaries
         if (row < 0 || row >= 15 || col < 0 || col >= 15) {
@@ -77,10 +98,17 @@ public class Board {
         }
     }
 
+    //I think this is where we are getting index out of bounds exceptions when trying to play a character
+
+    /**
+     * Converts the position from a string to a place on the array
+     * @param positionString the position a player enters on the board (e.g. M:A12)
+     * @return the position on the board in the 2D array
+     */
     public Position parsePosition(String positionString) {
         positionString = positionString.trim().toUpperCase();
 
-        // ensure provided string has at least two characters
+        // ensure provided string has at least two characters (e.g. A8 or A14
         if (positionString.length() < 2 || positionString.length() > 3) {
             return null;
         }
@@ -101,6 +129,10 @@ public class Board {
         return board[row][col];
     }
 
+    /**
+     * Gathers the words on the board
+     * @return a List of Strings of the words on the board
+     */
     public List<String> gatherWordsOnBoard() {
         List<String> words = new ArrayList<>();
 

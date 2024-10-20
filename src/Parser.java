@@ -8,6 +8,13 @@ Parser CLass checks for the word a user wants to input. This uses a game diction
  */
 public class Parser {
 
+    /**
+     * Checks if a word is valid by checking if it is in the dictionary
+     * @param filePath the path to the dictionary
+     * @param userInput the word the user entered
+     * @return true if the word was found, false if not
+     * @throws IOException if the file cannot be found
+     */
     public static boolean validWord(String filePath, String userInput) throws IOException {
         List<String> lines = Files.readAllLines(Paths.get(filePath));
 
