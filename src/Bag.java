@@ -97,15 +97,6 @@ public class Bag {
     }
 
     /**
-     * getter for the list of tiles in the bag
-     *
-     * @return the list of tiles in the bag
-     */
-    public List<Tile> getTiles() {
-        return tiles;
-    }
-
-    /**
      * method to draw a single tile, removing it from the bag
      *
      * @return the tile that was drawn

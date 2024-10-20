@@ -22,19 +22,6 @@ public class Board {
         }
     }
 
-    public void placeTile(int row, int col, Tile tile) {
-        if (row < 0 || row >= 15 || col < 0 || col >= 15) {
-            board[row][col].setTile(tile);
-        }
-    }
-
-    public Tile getTileAt(int row, int col) {
-        if (row < 0 || row >= 15 || col < 0 || col >= 15) {
-            return board[row][col].getTile();
-        }
-        return null;
-    }
-
     public void displayBoard() {
         System.out.print("\t  "); // Initial spacing for column headers
         for (char j = 'A'; j < 'P'; j++) {

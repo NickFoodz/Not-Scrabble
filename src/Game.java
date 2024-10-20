@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.*;
 
 public class Game {
@@ -204,7 +203,6 @@ public class Game {
                 if (!wordValidator.isValidWord(attemptedWordsInPlay)) {
                     System.out.println("invalid formation, please try again");
                     revertTiles(tilesToPlay);
-                    continue;
                 } else {
                     wordsInPlay.add(attemptedWordsInPlay.get(0));
                     // draw new tiles to replace played tiles

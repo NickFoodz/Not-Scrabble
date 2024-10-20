@@ -19,16 +19,4 @@ public class Tile {
     public char getLetter() {
         return letter;
     }
-
-    /**
-     * Getter to return the point value of a tile
-     * @return an integer value of the tiles point value
-     */
-    public int getPointValue() {
-        return pointValue;
-    }
-
-    public void setLetter(char letter) {
-        this.letter = letter;
-    }
 }
