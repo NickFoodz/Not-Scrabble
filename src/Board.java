@@ -22,6 +22,19 @@ public class Board {
         }
     }
 
+    public void placeTile(int row, int col, Tile tile) {
+        if (row < 0 || row >= 15 || col < 0 || col >= 15) {
+            board[row][col].setTile(tile);
+        }
+    }
+
+    public Tile getTileAt(int row, int col) {
+        if (row < 0 || row >= 15 || col < 0 || col >= 15) {
+            return board[row][col].getTile();
+        }
+        return null;
+    }
+
     public void displayBoard() {
         System.out.print("\t  "); // Initial spacing for column headers
         for (char j = 'A'; j < 'P'; j++) {
@@ -37,7 +50,7 @@ public class Board {
         for (int i = 0; i < 15; i++) {
             System.out.print(i + 1 + "\t"); // Print row numbers
             for (int j = 0; j < 15; j++) {
-                char tile = board[i][j].isOccupied() ? board[i][j].getTile() : ' ';
+                char tile = board[i][j].isOccupied() ? board[i][j].getTile().getLetter() : ' ';
                 System.out.print("| " + tile + " "); // Print the cell with vertical borders
             }
             System.out.println("|"); // End of row with a vertical border
@@ -58,7 +71,7 @@ public class Board {
         return board[row][col];
     }
 
-    public boolean placeTile(char letter, int row, int col) {
+    public boolean placeTile(Tile tile, int row, int col) {
         // checks if row and column provided are within board boundaries
         if (row < 0 || row >= 15 || col < 0 || col >= 15) {
             System.out.println("invalid position: out of bounds");
@@ -67,7 +80,7 @@ public class Board {
         Position pos = board[row][col];
         // checks if position is occupied, adding the tile to the board if it isn't
         if (!pos.isOccupied()) {
-            pos.setTile(letter);
+            pos.setTile(tile);
             return true;
         }
         // position occupied
@@ -110,7 +123,7 @@ public class Board {
             for (int col = 0; col < 15; col++) {
                 Position position = this.getPosition(row, col);
                 if (position.isOccupied()) {
-                    currentWord.append(position.getTile());
+                    currentWord.append(position.getTile().getLetter());
                 } else {
                     if (currentWord.length() > 1) {
                         words.add(currentWord.toString());
@@ -128,7 +141,7 @@ public class Board {
             for (int row = 0; row < 15; row++) {
                 Position position = this.getPosition(row, col);
                 if (position.isOccupied()) {
-                    currentWord.append(position.getTile());
+                    currentWord.append(position.getTile().getLetter());
                 } else {
                     if (currentWord.length() > 1) {
                         words.add(currentWord.toString());

@@ -122,13 +122,13 @@ public class Game {
             WordValidator wordValidator = new WordValidator(gameBoard, dictionaryFilePath);
 
             List<Position> checkPositions = new ArrayList<>();
-            Map<Character, Position> tilesToPlay = new HashMap<>();
+            Map<Tile, Position> tilesToPlay = new HashMap<>();
 
             // separate the tile letter from its position and verify proper format was used
             for (String tileInfo : tilePositionCords) {
                 String[] info = tileInfo.split(":");
                 if (info.length != 2) {
-                    System.out.println("Invalid format, please use Tile:Position format");
+                    System.out.println("invalid format, please use Tile:Position format");
                     break;
                 }
                 // check if entered tile letter is a letter
@@ -144,46 +144,47 @@ public class Game {
                     break;
                 }
                 // check if player has tile in rack
-                if (!currentPlayer.findTile(String.valueOf(tileLetter))) {
-                    System.out.println("You do not have this tile in your rack: " + tileLetter);
+                Tile tile = currentPlayer.getTile(String.valueOf(tileLetter));
+                if (tile == null) {
+                    System.out.println("you do not have this tile in your rack: " + tileLetter);
                     break;
                 }
+
                 // check if position is already occupied
                 if (position.isOccupied()) {
-                    System.out.println("the position " + info[1] + " is already occupied");
+                    System.out.println("invalid formation, the position " + info[1] + " is already occupied");
                     break;
                 }
                 checkPositions.add(position);
-                tilesToPlay.put(tileLetter, position);
+                tilesToPlay.put(tile, position);
             }
             if (!wordValidator.arePositionsAligned(checkPositions)) {
-                System.out.println("tiles must be placed in a straight line, either horizontally or vertically");
+                System.out.println("invalid formation, tiles must be placed in a straight line, either horizontally or vertically");
                 continue;
             }
-            if (turnNumber != 0) {
-                if (!wordValidator.isConnectedToAdjacentTiles(checkPositions)) {
-                    System.out.println("at least one tile must be adjacent to an existing tile");
-                    continue;
-                }
+            if (turnNumber != 0 && !wordValidator.isConnectedToAdjacentTiles(checkPositions)) {
+                System.out.println("invalid formation, at least one tile must be adjacent to an existing tile");
+                continue;
             }
-            for (Map.Entry<Character, Position> tile : tilesToPlay.entrySet()) {
-                char tileLetter = tile.getKey();
-                Position position = tile.getValue();
+            if (turnNumber == 0 && !checkPositions.contains(gameBoard.parsePosition("H8"))){
+                System.out.println("invalid formation, first word must cover centre square (H8)");
+                continue;
+            }
 
-                gameBoard.placeTile(tileLetter, position.getRow(), position.getCol());
-                currentPlayer.removeTile(String.valueOf(tileLetter));
+            for (Map.Entry<Tile, Position> currentTile : tilesToPlay.entrySet()) {
+                Tile tile = currentTile.getKey();
+                Position position = currentTile.getValue();
+
+                gameBoard.placeTile(tile, position.getRow(), position.getCol());
+                currentPlayer.removeTile(tile.getLetter() + "");
             }
 
             List<String> attemptedWordsInPlay = gameBoard.gatherWordsOnBoard();
 
             if (turnNumber != 0) {
-                int newWords = attemptedWordsInPlay.size() - wordsInPlay.size();
-                int startingIndex = attemptedWordsInPlay.size() - newWords - 1;
-                List<String> tempList = new ArrayList<>();
-
-                for (int i = startingIndex; i < attemptedWordsInPlay.size(); i++) {
-                    tempList.add(attemptedWordsInPlay.get(i));
-                }
+                int numNewWords = attemptedWordsInPlay.size() - wordsInPlay.size();
+                int startingIndex = attemptedWordsInPlay.size() - numNewWords - 1;
+                List<String> tempList = new ArrayList<>(attemptedWordsInPlay.subList(startingIndex, attemptedWordsInPlay.size()));
 
                 if (!wordValidator.isValidWord(tempList)) {
                     System.out.println("invalid formation, please try again");
@@ -192,19 +193,25 @@ public class Game {
                 } else {
                     // draw new tiles to replace played tiles
                     currentPlayer.drawTiles(gameBag, tilesToPlay.size());
-                    validInput = true;
+                    int turnScore = calculateScore(tempList);
+                    currentPlayer.setScore(currentPlayer.getScore() + turnScore);
+                    System.out.println(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
                     wordsInPlay = attemptedWordsInPlay;
+                    validInput = true;
                 }
 
             } else {
                 if (!wordValidator.isValidWord(attemptedWordsInPlay)) {
-                    System.out.println("invalid formation. " + attemptedWordsInPlay.get(0) + " is not a word");
+                    System.out.println("invalid formation, please try again");
                     revertTiles(tilesToPlay);
                     continue;
                 } else {
                     wordsInPlay.add(attemptedWordsInPlay.get(0));
                     // draw new tiles to replace played tiles
                     currentPlayer.drawTiles(gameBag, tilesToPlay.size());
+                    int turnScore = calculateScore(attemptedWordsInPlay);
+                    currentPlayer.setScore(currentPlayer.getScore() + turnScore);
+                    System.out.println(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
                     validInput = true;
                 }
             }
@@ -237,12 +244,10 @@ public class Game {
         }
     }
 
-    private void revertTiles(Map<Character, Position> tilesToPlay) {
-        for (Map.Entry<Character, Position> tile : tilesToPlay.entrySet()) {
-            char tileLetter = tile.getKey();
+    private void revertTiles(Map<Tile, Position> tilesToPlay) {
+        for (Map.Entry<Tile, Position> tile : tilesToPlay.entrySet()) {
             Position position = tile.getValue();
-
-            position.setTile(' '); // reset the position to empty
+            position.setTile(null); // reset the position to empty
         }
     }
 
@@ -257,5 +262,16 @@ public class Game {
             System.out.println(player.getName() + ": " + player.getScore());
         }
         System.out.println("The winner is " + winner.getName() + " with a score of " + winner.getScore() + "!");
+    }
+
+    private int calculateScore(List<String> wordsFormed) {
+        int score = 0;
+
+        for (String word : wordsFormed) {
+            for (char letter : word.toCharArray()) {
+                score += LetterPointValues.getPointValue(letter);
+            }
+        }
+        return score;
     }
 }

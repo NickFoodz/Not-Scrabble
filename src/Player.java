@@ -76,6 +76,10 @@ public class Player {
         return score;
     }
 
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     /**
      * method to check if player's rack is empty
      *
@@ -84,7 +88,18 @@ public class Player {
     public boolean isRackEmpty() {
         return rack.isEmpty();
     }
+public Tile getTile(String tileLetter){
+    Iterator<Tile> iterator = this.getRack().iterator();
 
+    while (iterator.hasNext()) {
+        Tile currentTile = iterator.next();
+        if (String.valueOf(currentTile.getLetter()).equalsIgnoreCase(tileLetter)) {
+            return currentTile; // tile found
+        }
+    }
+
+    return null; // tile not found
+}
     public boolean findTile(String tileLetter) {
         Iterator<Tile> iterator = this.getRack().iterator();
 

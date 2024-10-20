@@ -98,6 +98,7 @@ public class Bag {
 
     /**
      * getter for the list of tiles in the bag
+     *
      * @return the list of tiles in the bag
      */
     public List<Tile> getTiles() {
@@ -106,10 +107,11 @@ public class Bag {
 
     /**
      * method to draw a single tile, removing it from the bag
+     *
      * @return the tile that was drawn
      */
     public Tile drawTile() {
-        if (!tiles.isEmpty()){
+        if (!tiles.isEmpty()) {
             return tiles.remove(0);
         }
         return null;
@@ -117,9 +119,10 @@ public class Bag {
 
     /**
      * method to check if the bag is empty
+     *
      * @return true if bag is empty, false otherwise
      */
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return tiles.isEmpty();
     }
 }
