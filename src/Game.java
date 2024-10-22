@@ -314,7 +314,10 @@ public class Game {
         }
     }
 
-
+    /**
+     * Reverts the tiles to empty
+     * @param tilesToPlay the tiles the player attempted to play
+     */
     private void revertTiles(Map<Tile, Position> tilesToPlay) {
         for (Map.Entry<Tile, Position> tile : tilesToPlay.entrySet()) {
             Position position = tile.getValue();

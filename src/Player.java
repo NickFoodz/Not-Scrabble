@@ -104,6 +104,7 @@ public class Player {
     public Tile getTile(String tileLetter){
         Iterator<Tile> iterator = this.getRack().iterator();
 
+        //Find tile in rack and return its properties
         while (iterator.hasNext()) {
             Tile currentTile = iterator.next();
             if (String.valueOf(currentTile.getLetter()).equalsIgnoreCase(tileLetter)) {
@@ -122,6 +123,7 @@ public class Player {
     public boolean findTile(String tileLetter) {
         Iterator<Tile> iterator = this.getRack().iterator();
 
+        //Find tile in rack iteratively
         while (iterator.hasNext()) {
             Tile currentTile = iterator.next();
             if (String.valueOf(currentTile.getLetter()).equalsIgnoreCase(tileLetter)) {
@@ -140,6 +142,7 @@ public class Player {
     public boolean removeTile(String tileLetter) {
         Iterator<Tile> iterator = this.getRack().iterator();
 
+        //Find first instance of tile in rack and remove it
         while (iterator.hasNext()) {
             Tile currentTile = iterator.next();
             if (String.valueOf(currentTile.getLetter()).equalsIgnoreCase(tileLetter)) {

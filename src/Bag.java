@@ -4,6 +4,11 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.HashMap;
 
+/**
+ * Represents the game bag containing all tiles in a game of "Not Scrabble"
+ * @version 1
+ * @author Andrew Roberts
+ */
 public class Bag {
     private List<Tile> tiles; // a list containing all the available tiles
     private static final Map<Character, Integer> letterFrequencies = new HashMap<>(); // map containing the letters and corresponding frequencies
@@ -97,19 +102,19 @@ public class Bag {
     }
 
     /**
-     * method to draw a single tile, removing it from the bag
+     * Method to draw a single tile, removing it from the bag
      *
      * @return the tile that was drawn
      */
     public Tile drawTile() {
         if (!tiles.isEmpty()) {
-            return tiles.remove(0);
+            return tiles.remove(0); //Tile is removed from bag
         }
         return null;
     }
 
     /**
-     * method to check if the bag is empty
+     * Method to check if the bag is empty
      *
      * @return true if bag is empty, false otherwise
      */

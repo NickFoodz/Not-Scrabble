@@ -8,6 +8,10 @@ import java.io.IOException;
 public class Main {
 //    static Board gameBoard;
 
+    /**
+     * The main method to run the game
+     * @param args arguments to run the main method (none)
+     */
     public static void main(String[] args) {
 //        gameBoard = new Board();
 //        gameBoard.displayBoard();

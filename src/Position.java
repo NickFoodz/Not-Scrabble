@@ -2,6 +2,7 @@
  * Position class is used for positional methods using the board in the game
  * @version 1
  * @author Andrew Roberts
+ * @author Nick Fuda
  */
 
 public class Position {
@@ -17,10 +18,10 @@ public class Position {
      * @param col the column of the board
      */
     public Position(int row, int col) {
-        this.row = row;
-        this.col = col;
-        this.tile = null;
-        this.occupied = false;
+        this.row = row; //Row position
+        this.col = col; //Column position
+        this.tile = null; //No tile by default
+        this.occupied = false; //not occupied by default
     }
 
     /**
@@ -28,7 +29,7 @@ public class Position {
      * @return the row (0 through 14)
      */
     public int getRow() {
-        return row;
+        return row; //returns the row on the board
     }
 
     /**
@@ -36,24 +37,24 @@ public class Position {
      * @return the column (0-15)
      */
     public int getCol() {
-        return col;
+        return col; //returns the column on the board
     }
 
     /**
      * Get a tile (scrabble letter)
-     * @return
+     * @return the tile
      */
     public Tile getTile() {
-        return tile;
+        return tile; //returns the tile at the position
     }
 
     /**
      * Set a tile at a location, or checks if the location is occupied
-     * @param tile
+     * @param tile the tile to set a location as
      */
     public void setTile(Tile tile) {
-        this.tile = tile;
-        this.occupied = (tile != null);
+        this.tile = tile; //Sets tile in position to the one specified
+        this.occupied = (tile != null); //Changes to being occupied if the tile is not empty
     }
 
     /**
@@ -61,7 +62,7 @@ public class Position {
      * @return true if occupied, false if not
      */
     public boolean isOccupied() {
-        return occupied;
+        return occupied; //True if tile in position
     }
 
     /**
@@ -69,15 +70,24 @@ public class Position {
      * @return tile letter at location
      */
     public char displayTile() {
-        return tile != null ? tile.getLetter() : ' ';
+        return tile != null ? tile.getLetter() : ' '; //Letter of tile
     }
 
+    /**
+     * Overrides toString() method to represent the position as displayed
+     * @return
+     */
     @Override
     public String toString() {
         char colLetter = (char) ('A' + col);
         return (row + 1) + "" + colLetter;
     }
 
+    /**
+     * Overrides the equals() method to function with the position
+     * @param obj
+     * @return true if equal, false if not.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
