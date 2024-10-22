@@ -142,7 +142,7 @@ public class Game {
 
         while (!validInput) {
             // get tile letter and position from player
-            System.out.println("Please enter tiles and positions (e.g. R:A6, R:A8, E:A9)");
+            System.out.println("Please enter tiles and positions (e.g. R:A6, R:A8, E:A9), or enter pass to cancel turn");
             String input = scanner.nextLine();
             String[] tilePositionCords = input.split(",");
 
@@ -152,6 +152,9 @@ public class Game {
             Map<Tile, Position> tilesToPlay = new HashMap<>();
 
             boolean isValid = true;
+
+            //User cancels turn
+            if(input.equalsIgnoreCase("Pass")){break;}
 
             // separate the tile letter from its position and verify proper format was used
             for (String tileInfo : tilePositionCords) {
@@ -326,7 +329,7 @@ public class Game {
     }
 
     /**
-     * Method displayScores() will display each player's score and also choose the winenr based on the highest score
+     * Method displayScores() will display each player's score and also choose the winner based on the highest score
      */
     private void displayScores() {
         //Make winner variable the first player by default
