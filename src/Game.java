@@ -1,9 +1,12 @@
+import javax.swing.*;
 import java.util.*;
+
 /**
  * Main class of scrabble game. Handles play, exchange, pass, and if the game continues or not.
- * @version 1
+ *
  * @author Andrew Roberts
  * @author Nick Fuda
+ * @version 1
  */
 public class Game {
     private static Board gameBoard;
@@ -16,12 +19,14 @@ public class Game {
     private List<String> wordsInPlay;
     private String dictionaryFilePath = "C:\\Users\\npfud\\Desktop\\School\\Sysc3110\\Scrabble v1\\src\\scrabblewords.txt"; // change to appropriate file path
     private int turnNumber;
+    private ScrabbleView view;
 
     /**
      * Constructor for Game class
+     *
      * @param numPlayers the number of players who will be playing the game
      */
-    public Game(int numPlayers) {
+    public Game(int numPlayers, ScrabbleView view) {
         gameBoard = new Board();
         gameBag = new Bag();
         players = new ArrayList<>();
@@ -30,14 +35,21 @@ public class Game {
         successiveScorelessTurns = 0;
         turnNumber = 0;
         this.wordsInPlay = new ArrayList<>();
+        this.view = view;
 
         for (int i = 1; i <= numPlayers; i++) {
-            System.out.println("Enter player " + i + "'s name");
-            String playerName = scanner.nextLine();
+            String playerName = JOptionPane.showInputDialog(view.getFrame(), "Enter player " + i + "'s name");
+
+            // If playerName is null (e.g., if the user cancels the dialog), handle it appropriately
+            if (playerName == null || playerName.trim().isEmpty()) {
+                playerName = "Player " + i; // or prompt again if preferred
+            }
+
             Player player = new Player(playerName);
             player.drawTiles(gameBag, 7);
             players.add(player);
         }
+
         currentPlayerIndex = 0;
     }
 
@@ -45,7 +57,7 @@ public class Game {
      * Method start initializes the game and checks if it is over.
      */
     public void start() {
-        System.out.println("Welcome to \"Not Scrabble\"");
+        showMessage("Welcome to \"Not Scrabble\"");
         //Checks if game is over. If not, repeat
         while (!gameOver) {
             takeTurn();
@@ -57,58 +69,59 @@ public class Game {
     /**
      * Method takeTurn() allows players to choose to Pass, Exchange Tiles, or Play their turn.
      */
-    private void takeTurn() {
+    public void takeTurn() {
         Player currentPlayer = players.get(currentPlayerIndex);
-        System.out.println(currentPlayer.getName() + " 's turn");
+        showMessage(currentPlayer.getName() + " 's turn");
 
         //Display board and score
         gameBoard.displayBoard();
         currentPlayer.showTiles();
-        System.out.println(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
+        showMessage(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
 
         //Ask player to make choice for their turn
         boolean validChoice = false;
         do {
-            System.out.println("Please type Pass, Exchange or Play if you would like to pass your turn, exchange tiles or play tiles respectively");
+            showMessage("Please type Pass, Exchange or Play if you would like to pass your turn, exchange tiles or play tiles respectively");
             String choice = scanner.nextLine().toLowerCase();
 
             switch (choice) {
                 case ("pass"):
                     validChoice = true;
-                    System.out.println("You passed your turn");
-                    System.out.println(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
-                    currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-                    successiveScorelessTurns++;
-                    turnNumber++;
+                    handlePass(currentPlayer);
                     break;
 
                 case ("exchange"):
                     validChoice = true;
                     handleExchange(currentPlayer);
-                    currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-                    successiveScorelessTurns++;
-                    turnNumber++;
                     break;
 
                 case ("play"):
                     validChoice = true;
                     handlePlay(currentPlayer);
-                    currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-                    turnNumber++;
                     break;
 
                 default:
-                    System.out.println("Invalid choice");
+                    showMessage("Invalid choice");
             }
         } while (!validChoice);
     }
 
+    // method for handling a player passing their turn
+    public void handlePass(Player currentPlayer) {
+        showMessage("You passed your turn");
+        showMessage(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        successiveScorelessTurns++;
+        turnNumber++;
+    }
+
     /**
      * Method to handle if the player wishes to exchange a tile on their turn
+     *
      * @param currentPlayer the player whose turn it is
      */
-    private void handleExchange(Player currentPlayer) {
-        System.out.println("Please enter the tiles you wish to exchange, separated by a comma");
+    public void handleExchange(Player currentPlayer) {
+        showMessage("Please enter the tiles you wish to exchange, separated by a comma");
 
         //Players enter the tiles to exchange
         String[] exchangeTiles = scanner.nextLine().split(",");
@@ -122,157 +135,155 @@ public class Game {
             if (currentPlayer.removeTile(tileLetter)) {
                 numTilesToDraw++;
             } else {
-                System.out.println("You don't have this tile: " + tileLetter);
+                showMessage("You don't have this tile: " + tileLetter);
             }
         }
         //Draw tiles from game bag
         currentPlayer.drawTiles(gameBag, numTilesToDraw);
         currentPlayer.showTiles();
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        successiveScorelessTurns++;
+        turnNumber++;
 
     }
 
     /**
      * Method to handle the play condition and word when a player chooses "Play" on their turn
+     *
      * @param currentPlayer the player whose turn it is
      */
-    private void handlePlay(Player currentPlayer) {
+    public void handlePlay(Player currentPlayer) {
         gameBoard.displayBoard();
         currentPlayer.showTiles();
+
         boolean validInput = false;
-
         while (!validInput) {
-            // get tile letter and position from player
-            System.out.println("Please enter tiles and positions (e.g. R:A6, R:A8, E:A9)");
-            String input = scanner.nextLine();
-            String[] tilePositionCords = input.split(",");
+            // Step 1: Parse player input
+            Map<Tile, Position> tilesToPlay = parsePlayerInput(currentPlayer);
+            if (tilesToPlay == null) continue;
 
-            WordValidator wordValidator = new WordValidator(gameBoard, dictionaryFilePath);
+            // Step 2: Validate tile alignment and adjacency
+            List<Position> positions = new ArrayList<>(tilesToPlay.values());
+            if (!validateAlignmentAndAdjacency(positions)) continue;
 
-            List<Position> checkPositions = new ArrayList<>();
-            Map<Tile, Position> tilesToPlay = new HashMap<>();
-
-            boolean isValid = true;
-
-            // separate the tile letter from its position and verify proper format was used
-            for (String tileInfo : tilePositionCords) {
-                String[] info = tileInfo.split(":");
-                if (info.length != 2) {
-                    System.out.println("invalid format, please use Tile:Position format");
-                    isValid = false;
-                    break;
-                }
-                // check if entered tile letter is a letter
-                char tileLetter = info[0].trim().toUpperCase().charAt(0);
-                if (!Character.isLetter(tileLetter)) {
-                    System.out.println("invalid tile letter: " + tileLetter);
-                    isValid = false;
-                    break;
-                }
-                Position position = gameBoard.parsePosition(info[1]);
-                // check if a valid position was entered
-                if (position == null) {
-                    System.out.println("invalid position entered, please try again");
-                    isValid = false;
-                    break;
-                }
-                // check if player has tile in rack
-                Tile tile = currentPlayer.getTile(String.valueOf(tileLetter));
-                if (tile == null) {
-                    System.out.println("you do not have this tile in your rack: " + tileLetter);
-                    isValid = false;
-                    break;
-                }
-
-                // check if position is already occupied
-                if (position.isOccupied()) {
-                    System.out.println("invalid formation, the position " + info[1] + " is already occupied");
-                    isValid = false;
-                    break;
-                }
-                checkPositions.add(position);
-                tilesToPlay.put(tile, position);
-            }
-            if (!isValid){
-                continue;
-            }
-            if (!wordValidator.arePositionsAligned(checkPositions)) {
-                System.out.println("invalid formation, tiles must be placed in a straight line, either horizontally or vertically");
-                continue;
-            }
-            if (turnNumber != 0 && !wordValidator.isConnectedToAdjacentTiles(checkPositions)) {
-                System.out.println("invalid formation, at least one tile must be adjacent to an existing tile");
-                continue;
-            }
-            if (turnNumber == 0) {
-                if (!checkPositions.contains(gameBoard.parsePosition("H8"))) {
-                    System.out.println("invalid formation, first word must cover centre square (H8)");
-                    continue;
-                }
-                else if (checkPositions.size() == 1){
-                    System.out.println("invalid formation, the first turn must play at least 2 tiles");
-                    continue;
-                }
-            }
-
-            for (Map.Entry<Tile, Position> currentTile : tilesToPlay.entrySet()) {
-                Tile tile = currentTile.getKey();
-                Position position = currentTile.getValue();
-
-                gameBoard.placeTile(tile, position.getRow(), position.getCol());
-                currentPlayer.removeTile(tile.getLetter() + "");
-            }
-
-            List<String> attemptedWordsInPlay = gameBoard.gatherWordsOnBoard();
-
-            if (turnNumber != 0) {
-                List<String> newWords = getNewWords(attemptedWordsInPlay);
-
-
-                if (!wordValidator.isValidWord(newWords)) {
-                    System.out.println("invalid formation, please try again");
-                    revertTiles(tilesToPlay);
-                    break;
-                } else {
-                    // draw new tiles to replace played tiles
-                    currentPlayer.drawTiles(gameBag, tilesToPlay.size());
-                    int turnScore = calculateScore(newWords);
-                    currentPlayer.setScore(currentPlayer.getScore() + turnScore);
-                    System.out.println(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
-                    wordsInPlay = attemptedWordsInPlay;
-                    validInput = true;
-                }
-
-            } else {
-                if (!wordValidator.isValidWord(attemptedWordsInPlay)) {
-                    System.out.println("invalid formation, please try again");
-                    revertTiles(tilesToPlay);
-                } else {
-                    wordsInPlay.add(attemptedWordsInPlay.get(0));
-                    // draw new tiles to replace played tiles
-                    currentPlayer.drawTiles(gameBag, tilesToPlay.size());
-                    int turnScore = calculateScore(attemptedWordsInPlay);
-                    currentPlayer.setScore(currentPlayer.getScore() + turnScore);
-                    System.out.println(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
-                    validInput = true;
-                }
+            // Step 3: Place tiles and validate words
+            if (attemptPlay(currentPlayer, tilesToPlay)) {
+                validInput = true;
+                currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+                turnNumber++;
             }
         }
     }
 
+    // Parses and validates the player's input, returns tiles to play if valid, null otherwise
+    private Map<Tile, Position> parsePlayerInput(Player currentPlayer) {
+        showMessage("Please enter tiles and positions (e.g. R:A6, R:A8, E:A9)");
+        String input = scanner.nextLine();
+        String[] tilePositionCords = input.split(",");
+        Map<Tile, Position> tilesToPlay = new HashMap<>();
+
+        for (String tileInfo : tilePositionCords) {
+            String[] info = tileInfo.split(":");
+            if (info.length != 2) {
+                showMessage("Invalid format, please use Tile:Position format");
+                return null;
+            }
+
+            char tileLetter = info[0].trim().toUpperCase().charAt(0);
+            if (!Character.isLetter(tileLetter)) {
+                showMessage("Invalid tile letter: " + tileLetter);
+                return null;
+            }
+
+            Position position = gameBoard.parsePosition(info[1]);
+            if (position == null || position.isOccupied()) {
+                showMessage("Invalid position: " + info[1]);
+                return null;
+            }
+
+            Tile tile = currentPlayer.getTile(String.valueOf(tileLetter));
+            if (tile == null) {
+                showMessage("You do not have this tile in your rack: " + tileLetter);
+                return null;
+            }
+
+            tilesToPlay.put(tile, position);
+        }
+        return tilesToPlay;
+    }
+
+    // Checks tile alignment and adjacency for rule compliance
+    private boolean validateAlignmentAndAdjacency(List<Position> positions) {
+        WordValidator wordValidator = new WordValidator(gameBoard, dictionaryFilePath);
+
+        if (!wordValidator.arePositionsAligned(positions)) {
+            showMessage("Invalid formation, tiles must be in a straight line");
+            return false;
+        }
+        if (!wordsInPlay.isEmpty() && !wordValidator.isConnectedToAdjacentTiles(positions)) {
+            showMessage("Invalid formation, must be adjacent to existing tiles");
+            return false;
+        }
+        if (wordsInPlay.isEmpty() && !validateFirstPlay(positions)) return false;
+
+        return true;
+    }
+
+    // Validates the first play to ensure it covers the center and has at least 2 tiles
+    private boolean validateFirstPlay(List<Position> positions) {
+        Position center = gameBoard.parsePosition("H8");
+        if (!positions.contains(center)) {
+            showMessage("First word must cover center square (H8)");
+            return false;
+        }
+        if (positions.size() < 2) {
+            showMessage("First turn must play at least 2 tiles");
+            return false;
+        }
+        return true;
+    }
+
+    // Places tiles on the board, validates words, and updates score if valid
+    private boolean attemptPlay(Player currentPlayer, Map<Tile, Position> tilesToPlay) {
+        List<String> attemptedWords = gameBoard.gatherWordsOnBoard();
+        WordValidator wordValidator = new WordValidator(gameBoard, dictionaryFilePath);
+
+        for (Map.Entry<Tile, Position> entry : tilesToPlay.entrySet()) {
+            gameBoard.placeTile(entry.getKey(), entry.getValue().getRow(), entry.getValue().getCol());
+        }
+
+        List<String> newWords = (turnNumber == 0) ? attemptedWords : getNewWords(attemptedWords);
+        if (!wordValidator.isValidWord(newWords)) {
+            showMessage("Invalid formation, please try again");
+            revertTiles(tilesToPlay);
+            return false;
+        }
+
+        // Update game state for valid play
+        wordsInPlay = attemptedWords;
+        currentPlayer.drawTiles(gameBag, tilesToPlay.size());
+        int turnScore = calculateScore(newWords);
+        currentPlayer.setScore(currentPlayer.getScore() + turnScore);
+        showMessage(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
+
+        return true;
+    }
+
     /**
      * Method to get a list of new words formed during the current players turn
+     *
      * @param attemptedWordsInPlay list of words on the board after current players turn
      * @return a list of all the new words created from current player's turn
      */
     private List<String> getNewWords(List<String> attemptedWordsInPlay) {
         Map<String, Integer> wordsInPlayCount = new HashMap<>();
-        for (String word : wordsInPlay){
+        for (String word : wordsInPlay) {
             wordsInPlayCount.put(word, wordsInPlayCount.getOrDefault(word, 0) + 1);
         }
 
         List<String> tempList = new ArrayList<>();
 
-        for (String word : attemptedWordsInPlay){
+        for (String word : attemptedWordsInPlay) {
             int currentCount = wordsInPlayCount.getOrDefault(word, 0);
 
             if (currentCount == 0 || currentCount < Collections.frequency(attemptedWordsInPlay, word)) {
@@ -294,7 +305,7 @@ public class Game {
         } else if (successiveScorelessTurns >= 6) {
             //If players are skipping consecutively, give them the option to end the game
             boolean validChoice = false;
-            System.out.println(successiveScorelessTurns + " scoreless turns have passed, would you like to continue the game? Type Yes or No");
+            showMessage(successiveScorelessTurns + " scoreless turns have passed, would you like to continue the game? Type Yes or No");
 
             //if not yes or no, demand a valid command
             while (!validChoice) {
@@ -306,7 +317,7 @@ public class Game {
                     validChoice = true;
                     gameOver = true;
                 } else {
-                    System.out.println("invalid choice. please enter either Yes or No");
+                    showMessage("invalid choice. please enter either Yes or No");
                 }
             }
         } else {
@@ -316,6 +327,7 @@ public class Game {
 
     /**
      * Reverts the tiles to empty
+     *
      * @param tilesToPlay the tiles the player attempted to play
      */
     private void revertTiles(Map<Tile, Position> tilesToPlay) {
@@ -331,20 +343,21 @@ public class Game {
     private void displayScores() {
         //Make winner variable the first player by default
         Player winner = players.get(currentPlayerIndex);
-        System.out.println("Game over! Final scores:");
+        showMessage("Game over! Final scores:");
         //Print each player's score
         for (Player player : players) {
             if (player.getScore() > winner.getScore()) {
                 winner = player;
             }
-            System.out.println(player.getName() + ": " + player.getScore());
+            showMessage(player.getName() + ": " + player.getScore());
         }
         //Print winner and score
-        System.out.println("The winner is " + winner.getName() + " with a score of " + winner.getScore() + "!");
+        showMessage("The winner is " + winner.getName() + " with a score of " + winner.getScore() + "!");
     }
 
     /**
      * Method calculateScore() will calculate the score for each word played.
+     *
      * @param wordsFormed the words that are formed by the player
      * @return the score
      */
@@ -358,5 +371,19 @@ public class Game {
             }
         }
         return score;
+    }
+
+    public void nextPlayerTurn() {
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        successiveScorelessTurns++;
+    }
+
+    public Player getCurrentPlayer() {
+        return players.get(currentPlayerIndex);
+    }
+
+    //method to display messages
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(view.getFrame(), message);
     }
 }

@@ -35,7 +35,7 @@ public class Main {
 //        for (Tile entry : gameBag.getTiles()){
 //            System.out.println(entry.getLetter() + ", " + entry.getPointValue());
 //        }
-        Game testGame = new Game(2);
-        testGame.start();
+//        Game testGame = new Game(2);
+//       testGame.start();
     }
 }
