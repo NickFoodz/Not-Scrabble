@@ -9,39 +9,32 @@ import java.lang.String;
  * @version 0.1
  */
 public class ScrabbleButton extends JButton {
-    private int row;
-    private int column;
-    private int score;
-    private Tile tile;
+    private int row; //Row location of the tile
+    private int column; //Column location of the tile
+    private int score; //Score of the tile
+    private Tile tile; //Tile at this location (starts without one)
     private Color tileColor = new Color(227,207,170);
+    private boolean available;
 
     public ScrabbleButton(int rw, int col){
+        //Button initialization
         super();
         setOpaque(true);
         setBackground(Color.WHITE);
         setForeground(Color.BLACK);
-        score = 0;
-
+        //Field initialization
+        this.row=rw;
+        this.column=col;
+        this.score = 0;
+        this.available= true; //Active for play.
+        this.tile = null; //Starts with no tile
 
     }
-
-    /**
-     * Sets the row of the button
-     * @param y the row number, an integer
-     */
-    public void setRow(int y){this.row =y;}
-
     /**
      * Gets the row of the button
      * @return the integer representing the current row
      */
     public int getRow(){return this.row;}
-
-    /**
-     * Sets the column of the button, done during initializing the board
-     * @param x, the column integer
-     */
-    public void setColumn(int x){this.column =x;}
 
     /**
      * Returns the column of the button
@@ -50,16 +43,9 @@ public class ScrabbleButton extends JButton {
     public int getColumn(){return this.column;}
 
     /**
-     * Allows the button object to have a color set. Useful when placing a tile. Useful in future for special tiles.
-     * @param color the color to change the button to.
+     * Gets score from individual tile
      */
-    public void setColor(Color color){setBackground(color);}
-
-    /**
-     * Set the score of the button from a tile. Initializes to 0, but changes based on a tile being assigned
-      * @param points
-     */
-    public void setScore(int points){this.score = points;}
+    public int getScore(){return this.score;}
 
     /**
      * Set the letter of the button, initializes as coordinate. Will change when tile is placed.
@@ -70,16 +56,21 @@ public class ScrabbleButton extends JButton {
     /**
      * Sets the tile that this button stores, so that it may be used to update the button
      */
-    public void setTile(Tile t){
+    public void placeTile(Tile t){
         //Stores Tile
         this.tile = t;
         //Sets letter of this button, and sets score
         this.setLetter(this.tile.getLetter());
-        this.setScore(this.tile.getPointValue());
-        this.setColor(tileColor);
+        this.score = tile.getPointValue();
+        this.setBackground(tileColor);
+        this.available = false;
     }
 
-
+    /**
+     *  Checks if tile is available. Should be called before any actions on the tile from other classes
+     *  Can also be used to check an entire word (e.g. follow a row of tiles until empty to calculate score)
+     */
+    public boolean checkAvailable(){return available;}
 
 
 
