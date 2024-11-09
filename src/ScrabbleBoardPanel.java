@@ -18,7 +18,7 @@ public class ScrabbleBoardPanel extends JPanel {
         boardButtons = new ScrabbleButton[15][15];
         for (int row = 0; row < 15; row++) {
             for (int col = 0; col < 15; col++) {
-                ScrabbleButton button = new ScrabbleButton();
+                ScrabbleButton button = new ScrabbleButton(row,col);
                 char ch = 'A';
                 button.setText(Character.toString(ch+col) + (row+1));
                 button.addActionListener(new BoardButtonClickListener(row, col));
@@ -42,7 +42,7 @@ public class ScrabbleBoardPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             Tile tile = scrabbleView.getSelectedTile();
             if (tile != null) {
-                boardButtons[row][col].setLetter(tile.getLetter());
+                boardButtons[row][col].setTile(tile);
 
                 // place tile method should be created to handle placing tiles instead of in handle play
                 // scrabbleView.getGame().placeTile(tile, row, col);

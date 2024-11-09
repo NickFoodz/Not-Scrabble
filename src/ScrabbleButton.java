@@ -12,12 +12,16 @@ public class ScrabbleButton extends JButton {
     private int row;
     private int column;
     private int score;
+    private Tile tile;
+    private Color tileColor = new Color(227,207,170);
 
-    public ScrabbleButton(){
+    public ScrabbleButton(int rw, int col){
         super();
         setOpaque(true);
         setBackground(Color.WHITE);
         setForeground(Color.BLACK);
+        score = 0;
+
 
     }
 
@@ -63,6 +67,17 @@ public class ScrabbleButton extends JButton {
      */
     public void setLetter(char letter){this.setText(String.valueOf(letter));}
 
+    /**
+     * Sets the tile that this button stores, so that it may be used to update the button
+     */
+    public void setTile(Tile t){
+        //Stores Tile
+        this.tile = t;
+        //Sets letter of this button, and sets score
+        this.setLetter(this.tile.getLetter());
+        this.setScore(this.tile.getPointValue());
+        this.setColor(tileColor);
+    }
 
 
 
