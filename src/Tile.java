@@ -19,4 +19,6 @@ public class Tile {
     public char getLetter() {
         return letter;
     }
+
+    public int getPointValue(){return pointValue;}
 }

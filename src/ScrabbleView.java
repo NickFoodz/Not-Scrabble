@@ -13,7 +13,7 @@ public class ScrabbleView extends JFrame{
         // partially set up frame
         frame = new JFrame("Not Scrabble"); // create JFrame with title of main window
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(750, 750);
+        frame.setSize(1000, 1000);
 
         int numPlayers = Integer.parseInt(JOptionPane.showInputDialog(frame, "Enter the number of players for the game"));
 
