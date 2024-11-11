@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,16 +11,16 @@ import java.util.Map;
  */
 public class WordValidator {
     private Board board;
-    private String dictionaryFilePath;
+    private ArrayList<String> dictionary;
 
     /**
      * Constructor for class WordValidator
      * @param board the game board
-     * @param dictionaryFilePath the path to the dictionary (scrabblewords.txt)
+     * @param gameDict the path to the dictionary (scrabblewords.txt)
      */
-    public WordValidator(Board board, String dictionaryFilePath) {
+    public WordValidator(Board board, ArrayList<String> gameDict) {
         this.board = board;
-        this.dictionaryFilePath = dictionaryFilePath;
+        this.dictionary = gameDict;
     }
 
     /**
@@ -70,20 +71,11 @@ public class WordValidator {
 
     /**
      * Checks if the word is valid (calling parser class) by checking dictionary.
-     * @param wordList the word to check
+     * @param word the word to check
      * @return true if the word is valid, false otherwise
      */
-    public boolean isValidWord(List<String> wordList) {
-        for (String word : wordList) {
-            try {
-                if (!Parser.validWord(dictionaryFilePath, word.toLowerCase())) {
-                    return false;
-                }
-            } catch (IOException e) {
-                System.err.println("Error reading dictionary: " + e.getMessage());
-                return false; // in case of an error, treat word as invalid
-            }
-        }
-        return true;
+    public boolean isValidWord(ArrayList<String> gameDictionary, String word) {
+        if(gameDictionary.contains(word)){return true;}
+        else{return false;}
     }
 }

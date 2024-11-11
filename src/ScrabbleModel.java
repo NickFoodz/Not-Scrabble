@@ -1,4 +1,6 @@
 import javax.swing.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
@@ -17,7 +19,7 @@ public class ScrabbleModel {
     private Scanner scanner;
     private int successiveScorelessTurns;
     private List<String> wordsInPlay;
-    private String dictionaryFilePath = "C:\\Users\\npfud\\Desktop\\School\\Sysc3110\\Scrabble v1\\src\\scrabblewords.txt"; // change to appropriate file path
+    private ArrayList<String> dictionary;
     private int turnNumber;
     private ScrabbleView view;
 
@@ -36,6 +38,9 @@ public class ScrabbleModel {
         turnNumber = 0;
         this.wordsInPlay = new ArrayList<>();
         this.view = view;
+        dictionary = new ArrayList<String>();
+        dictionary = createDictionary();
+        System.out.println(dictionary.get(1));
 
         for (int i = 1; i <= numPlayers; i++) {
             String playerName = JOptionPane.showInputDialog(view.getFrame(), "Enter player " + i + "'s name");
@@ -51,6 +56,22 @@ public class ScrabbleModel {
         }
 
         currentPlayerIndex = 0;
+    }
+
+    private ArrayList<String> createDictionary() {
+        ArrayList<String> dictionary = new ArrayList<String>();
+        File dictFile = new File("scrabblewords.txt");
+        Scanner scanner;
+        try {
+            scanner = new Scanner(dictFile);
+        } catch (FileNotFoundException e) {
+            System.out.println("Dictionary File \"scrabblewords.txt\" is missing");
+            throw new RuntimeException(e);
+        }
+        while (scanner.hasNextLine()) {
+            dictionary.add(scanner.nextLine());
+        }
+        return dictionary;
     }
 
     /**
@@ -214,7 +235,7 @@ public class ScrabbleModel {
 
     // Checks tile alignment and adjacency for rule compliance
     private boolean validateAlignmentAndAdjacency(List<Position> positions) {
-        WordValidator wordValidator = new WordValidator(gameBoard, dictionaryFilePath);
+        WordValidator wordValidator = new WordValidator(gameBoard, dictionary);
 
         if (!wordValidator.arePositionsAligned(positions)) {
             showMessage("Invalid formation, tiles must be in a straight line");
@@ -246,18 +267,21 @@ public class ScrabbleModel {
     // Places tiles on the board, validates words, and updates score if valid
     private boolean attemptPlay(Player currentPlayer, Map<Tile, Position> tilesToPlay) {
         List<String> attemptedWords = gameBoard.gatherWordsOnBoard();
-        WordValidator wordValidator = new WordValidator(gameBoard, dictionaryFilePath);
+        WordValidator wordValidator = new WordValidator(gameBoard, dictionary);
 
         for (Map.Entry<Tile, Position> entry : tilesToPlay.entrySet()) {
             gameBoard.placeTile(entry.getKey(), entry.getValue().getRow(), entry.getValue().getCol());
         }
 
         List<String> newWords = (turnNumber == 0) ? attemptedWords : getNewWords(attemptedWords);
-        if (!wordValidator.isValidWord(newWords)) {
-            showMessage("Invalid formation, please try again");
-            revertTiles(tilesToPlay);
-            return false;
-        }
+            for(String word : newWords){
+                if(!wordValidator.isValidWord(dictionary, word)){
+                    showMessage("Invalid formation, please try again");
+                    revertTiles(tilesToPlay);
+                    return false;
+                }
+            }
+
 
         // Update game state for valid play
         wordsInPlay = attemptedWords;
@@ -386,4 +410,6 @@ public class ScrabbleModel {
     public void showMessage(String message) {
         JOptionPane.showMessageDialog(view.getFrame(), message);
     }
+
+
 }
