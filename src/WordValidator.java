@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Class WordValidator checks if a word placement is valid on the board
- * @version 1
+ * @version 2
  * @author Andrew Roberts
  * @author Nick Fuda
  */

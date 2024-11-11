@@ -4,15 +4,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The main GUI class for a game of Scrabble. Contains the Frame with the necessary components to play
+ * @author Andrew Roberts
+ * @author Nick Fuda
+ * @version 1
+ */
 public class ScrabbleView extends JFrame{
     private JFrame frame;
     private ScrabbleBoardPanel boardPanel;
     private Tile selectedTile;
     private PlayerRackPanel playerRackPanel;
     private ScrabbleModel game;
-    private HashMap<Player, JLabel> playerScoreLabel = new HashMap<>() {
-    };
+    private HashMap<Player, JLabel> playerScoreLabel = new HashMap<>() {};
 
+    /**
+     * Constructor for class ScrabbleView
+     */
     public ScrabbleView(){
         // partially set up frame
         frame = new JFrame("Not Scrabble"); // create JFrame with title of main window
@@ -45,62 +53,91 @@ public class ScrabbleView extends JFrame{
         frame.setVisible(true);
     }
 
-    // setter for selected tile
+    /**
+     * Setter for a selected tile
+     * @param tile the tile to place
+     */
     public void setSelectedTile(Tile tile){
         this.selectedTile =  tile;
     }
 
-    // getter for selected tile
+    /**
+     * Gets the tile you wish to get in order to place
+     * @return the selected tile
+     */
     public Tile getSelectedTile(){
         return selectedTile;
     }
 
-    // view updater for player
+    /**
+     * Updates the view for the current player (shows their rack, updates scores)
+     */
     private void updateViewForCurrentPlayer(){
         playerRackPanel.updateRack(game.getCurrentPlayer().getRack());
         playerScoreLabel.get(game.getCurrentPlayer()).setText(game.getCurrentPlayer().getName()+" score: " + game.getCurrentPlayer().getScore());
         frame.repaint();
     }
 
-    // ends turn and moves to next player
+    /**
+     * Ends turn and moves to the next player (milestone 1)
+     */
     public void endTurn(){
         game.nextPlayerTurn();
         updateViewForCurrentPlayer();
     }
 
-    // getter for current game
+    /**
+     * Getter for current game instance
+     * @return game
+     */
     public ScrabbleModel getGame() {
         return game;
     }
 
-    // temp method for handling a play
+    /**
+     * Handle Play
+     */
     public void handlePlayAction() {
         game.handlePlay(game.getCurrentPlayer());
         updateViewForCurrentPlayer();  // refresh display after play
     }
 
-    // temp method for handling a pass
+    /**
+     * Handle Pass
+     */
     public void handlePassAction() {
         game.handlePass(game.getCurrentPlayer());
         updateViewForCurrentPlayer();  // refresh display after pass
     }
 
-    // temp method for handling an exchange
+    /**
+     * Handle Exchange
+     */
     public void handleSwapAction() {
         game.handleExchange(game.getCurrentPlayer());
         updateViewForCurrentPlayer();  // refresh display after swapa
     }
 
-    // method for getting the frame
+    /**
+     * Getter for frame
+     * @return the frame of this ScrabbleView instance
+     */
     public Component getFrame() {
         return frame;
     }
 
-    // method for getting board panel
+    /**
+     * Getter for board GUI
+     * @return boardPanel
+     */
     public ScrabbleBoardPanel getBoardPanel() {
         return boardPanel;
     }
 
+    /**
+     * Main method to run and test a game
+     * @param args none
+     */
     public static void main(String[] args){
         new ScrabbleView();
     }

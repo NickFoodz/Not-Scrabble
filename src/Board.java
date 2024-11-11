@@ -8,6 +8,12 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class Board models a board in a game of scrabble
+ * @author Nick Fuda
+ * @author Andrew Roberts
+ * @version 2
+ */
 public class Board {
     private Position[][] board;
 

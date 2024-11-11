@@ -4,6 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+/**
+ * PlayerRackPanel is a JPanel that shows the player rack
+ * @author Andrew Roberts
+ * @version 1
+ */
 public class PlayerRackPanel extends JPanel {
 
     private List<Tile> rack; // The players rack
@@ -14,6 +19,11 @@ public class PlayerRackPanel extends JPanel {
     private JLabel playerName;
     private JPanel tilePanel;  // Panel for holding tile buttons
 
+    /**
+     * Constructor for PlayerRackPanel
+     * @param rack the player's rack to be represented
+     * @param view the JFrame GUI instance
+     */
     public PlayerRackPanel(List<Tile> rack, ScrabbleView view) {
         this.rack = rack;
         this.scrabbleView = view;  // Set the reference to ScrabbleView
@@ -62,7 +72,10 @@ public class PlayerRackPanel extends JPanel {
         updateRack(rack);
     }
 
-    // updates rack display
+    /**
+     * Updates the rack display
+     * @param tiles the tiles in the rack
+     */
     public void updateRack(List<Tile> tiles) {
         // Update player name
         playerName.setText(scrabbleView.getGame().getCurrentPlayer().getName());
@@ -79,7 +92,11 @@ public class PlayerRackPanel extends JPanel {
         repaint();
     }
 
-    // helper class for button action listener
+    /**
+     * Helper Class for TileButtons
+     * @author Andrew Roberts
+     * @version 1
+     */
     private class TileButtonListener implements ActionListener {
         private Tile tile;
 

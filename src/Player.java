@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Class Player represents a player in "Not Scrabble" games. Deals with actions
  * such as drawing tiles
- * @version 1
+ * @version 2
  * @author Andrew Roberts
  */
 public class Player {

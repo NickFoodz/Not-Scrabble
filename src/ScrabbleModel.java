@@ -100,6 +100,7 @@ public class ScrabbleModel {
         currentPlayer.showTiles();
         showMessage(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
 
+//         Part of the first milestone
 //        //Ask player to make choice for their turn
 //        boolean validChoice = false;
 //        do {
@@ -128,7 +129,10 @@ public class ScrabbleModel {
 //        } while (!validChoice);
     }
 
-    // method for handling a player passing their turn
+    /**
+     * Handler for passing a turn
+     * @param currentPlayer the player who will pass the turn
+     */
     public void handlePass(Player currentPlayer) {
         showMessage("You passed your turn");
         showMessage(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
@@ -212,7 +216,7 @@ public class ScrabbleModel {
         System.out.println("Turn#: " + turnNumber); // test
         System.out.println("WIP: "+ wordsInPlay); // test
     }
-
+//      From Milestone 1
 //    // Parses and validates the player's input, returns tiles to play if valid, null otherwise
 //    private Map<Tile, Position> parsePlayerInput(Player currentPlayer) {
 //        showMessage("Please enter tiles and positions (e.g. R:A6, R:A8, E:A9)");
@@ -250,7 +254,11 @@ public class ScrabbleModel {
 //        return tilesToPlay;
 //    }
 
-    // Checks tile alignment and adjacency for rule compliance
+    /**
+     * Checks tile adjacency, alignment, and rule compliance
+     * @param positions the positions of the tiles to be placed
+     * @return true if valid alignment and adjacency
+     */
     private boolean validateAlignmentAndAdjacency(List<Position> positions) {
         WordValidator wordValidator = new WordValidator(gameBoard, dictionary);
 
@@ -270,6 +278,11 @@ public class ScrabbleModel {
         return true;
     }
 
+    /**
+     * Validates the first play to ensure it covers the center tile H8 and has at least 2 tiles
+     * @param positions positions of the tiles to be played
+     * @return true if valid first move
+     */
     // Validates the first play to ensure it covers the center and has at least 2 tiles
     private boolean validateFirstPlay(List<Position> positions) {
         Position center = gameBoard.parsePosition("H8");
@@ -292,6 +305,12 @@ public class ScrabbleModel {
         return true;
     }
 
+    /**
+     * Attempts to play a turn
+     * @param currentPlayer the player whose turn it is
+     * @param tilesToPlay the tiles the player is trying to play
+     * @return true if successful move, false otherwise
+     */
     // Places tiles on the board, validates words, and updates score if valid
     private boolean attemptPlay(Player currentPlayer, Map<Tile, Position> tilesToPlay) {
         WordValidator wordValidator = new WordValidator(gameBoard, dictionary);
@@ -437,7 +456,7 @@ public class ScrabbleModel {
     public List<Player> getPlayers(){return players;}
 
     /**
-     * getter for game board
+     * Getter for game board
      *
      * @return game board
      */
@@ -445,6 +464,10 @@ public class ScrabbleModel {
         return gameBoard;
     }
 
+    /**
+     * Method to display message
+     * @param message a string message to display
+     */
     //method to display messages
     public void showMessage(String message) {
         JOptionPane.showMessageDialog(view.getFrame(), message);
