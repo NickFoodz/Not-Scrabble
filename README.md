@@ -1,27 +1,32 @@
-This is a school project for SYSC3110.
-Created by Nick Fuda and Andrew Roberts
+
 
 ***************************************************IMPORTANT***************************************************
 
-Change dictionaryFilePath variable in Game Class to the file path where scrabblewords.txt
-is located in your system for the dictionary to work as intended.
+This is a school project for SYSC3110.
+Created by Nick Fuda and Andrew Roberts
 
 ***************************************************************************************************************
 Known Bugs:
-- When inputting an incorrect input as a player, the game can crash. Also, inputting a word that does not exist 
-can remove tiles from the rack despite not being used.
-- If inputting tiles with spaces between the tiles (e.g. A:A1, A:A2 rather than A:A1,A:A2) you may have the terminal
-tell you they must be adjacent.
-- Double letters may have problem where they do not appear (e.g. first L in tall is missing on the board)
+- When inputting a non integer input for number of players, the game can crash.
+- An invalid placement of 2 or more tiles sometimes registers as valid if they are in the same row/column
+-**ADD MORE**
+
 
 ***************************************************************************************************************
 
 Contributions:
-Andrew Roberts: Position, Bag, Player, Game, WordValidator, Board, LetterPointValues, and Main classes 
-Nick Fuda: Main, Board, Game, Position, WordValidator classes, javadocs, scrabblewords.txt, readme, and UML
+Andrew Roberts: Position, Bag, Player, Game, WordValidator, Board, LetterPointValues, PlayerRackPanel,
+ScrabbleBoardPanel, ScrabbleView, readme.
 
+Nick Fuda: Board, Game, Position, WordValidator classes, javadocs, scrabblewords.txt, readme, ScrabbleButton,
+ScrabbleBoardPanel, ScrabbleView, and UML
+
+Both of us also committed many times, with many iterations of ideas pushed to GitHub as we collaborated and 
+discussed future design decisions.
 ***************************************************************************************************************
 Design Decisions
+
+Milestone 1:
 
 The game dictionary was placed in a text file and a parser class was built first to allow the user to modify a
 simple text file to add or remove words. Parser allows the words in the text file to be read so long as they are
@@ -104,20 +109,74 @@ Non-Classes
 that the players can add custom words if they choose. The parser can find a word in the dictionary and determine
 if it is valid in the game.
 
+###############################################################################################################
+Milestone 2:
 
+-Changed "Game" class to "ScrabbleModel" to better reflect the nature of what it is
+-Added ScrabbleView, ScrabbleBoardPanel, PlayerRackPanel, and ScrabbleButton GUI classes.
+-Removed the Parser class and implemented it as a method into ScrabbleModel
+-Main class removed, replaced with view
+
+- ScrabbleView
+  - The main GUI class, which creates the frame of the GUI and implements different java swing components.
+  - The board, scoreboard, rack, and turn options are all JComponents
+  - Errors in play currently popup as JDialogs
+  - The JFrame reflects the changes to the model
+    - Data Structures: Hashmap used to map <Player,JLabel> locations for the scoreboard to allow updates
+
+- ScrabbleBoardPanel
+  - Represents the board in a game of scrabble
+  - JPanel containing a grid of ScrabbleButton objects
+  - Provides a method to revert the board if turn is invalid
+    - Data Structures: None
+  
+- PlayerRackPanel
+  - Represents player's tiles to play (The rack from class Player)
+  - Changes depending on the current player
+  - Allows the players to click a tile, then place it on the board.
+    - Data Structures:None
+
+- ScrabbleButton
+  - Makes up each place on the board, has coordinates and stores the score and Tile
+  - Provides color changing to allow users to see where tiles are placed.
+  - Provides method to revert button to empty, used by ScrabbleBoardPanel
+
+- Parser
+  - Removed Parser, changed how dictionary works.
+  - Dictionary is now stored in project module, scanned using Scanner to add it to an ArrayList.
+  - No longer requires filepath and user tampering with code.
+
+- WordValidator
+  - Methods updated to work without Parser
+  - Added method to check if tile placements will have gaps.
+
+- ScrabbleModel
+  - Added getters and setters for fields
+  - Changed handler methods to not require text input 
 ***************************************************************************************************************
 
 Future Goals;
 
+Milestone 1:
 - Implementing GUI, Special/Blank Tiles, and some simpler functionality for input (solvable with GUI).
 - Decoupling some of the classes to allow more functionality with less dependency.
 - Removing the Main class and running the main function directly through Main, to remove an unnecessary class
 - Fixing bugs 
 - More testing and development time allocated
 
+###############################################################################################################
+
+Milestone 2:
+- Better implementing MVC, which was difficult to do for this milestone, as the two of us were quite busy
+  - Such as creating a controller, having view be an interface, having the current view become modelview or frame
+- Get better with GUI, as both of us did not learn programming prior to university.
+- Fix bugs in model and logic
+- More time to test and develop, especially GUI related components.
+
 ***************************************************************************************************************
 Other Notes:
 
+Milestone 1:
 This project thus far was made by only two people in a short time (as exams were in the week preceding).
 We are in a group of three, a smaller group than many of our peers, and one member has not responded to any
 attempt at communication. As such, we have had limited resources for testing, and have perhaps spent more
@@ -127,3 +186,14 @@ We hope you take this into consideration when reviewing our first deliverable, a
 a functioning foundation to the whole project.
 
 Thank you, we hope you enjoy our recreation of a classic game!
+
+###############################################################################################################
+
+Milestone 2:
+
+We still have not heard back from our third group member, and the actual delegation of work has been harder now
+that the project is picking up. Andrew and I are both relatively new to creating GUI, so we got hung up on trying 
+to make the GUI work and did not follow the proper MVC format. Now that we are closing in on having the majority
+of the GUI made and mostly need to work on the model, we are hoping this allows us to create a better foundation.
+We unfortunately could not meet the Sunday deadline, but thankfully the professor put an announcement out that
+saved our confidence in being able to present something that is somewhat functional.
