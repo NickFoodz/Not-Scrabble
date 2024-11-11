@@ -69,6 +69,16 @@ public class ScrabbleButton extends JButton {
         }
     }
 
+    public void revertTile(){
+        this.empty = true;
+        setOpaque(true);
+        setBackground(Color.WHITE);
+        setForeground(Color.BLACK);
+        setEnabled(true); // enable button for use
+        char ch = 'A';
+        setText(Character.toString(ch + column) + (row + 1));
+    }
+
     /**
      *  Checks if tile is available. Should be called before any actions on the tile from other classes
      *  Can also be used to check an entire word (e.g. follow a row of tiles until empty to calculate score)

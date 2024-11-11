@@ -22,6 +22,7 @@ public class ScrabbleModel {
     private ArrayList<String> dictionary;
     private int turnNumber;
     private ScrabbleView view;
+    private boolean firstTurn;
 
     /**
      * Constructor for Game class
@@ -40,6 +41,7 @@ public class ScrabbleModel {
         this.view = view;
         dictionary = new ArrayList<String>();
         dictionary = createDictionary();
+        firstTurn = true;
 
         for (int i = 1; i <= numPlayers; i++) {
             String playerName = JOptionPane.showInputDialog(view.getFrame(), "Enter player " + i + "'s name");
@@ -98,32 +100,32 @@ public class ScrabbleModel {
         currentPlayer.showTiles();
         showMessage(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
 
-        //Ask player to make choice for their turn
-        boolean validChoice = false;
-        do {
-            showMessage("Please type Pass, Exchange or Play if you would like to pass your turn, exchange tiles or play tiles respectively");
-            String choice = scanner.nextLine().toLowerCase();
-
-            switch (choice) {
-                case ("pass"):
-                    validChoice = true;
-                    handlePass(currentPlayer);
-                    break;
-
-                case ("exchange"):
-                    validChoice = true;
-                    handleExchange(currentPlayer);
-                    break;
-
-                case ("play"):
-                    validChoice = true;
-                    handlePlay(currentPlayer);
-                    break;
-
-                default:
-                    showMessage("Invalid choice");
-            }
-        } while (!validChoice);
+//        //Ask player to make choice for their turn
+//        boolean validChoice = false;
+//        do {
+//            showMessage("Please type Pass, Exchange or Play if you would like to pass your turn, exchange tiles or play tiles respectively");
+//            String choice = scanner.nextLine().toLowerCase();
+//
+//            switch (choice) {
+//                case ("pass"):
+//                    validChoice = true;
+//                    handlePass(currentPlayer);
+//                    break;
+//
+//                case ("exchange"):
+//                    validChoice = true;
+//                    handleExchange(currentPlayer);
+//                    break;
+//
+//                case ("play"):
+//                    validChoice = true;
+//                    handlePlay(currentPlayer);
+//                    break;
+//
+//                default:
+//                    showMessage("Invalid choice");
+//            }
+//        } while (!validChoice);
     }
 
     // method for handling a player passing their turn
@@ -203,8 +205,8 @@ public class ScrabbleModel {
             turnNumber++;
         } else {
             revertTiles(tilesToPlay); // Revert if play fails
-            currentPlayer.clearTilesPlayed(); // Clear the played tiles to reset
             view.getBoardPanel().revertTiles(currentPlayer); // clear gui
+            currentPlayer.clearTilesPlayed(); // Clear the played tiles to reset
         }
         gameBoard.displayBoard(); // test
         System.out.println("Turn#: " + turnNumber); // test
@@ -256,6 +258,7 @@ public class ScrabbleModel {
             showMessage("Invalid formation, tiles must be in a straight line");
             return false;
         }
+
         if (!wordsInPlay.isEmpty() && !wordValidator.isConnectedToAdjacentTiles(positions)) {
             showMessage("Invalid formation, must be adjacent to existing tiles");
             return false;
@@ -270,10 +273,18 @@ public class ScrabbleModel {
     // Validates the first play to ensure it covers the center and has at least 2 tiles
     private boolean validateFirstPlay(List<Position> positions) {
         Position center = gameBoard.parsePosition("H8");
+        WordValidator wordValidator = new WordValidator(gameBoard, dictionary);
+        //Check if tile placed on H8
         if (!positions.contains(center)) {
             showMessage("First word must cover center square (H8)");
             return false;
         }
+        //Check if positions are aligned
+        if (!wordValidator.arePositionsAligned(positions)) {
+            showMessage("Invalid formation, tiles must be in a straight line");
+            return false;
+        }
+        //Check if word has at least 2 letters
         if (positions.size() < 2) {
             showMessage("First turn must play at least 2 tiles");
             return false;
@@ -374,6 +385,7 @@ public class ScrabbleModel {
         for (Map.Entry<Tile, Position> tile : tilesToPlay.entrySet()) {
             Position position = tile.getValue();
             position.setTile(null); // reset the position to empty
+            //GUI to revert tile
         }
     }
 
@@ -421,6 +433,8 @@ public class ScrabbleModel {
     public Player getCurrentPlayer() {
         return players.get(currentPlayerIndex);
     }
+
+    public List<Player> getPlayers(){return players;}
 
     /**
      * getter for game board

@@ -1,7 +1,6 @@
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Class WordValidator checks if a word placement is valid on the board
@@ -68,6 +67,72 @@ public class WordValidator {
         }
         return false;
     }
+
+    /**
+     * Checks if placed tiles to be placed will be connected to other tiles to be placed
+     * either directly or through other existing tiles.
+     * @param positions
+     * @return
+     */
+    public boolean isConnectedToOtherTilesInTurn(List<Position> positions){
+        //Check if path between highest and lowest position is occupied
+        //If more than one tile placed
+        int max;
+        int min;
+        int sameRowOrColumn;
+        if(positions.size() > 1){
+            //same column, vertical turn
+            if(positions.get(0).getCol() == positions.get(1).getCol()){
+                //Save column
+                sameRowOrColumn = positions.getFirst().getCol();
+                //Set span of positions ot initialize to first item
+                max = positions.getFirst().getRow();
+                min = positions.getFirst().getRow();
+
+                //Find min and max position
+                for(Position position : positions){
+                   if(position.getRow() > max){
+                       max = position.getRow();
+                   }else if(position.getRow() < min){
+                       min = position.getRow();
+                   }
+                }
+                //Check if there is a tile occupying each space between
+                for(int i = min; i < max; i++){
+                    if(!board.getPosition(i,sameRowOrColumn).isOccupied()){
+                        return false;
+                    }
+                }
+            }
+
+            //Same row, Horizontal turn
+            if(positions.get(0).getRow() == positions.get(1).getRow()){
+                //Save row
+                sameRowOrColumn = positions.getFirst().getRow();
+                //set span of positions to initialize first item
+                max = positions.get(0).getCol();
+                min = positions.get(0).getCol();
+                //For each
+                //Find min and max position
+                for(Position position : positions){
+                    if(position.getCol() > max){
+                        max = position.getCol();
+                    }else if(position.getCol() < min){
+                        min = position.getCol();
+                    }
+                }
+                //Check if there is a tile occupying each space between first and last tiles to place
+                for(int i = min; i < max; i++){
+                    if(!board.getPosition(sameRowOrColumn, i).isOccupied()){
+                        return false;
+                    }
+                }
+
+            }
+        }
+        return true;
+    }
+
 
     /**
      * Checks if the word is valid (calling parser class) by checking dictionary.

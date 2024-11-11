@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ScrabbleView extends JFrame{
     private JFrame frame;
@@ -8,6 +10,8 @@ public class ScrabbleView extends JFrame{
     private Tile selectedTile;
     private PlayerRackPanel playerRackPanel;
     private ScrabbleModel game;
+    private HashMap<Player, JLabel> playerScoreLabel = new HashMap<>() {
+    };
 
     public ScrabbleView(){
         // partially set up frame
@@ -20,11 +24,22 @@ public class ScrabbleView extends JFrame{
         // initialize game with specified number of players
         this.game = new ScrabbleModel(numPlayers, this);
 
-        // initialize player rack and board panels
+        // initialize player rack, score, and board panels
         playerRackPanel = new PlayerRackPanel(game.getCurrentPlayer().getRack(), this);
         boardPanel = new ScrabbleBoardPanel(playerRackPanel, this);
 
+        //Player scores panel
+        JPanel scores = new JPanel();
+        scores.setLayout(new GridLayout(game.getPlayers().size(), 0));
+        for(Player player : game.getPlayers()){
+            JLabel playerScore = new JLabel(player.getName()+" score: " + player.getScore());
+            playerScoreLabel.put(player, playerScore);
+            scores.add(playerScore);
+        }
+
+
         // set up rest of frame
+        frame.add(scores, BorderLayout.EAST);
         frame.add(playerRackPanel, BorderLayout.SOUTH);
         frame.add(boardPanel, BorderLayout.CENTER);
         frame.setVisible(true);
@@ -43,6 +58,7 @@ public class ScrabbleView extends JFrame{
     // view updater for player
     private void updateViewForCurrentPlayer(){
         playerRackPanel.updateRack(game.getCurrentPlayer().getRack());
+        playerScoreLabel.get(game.getCurrentPlayer()).setText(game.getCurrentPlayer().getName()+" score: " + game.getCurrentPlayer().getScore());
         frame.repaint();
     }
 

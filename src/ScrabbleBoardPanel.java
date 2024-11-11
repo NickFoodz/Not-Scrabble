@@ -58,10 +58,11 @@ public class ScrabbleBoardPanel extends JPanel {
 
     public void revertTiles(Player player) {
         for (Position pos : player.getTilesPlayed().values()) {
-            char ch = 'A';
-            boardButtons[pos.getRow()][pos.getCol()].setText(Character.toString(ch + pos.getCol()) + (pos.getRow() + 1));
-            boardButtons[pos.getRow()][pos.getCol()].setBackground(Color.WHITE);
-            boardButtons[pos.getRow()][pos.getCol()].setEnabled(true);
+                boardButtons[pos.getRow()][pos.getCol()].revertTile();
+//            char ch = 'A';
+////            boardButtons[pos.getRow()][pos.getCol()].setText(Character.toString(ch + pos.getCol()) + (pos.getRow() + 1));
+////            boardButtons[pos.getRow()][pos.getCol()].setBackground(Color.WHITE);
+////            boardButtons[pos.getRow()][pos.getCol()].setEnabled(true);
         }
     }
 }
