@@ -22,6 +22,7 @@ public class ScrabbleButton extends JButton {
         setOpaque(true);
         setBackground(Color.WHITE);
         setForeground(Color.BLACK);
+        setEnabled(true); // enable button for use
         //Field initialization
         this.row=rw;
         this.column=col;

@@ -12,6 +12,7 @@ public class PlayerRackPanel extends JPanel {
     private JButton passButton;
     private JButton swapButton;
     private JLabel playerName;
+    private JPanel tilePanel;  // Panel for holding tile buttons
 
     public PlayerRackPanel(List<Tile> rack, ScrabbleView view) {
         this.rack = rack;
@@ -27,30 +28,51 @@ public class PlayerRackPanel extends JPanel {
         passButton.addActionListener(e -> view.handlePassAction());
         swapButton.addActionListener(e -> view.handleSwapAction());
 
-        // create the scrabble play area layout
-        setLayout(new FlowLayout());
-        add(playerName);
+        // Initialize layout and sub-panels
+        setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(5, 5, 5, 5); // Add space between components
+        constraints.gridy = 0; // All components will be in the same row
+
+        // Panel for tile buttons
+        tilePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));  // Align tiles to the left
+
+        // Add player name to the layout in gridx = 0
+        constraints.gridx = 0;
+        constraints.anchor = GridBagConstraints.WEST; // Align left
+        add(playerName, constraints);
+
+        // Add the tile panel just after the player name in gridx = 1
+        constraints.gridx = 1;
+        constraints.anchor = GridBagConstraints.CENTER;  // Align tiles in the center
+        add(tilePanel, constraints);
+
+        // Panel for control buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));  // Align buttons to the left
+        buttonPanel.add(playButton);
+        buttonPanel.add(swapButton);
+        buttonPanel.add(passButton);
+
+        // Add button panel after the tile panel in gridx = 2
+        constraints.gridx = 2;
+        constraints.anchor = GridBagConstraints.EAST; // Align buttons to the right
+        add(buttonPanel, constraints);
+
+        // Initial display of tiles
         updateRack(rack);
-        add(playButton);
-        add(passButton);
-        add(swapButton);
     }
 
     // updates rack display
     public void updateRack(List<Tile> tiles) {
-        // Remove only tile buttons
-        Component[] components = this.getComponents();
-        for (Component component : components) {
-            if (component instanceof JButton && component != playButton && component != passButton && component != swapButton) {
-                remove(component);
-            }
-        }
+        // Update player name
+        playerName.setText(scrabbleView.getGame().getCurrentPlayer().getName());
 
-        // Add updated tile buttons
+        // Clear tile panel and add updated tile buttons
+        tilePanel.removeAll();
         for (Tile tile : tiles) {
             JButton tileButton = new JButton(String.valueOf(tile.getLetter()));
             tileButton.addActionListener(new TileButtonListener(tile));
-            add(tileButton);
+            tilePanel.add(tileButton);
         }
 
         revalidate();

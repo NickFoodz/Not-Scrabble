@@ -75,7 +75,7 @@ public class WordValidator {
      * @return true if the word is valid, false otherwise
      */
     public boolean isValidWord(ArrayList<String> gameDictionary, String word) {
-        if(gameDictionary.contains(word)){return true;}
+        if(gameDictionary.contains(word.trim().toLowerCase())){return true;}
         else{return false;}
     }
 }

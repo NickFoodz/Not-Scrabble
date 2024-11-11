@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ScrabbleView extends JFrame{
     private JFrame frame;
-    private JPanel boardPanel;
+    private ScrabbleBoardPanel boardPanel;
     private Tile selectedTile;
     private PlayerRackPanel playerRackPanel;
     private ScrabbleModel game;
@@ -72,12 +72,17 @@ public class ScrabbleView extends JFrame{
     // temp method for handling an exchange
     public void handleSwapAction() {
         game.handleExchange(game.getCurrentPlayer());
-        updateViewForCurrentPlayer();  // refresh display after swap
+        updateViewForCurrentPlayer();  // refresh display after swapa
     }
 
     // method for getting the frame
     public Component getFrame() {
         return frame;
+    }
+
+    // method for getting board panel
+    public ScrabbleBoardPanel getBoardPanel() {
+        return boardPanel;
     }
 
     public static void main(String[] args){

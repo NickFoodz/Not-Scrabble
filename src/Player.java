@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Class Player represents a player in "Not Scrabble" games. Deals with actions
@@ -11,6 +13,7 @@ public class Player {
     private String name; // the player's name
     private ArrayList<Tile> rack; //the tiles the player currently holds
     private int score; //the players score
+    private Map<Tile, Position> tilesPlayed; // tiles played in current turn
 
     /**
      * Creates new player object with corresponding name
@@ -21,6 +24,7 @@ public class Player {
         this.name = name;
         rack = new ArrayList<Tile>();
         score = 0;
+        tilesPlayed = new HashMap<>();
     }
 
     /**
@@ -152,5 +156,22 @@ public class Player {
         }
 
         return false; // tile not found
+    }
+
+    /**
+     * add tiles played this turn to the playedTiles field
+     * @param coordinate the row and column
+     * @param tile the tile played
+     */
+    public void addTilesPlayed(Tile tile, Position coordinate) {
+        tilesPlayed.put(tile, coordinate);
+    }
+
+    public Map<Tile, Position> getTilesPlayed() {
+        return tilesPlayed;
+    }
+
+    public void clearTilesPlayed() {
+        tilesPlayed.clear();
     }
 }

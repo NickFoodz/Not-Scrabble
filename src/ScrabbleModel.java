@@ -40,7 +40,6 @@ public class ScrabbleModel {
         this.view = view;
         dictionary = new ArrayList<String>();
         dictionary = createDictionary();
-        System.out.println(dictionary.get(1));
 
         for (int i = 1; i <= numPlayers; i++) {
             String playerName = JOptionPane.showInputDialog(view.getFrame(), "Enter player " + i + "'s name");
@@ -174,64 +173,80 @@ public class ScrabbleModel {
      * @param currentPlayer the player whose turn it is
      */
     public void handlePlay(Player currentPlayer) {
-        gameBoard.displayBoard();
-        currentPlayer.showTiles();
 
-        boolean validInput = false;
-        while (!validInput) {
-            // Step 1: Parse player input
-            Map<Tile, Position> tilesToPlay = parsePlayerInput(currentPlayer);
-            if (tilesToPlay == null) continue;
+        // Step 1: get tiles played
+        Map<Tile, Position> tilesToPlay = currentPlayer.getTilesPlayed();
 
-            // Step 2: Validate tile alignment and adjacency
-            List<Position> positions = new ArrayList<>(tilesToPlay.values());
-            if (!validateAlignmentAndAdjacency(positions)) continue;
+        gameBoard.displayBoard(); // test
+        System.out.println("Turn#: " + turnNumber); // test
+        System.out.println("WIP: "+ wordsInPlay); // test
 
-            // Step 3: Place tiles and validate words
-            if (attemptPlay(currentPlayer, tilesToPlay)) {
-                validInput = true;
-                currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-                turnNumber++;
-            }
+        // check if at least one tile was played
+        if (tilesToPlay.isEmpty()) {
+            showMessage("No tiles placed on the board. Please place tiles before playing.");
+            return;
         }
+
+        // Step 2: Validate tile alignment and adjacency
+        List<Position> positions = new ArrayList<>(tilesToPlay.values());
+        if (!validateAlignmentAndAdjacency(positions)) {
+            revertTiles(tilesToPlay); // revert tiles on board
+            view.getBoardPanel().revertTiles(currentPlayer); // clear gui
+            currentPlayer.clearTilesPlayed(); // clear played tiles
+            return;
+        }
+
+        // Step 3: Place tiles and validate words
+        if (attemptPlay(currentPlayer, tilesToPlay)) {
+            currentPlayer.clearTilesPlayed(); // clear stored played tiles
+            currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+            turnNumber++;
+        } else {
+            revertTiles(tilesToPlay); // Revert if play fails
+            currentPlayer.clearTilesPlayed(); // Clear the played tiles to reset
+            view.getBoardPanel().revertTiles(currentPlayer); // clear gui
+        }
+        gameBoard.displayBoard(); // test
+        System.out.println("Turn#: " + turnNumber); // test
+        System.out.println("WIP: "+ wordsInPlay); // test
     }
 
-    // Parses and validates the player's input, returns tiles to play if valid, null otherwise
-    private Map<Tile, Position> parsePlayerInput(Player currentPlayer) {
-        showMessage("Please enter tiles and positions (e.g. R:A6, R:A8, E:A9)");
-        String input = scanner.nextLine();
-        String[] tilePositionCords = input.split(",");
-        Map<Tile, Position> tilesToPlay = new HashMap<>();
-
-        for (String tileInfo : tilePositionCords) {
-            String[] info = tileInfo.split(":");
-            if (info.length != 2) {
-                showMessage("Invalid format, please use Tile:Position format");
-                return null;
-            }
-
-            char tileLetter = info[0].trim().toUpperCase().charAt(0);
-            if (!Character.isLetter(tileLetter)) {
-                showMessage("Invalid tile letter: " + tileLetter);
-                return null;
-            }
-
-            Position position = gameBoard.parsePosition(info[1]);
-            if (position == null || position.isOccupied()) {
-                showMessage("Invalid position: " + info[1]);
-                return null;
-            }
-
-            Tile tile = currentPlayer.getTile(String.valueOf(tileLetter));
-            if (tile == null) {
-                showMessage("You do not have this tile in your rack: " + tileLetter);
-                return null;
-            }
-
-            tilesToPlay.put(tile, position);
-        }
-        return tilesToPlay;
-    }
+//    // Parses and validates the player's input, returns tiles to play if valid, null otherwise
+//    private Map<Tile, Position> parsePlayerInput(Player currentPlayer) {
+//        showMessage("Please enter tiles and positions (e.g. R:A6, R:A8, E:A9)");
+//        String input = scanner.nextLine();
+//        String[] tilePositionCords = input.split(",");
+//        Map<Tile, Position> tilesToPlay = new HashMap<>();
+//
+//        for (String tileInfo : tilePositionCords) {
+//            String[] info = tileInfo.split(":");
+//            if (info.length != 2) {
+//                showMessage("Invalid format, please use Tile:Position format");
+//                return null;
+//            }
+//
+//            char tileLetter = info[0].trim().toUpperCase().charAt(0);
+//            if (!Character.isLetter(tileLetter)) {
+//                showMessage("Invalid tile letter: " + tileLetter);
+//                return null;
+//            }
+//
+//            Position position = gameBoard.parsePosition(info[1]);
+//            if (position == null || position.isOccupied()) {
+//                showMessage("Invalid position: " + info[1]);
+//                return null;
+//            }
+//
+//            Tile tile = currentPlayer.getTile(String.valueOf(tileLetter));
+//            if (tile == null) {
+//                showMessage("You do not have this tile in your rack: " + tileLetter);
+//                return null;
+//            }
+//
+//            tilesToPlay.put(tile, position);
+//        }
+//        return tilesToPlay;
+//    }
 
     // Checks tile alignment and adjacency for rule compliance
     private boolean validateAlignmentAndAdjacency(List<Position> positions) {
@@ -245,7 +260,9 @@ public class ScrabbleModel {
             showMessage("Invalid formation, must be adjacent to existing tiles");
             return false;
         }
-        if (wordsInPlay.isEmpty() && !validateFirstPlay(positions)) return false;
+        if (wordsInPlay.isEmpty()) {
+            return validateFirstPlay(positions);
+        }
 
         return true;
     }
@@ -266,22 +283,21 @@ public class ScrabbleModel {
 
     // Places tiles on the board, validates words, and updates score if valid
     private boolean attemptPlay(Player currentPlayer, Map<Tile, Position> tilesToPlay) {
-        List<String> attemptedWords = gameBoard.gatherWordsOnBoard();
         WordValidator wordValidator = new WordValidator(gameBoard, dictionary);
 
         for (Map.Entry<Tile, Position> entry : tilesToPlay.entrySet()) {
             gameBoard.placeTile(entry.getKey(), entry.getValue().getRow(), entry.getValue().getCol());
         }
 
-        List<String> newWords = (turnNumber == 0) ? attemptedWords : getNewWords(attemptedWords);
-            for(String word : newWords){
-                if(!wordValidator.isValidWord(dictionary, word)){
-                    showMessage("Invalid formation, please try again");
-                    revertTiles(tilesToPlay);
-                    return false;
-                }
-            }
+        List<String> attemptedWords = gameBoard.gatherWordsOnBoard();
 
+        List<String> newWords = (turnNumber == 0) ? attemptedWords : getNewWords(attemptedWords);
+        for (String word : newWords) {
+            if (!wordValidator.isValidWord(dictionary, word)) {
+                showMessage("Invalid formation, please try again");
+                return false;
+            }
+        }
 
         // Update game state for valid play
         wordsInPlay = attemptedWords;
@@ -404,6 +420,15 @@ public class ScrabbleModel {
 
     public Player getCurrentPlayer() {
         return players.get(currentPlayerIndex);
+    }
+
+    /**
+     * getter for game board
+     *
+     * @return game board
+     */
+    public static Board getGameBoard() {
+        return gameBoard;
     }
 
     //method to display messages
