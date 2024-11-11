@@ -14,7 +14,7 @@ public class ScrabbleButton extends JButton {
     private int score; //Score of the tile
     private Tile tile; //Tile at this location (starts without one)
     private Color tileColor = new Color(227,207,170);
-    private boolean available;
+    private boolean empty;
 
     public ScrabbleButton(int rw, int col){
         //Button initialization
@@ -26,7 +26,7 @@ public class ScrabbleButton extends JButton {
         this.row=rw;
         this.column=col;
         this.score = 0;
-        this.available= true; //Active for play.
+        this.empty= true; //Active for play.
         this.tile = null; //Starts with no tile
 
     }
@@ -57,20 +57,22 @@ public class ScrabbleButton extends JButton {
      * Sets the tile that this button stores, so that it may be used to update the button
      */
     public void placeTile(Tile t){
-        //Stores Tile
-        this.tile = t;
-        //Sets letter of this button, and sets score
-        this.setLetter(this.tile.getLetter());
-        this.score = tile.getPointValue();
-        this.setBackground(tileColor);
-        this.available = false;
+        if(empty) {
+            //Stores Tile
+            this.tile = t;
+            //Sets letter of this button, and sets score
+            this.setLetter(this.tile.getLetter());
+            this.score = tile.getPointValue();
+            this.setBackground(tileColor);
+            this.empty = false;
+        }
     }
 
     /**
      *  Checks if tile is available. Should be called before any actions on the tile from other classes
      *  Can also be used to check an entire word (e.g. follow a row of tiles until empty to calculate score)
      */
-    public boolean checkAvailable(){return available;}
+    public boolean checkAvailable(){return empty;}
 
 
 

@@ -43,11 +43,8 @@ public class ScrabbleBoardPanel extends JPanel {
             Tile tile = scrabbleView.getSelectedTile();
             if (tile != null) {
                 boardButtons[row][col].placeTile(tile);
-
                 // place tile method should be created to handle placing tiles instead of in handle play
                 // scrabbleView.getGame().placeTile(tile, row, col);
-
-
                 scrabbleView.setSelectedTile(null);
                 boardButtons[row][col].setEnabled(false);
 

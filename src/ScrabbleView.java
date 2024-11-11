@@ -7,7 +7,7 @@ public class ScrabbleView extends JFrame{
     private JPanel boardPanel;
     private Tile selectedTile;
     private PlayerRackPanel playerRackPanel;
-    private Game game;
+    private ScrabbleModel game;
 
     public ScrabbleView(){
         // partially set up frame
@@ -18,7 +18,7 @@ public class ScrabbleView extends JFrame{
         int numPlayers = Integer.parseInt(JOptionPane.showInputDialog(frame, "Enter the number of players for the game"));
 
         // initialize game with specified number of players
-        this.game = new Game(numPlayers, this);
+        this.game = new ScrabbleModel(numPlayers, this);
 
         // initialize player rack and board panels
         playerRackPanel = new PlayerRackPanel(game.getCurrentPlayer().getRack(), this);
@@ -53,7 +53,7 @@ public class ScrabbleView extends JFrame{
     }
 
     // getter for current game
-    public Game getGame() {
+    public ScrabbleModel getGame() {
         return game;
     }
 

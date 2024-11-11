@@ -8,7 +8,7 @@ import java.util.*;
  * @author Nick Fuda
  * @version 1
  */
-public class Game {
+public class ScrabbleModel {
     private static Board gameBoard;
     private static List<Player> players;
     private static Bag gameBag;
@@ -26,7 +26,7 @@ public class Game {
      *
      * @param numPlayers the number of players who will be playing the game
      */
-    public Game(int numPlayers, ScrabbleView view) {
+    public ScrabbleModel(int numPlayers, ScrabbleView view) {
         gameBoard = new Board();
         gameBag = new Bag();
         players = new ArrayList<>();
