@@ -396,25 +396,25 @@ public class ScrabbleModel {
      * Method checkGameOver() checks if the players want to end the game or if game is naturally over
      */
     private void checkGameOver() {
-        //If no tiles left to be played in the game
+        // If no tiles left to be played in the game
         if (players.get(currentPlayerIndex).isRackEmpty() && gameBag.isEmpty()) {
             gameOver = true;
-
         } else if (successiveScorelessTurns >= 6) {
-            //If players are skipping consecutively, give them the option to end the game
+            // If players are skipping consecutively, give them the option to end the game
             boolean validChoice = false;
 
-            //if not yes or no, demand a valid command
+            // Instead of input dialog, request decision from the view
             while (!validChoice) {
-                String continuePlaying = JOptionPane.showInputDialog(successiveScorelessTurns + " scoreless turns have passed, would you like to continue the game? Type Yes or No");
-                if (continuePlaying.equalsIgnoreCase("yes")) {
+                int response = view.showGameOverDialog(successiveScorelessTurns); // Call method in view
+
+                if (response == JOptionPane.YES_OPTION) {
                     validChoice = true;
                     gameOver = false;
-                } else if (continuePlaying.equalsIgnoreCase("no")) {
+                } else if (response == JOptionPane.NO_OPTION) {
                     validChoice = true;
                     gameOver = true;
                 } else {
-                    showMessage("invalid choice. please enter either Yes or No");
+                    showMessage("Invalid choice. Please enter either Yes or No.");
                 }
             }
         } else {
@@ -433,24 +433,6 @@ public class ScrabbleModel {
             position.setTile(null); // reset the position to empty
             //GUI to revert tile
         }
-    }
-
-    /**
-     * Iterates through the player list and finds the player with the highest score
-     *
-     * @Return the winning player
-     */
-    private Player getWinner() {
-        //Make winner variable the first player by default
-        Player winner = players.get(currentPlayerIndex);
-
-        // find player with the highest score
-        for (Player player : players) {
-            if (player.getScore() > winner.getScore()) {
-                winner = player;
-            }
-        }
-        return winner;
     }
 
     /**
@@ -498,12 +480,11 @@ public class ScrabbleModel {
     }
 
     /**
-     * Getter for model view
-     *
-     * @return model view
+     * determine if game is over
+     * @return true if game is over, false otherwise
      */
-    public ScrabbleView getView() {
-        return view;
+    public boolean isGameOver() {
+        return gameOver;
     }
 
     /**
