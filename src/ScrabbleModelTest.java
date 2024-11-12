@@ -53,7 +53,7 @@ public class ScrabbleModelTest {
 
         //Save current rack before exchange to check if it is different from next
         ArrayList<Tile> hand = game.getCurrentPlayer().getRack();
-        //game.handleExchange(game.getCurrentPlayer());
+        game.handleExchange(game.getCurrentPlayer());
         assertEquals(game.getCurrentPlayer(), player2);
         //Switch back to player 1
         game.handlePass(game.getCurrentPlayer());
@@ -141,21 +141,21 @@ public class ScrabbleModelTest {
         assertEquals(game.getPlayers(),playerList);
     }
 
-    @Test
-    public void getGameBoard() {
-        //base of each test
-        Board board = new Board();
-        ArrayList<Player> playerList = new ArrayList<Player>();
-        Player player1 = new Player("Andrew");
-        Player player2 = new Player("Nick");
-        playerList.add(player1);
-        playerList.add(player2);
-        ScrabbleModel game = new ScrabbleModel(playerList);
-        //Assert that the game board is an empty board
-        //Check each position of each board and assert they are empty
-        //Cannot test as this method is static, cannot use class Board methods to check tiles
-
-    }
+    //    @Test - Nothing to test
+//    public void getGameBoard() {
+//        //base of each test
+//        Board board = new Board();
+//        ArrayList<Player> playerList = new ArrayList<Player>();
+//        Player player1 = new Player("Andrew");
+//        Player player2 = new Player("Nick");
+//        playerList.add(player1);
+//        playerList.add(player2);
+//        ScrabbleModel game = new ScrabbleModel(playerList);
+//        //Assert that the game board is an empty board
+//        //Check each position of each board and assert they are empty
+//        //Cannot test as this method is static, cannot use class Board methods to check tiles
+//
+//    }
 }
 
 
@@ -181,4 +181,35 @@ public class ScrabbleModelTest {
 //    }
 //    currentPlayerIndex = 0;
 //
+//}
+
+//private void testLetterFrequencies() {
+//    //Need only one of each letter to not fail exchange test
+//    int oneOfEach = 1;
+//    letterFrequencies.put('E', oneOfEach);
+//    letterFrequencies.put('A', oneOfEach);
+//    letterFrequencies.put('I', oneOfEach);
+//    letterFrequencies.put('O', oneOfEach);
+//    letterFrequencies.put('N', oneOfEach);
+//    letterFrequencies.put('R', oneOfEach);
+//    letterFrequencies.put('T', oneOfEach);
+//    letterFrequencies.put('L', oneOfEach);
+//    letterFrequencies.put('S', oneOfEach);
+//    letterFrequencies.put('U', oneOfEach);
+//    letterFrequencies.put('D', oneOfEach);
+//    letterFrequencies.put('G', oneOfEach);
+//    letterFrequencies.put('B', oneOfEach);
+//    letterFrequencies.put('C', oneOfEach);
+//    letterFrequencies.put('M', oneOfEach);
+//    letterFrequencies.put('P', oneOfEach);
+//    letterFrequencies.put('F', oneOfEach);
+//    letterFrequencies.put('H', oneOfEach);
+//    letterFrequencies.put('V', oneOfEach);
+//    letterFrequencies.put('W', oneOfEach);
+//    letterFrequencies.put('Y', oneOfEach);
+//    letterFrequencies.put('K', oneOfEach);
+//    letterFrequencies.put('J', oneOfEach);
+//    letterFrequencies.put('X', oneOfEach);
+//    letterFrequencies.put('Q', oneOfEach);
+//    letterFrequencies.put('Z', oneOfEach);
 //}

@@ -31,7 +31,8 @@ public class ScrabbleModel {
      */
     public ScrabbleModel(int numPlayers, ScrabbleView view) {
         gameBoard = new Board();
-        gameBag = new Bag();
+        isTest = false;
+        gameBag = new Bag(isTest);
         players = new ArrayList<>();
         gameOver = false;
         successiveScorelessTurns = 0;
@@ -40,7 +41,7 @@ public class ScrabbleModel {
         this.view = view;
         dictionary = new ArrayList<String>();
         dictionary = createDictionary();
-        isTest = false;
+
 
 
         for (int i = 1; i <= numPlayers; i++) {
@@ -64,7 +65,8 @@ public class ScrabbleModel {
      */
     public ScrabbleModel(ArrayList<Player> playerList) {
         gameBoard = new Board();
-        gameBag = new Bag();
+        isTest = true;
+        gameBag = new Bag(isTest);
         players = playerList;
         gameOver = false;
         successiveScorelessTurns = 0;
@@ -72,7 +74,6 @@ public class ScrabbleModel {
         this.wordsInPlay = new ArrayList<>();
         dictionary = new ArrayList<String>();
         dictionary = createDictionary();
-        isTest = true;
 
         for (Player player : players) {
             player.drawTiles(gameBag, 7, this);

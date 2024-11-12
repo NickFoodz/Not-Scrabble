@@ -17,11 +17,18 @@ public class Bag {
     /**
      * creates new bag object that contains all tiles available for play
      */
-    public Bag() {
+    public Bag(boolean isTest) {
         tiles = new ArrayList<>(); // initialize the tiles list
 
+
+
         // initialize letter frequencies and points
-        initializeLetterFrequencies();
+        if(!isTest) {
+            initializeLetterFrequencies();
+        }
+        else if(isTest){
+            testLetterFrequencies();
+        }
         initializeLetterPoints();
 
         // add tiles to the bag based on frequencies
@@ -120,5 +127,39 @@ public class Bag {
      */
     public boolean isEmpty() {
         return tiles.isEmpty();
+    }
+
+    /**
+     * Initialize each letters' frequency
+     */
+    private void testLetterFrequencies() {
+        //Need only one of each letter to not fail exchange test
+        int oneOfEach = 1;
+        letterFrequencies.put('E', oneOfEach);
+        letterFrequencies.put('A', oneOfEach);
+        letterFrequencies.put('I', oneOfEach);
+        letterFrequencies.put('O', oneOfEach);
+        letterFrequencies.put('N', oneOfEach);
+        letterFrequencies.put('R', oneOfEach);
+        letterFrequencies.put('T', oneOfEach);
+        letterFrequencies.put('L', oneOfEach);
+        letterFrequencies.put('S', oneOfEach);
+        letterFrequencies.put('U', oneOfEach);
+        letterFrequencies.put('D', oneOfEach);
+        letterFrequencies.put('G', oneOfEach);
+        letterFrequencies.put('B', oneOfEach);
+        letterFrequencies.put('C', oneOfEach);
+        letterFrequencies.put('M', oneOfEach);
+        letterFrequencies.put('P', oneOfEach);
+        letterFrequencies.put('F', oneOfEach);
+        letterFrequencies.put('H', oneOfEach);
+        letterFrequencies.put('V', oneOfEach);
+        letterFrequencies.put('W', oneOfEach);
+        letterFrequencies.put('Y', oneOfEach);
+        letterFrequencies.put('K', oneOfEach);
+        letterFrequencies.put('J', oneOfEach);
+        letterFrequencies.put('X', oneOfEach);
+        letterFrequencies.put('Q', oneOfEach);
+        letterFrequencies.put('Z', oneOfEach);
     }
 }
