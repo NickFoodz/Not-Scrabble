@@ -79,14 +79,6 @@ public class ScrabbleView extends JFrame{
     }
 
     /**
-     * Ends turn and moves to the next player (milestone 1)
-     */
-    public void endTurn(){
-        game.nextPlayerTurn();
-        updateViewForCurrentPlayer();
-    }
-
-    /**
      * Getter for current game instance
      * @return game
      */
@@ -95,10 +87,19 @@ public class ScrabbleView extends JFrame{
     }
 
     /**
+     * Getter for player rack panel
+     * @return playerRackPanel
+     */
+    public PlayerRackPanel getPlayerRackPanel() {
+        return playerRackPanel;
+    }
+
+    /**
      * Handle Play
      */
     public void handlePlayAction() {
         game.handlePlay(game.getCurrentPlayer());
+        playerRackPanel.clearExchangePanel();
         updateViewForCurrentPlayer();  // refresh display after play
     }
 
@@ -107,6 +108,7 @@ public class ScrabbleView extends JFrame{
      */
     public void handlePassAction() {
         game.handlePass(game.getCurrentPlayer());
+        playerRackPanel.clearExchangePanel();
         updateViewForCurrentPlayer();  // refresh display after pass
     }
 
@@ -115,10 +117,16 @@ public class ScrabbleView extends JFrame{
      */
     public void handleSwapAction() {
         game.handleExchange(game.getCurrentPlayer());
-        //game.showMessage("Please enter the tiles you wish to exchange, separated by a comma");
-        updateViewForCurrentPlayer();  // refresh display after swapa
+        playerRackPanel.clearExchangePanel();
+        updateViewForCurrentPlayer();  // refresh display after swap
     }
 
+    /**
+     * Handle Undo
+     */
+    public void handleUndoAction() {
+        return;
+    }
     /**
      * Getter for frame
      * @return the frame of this ScrabbleView instance

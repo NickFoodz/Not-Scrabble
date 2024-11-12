@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,32 +33,34 @@ public class Player {
      *
      * @param bag      the bag to be drawn from
      * @param numTiles the number of tiles the player wishes to draw
+     * @param gameRef reference to the game instance
      */
-    public void drawTiles(Bag bag, int numTiles) {
+    public void drawTiles(Bag bag, int numTiles, ScrabbleModel gameRef) {
         for (int i = 0; i < numTiles; i++) {
             if (!bag.isEmpty() && (rack.size() < 7)) {
                 Tile drawnTile = bag.drawTile();
                 rack.add(drawnTile);
             } else if (bag.isEmpty()) {
-                System.out.println("there are no more tiles in the bag");
+                gameRef.showMessage("there are no more tiles in the bag");
                 break;
             } else if (rack.size() == 7) {
-                System.out.println("you already have 7 tiles");
+                gameRef.showMessage("you already have 7 tiles");
                 break;
             }
         }
     }
 
-    /**
-     * method for displaying the tiles of the player
-     */
-    public void showTiles() {
-        System.out.print(name + "'s tiles: ");
-        for (Tile tile : rack) {
-            System.out.print(tile.getLetter() + " ");
-        }
-        System.out.println();
-    }
+    // Milestone 1
+//    /**
+//     * method for displaying the tiles of the player
+//     */
+//    public void showTiles() {
+//        System.out.print(name + "'s tiles: ");
+//        for (Tile tile : rack) {
+//            System.out.print(tile.getLetter() + " ");
+//        }
+//        System.out.println();
+//    }
 
     /**
      * getter for player's name

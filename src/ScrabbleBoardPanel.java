@@ -49,7 +49,7 @@ public class ScrabbleBoardPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             Tile tile = scrabbleView.getSelectedTile();
             if (tile != null) {
-                // Place tile in GUI board and game board simultaneously
+                // Place tile in GUI board
                 boardButtons[row][col].placeTile(tile);
 
                 // Disable button to prevent further modification
@@ -70,10 +70,6 @@ public class ScrabbleBoardPanel extends JPanel {
     public void revertTiles(Player player) {
         for (Position pos : player.getTilesPlayed().values()) {
                 boardButtons[pos.getRow()][pos.getCol()].revertTile();
-//            char ch = 'A';
-////            boardButtons[pos.getRow()][pos.getCol()].setText(Character.toString(ch + pos.getCol()) + (pos.getRow() + 1));
-////            boardButtons[pos.getRow()][pos.getCol()].setBackground(Color.WHITE);
-////            boardButtons[pos.getRow()][pos.getCol()].setEnabled(true);
         }
     }
 }

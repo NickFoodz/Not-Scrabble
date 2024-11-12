@@ -52,7 +52,7 @@ public class ScrabbleModel {
             }
 
             Player player = new Player(playerName);
-            player.drawTiles(gameBag, 7);
+            player.drawTiles(gameBag, 7, this);
             players.add(player);
         }
 
@@ -75,7 +75,7 @@ public class ScrabbleModel {
         isTest = true;
 
         for(Player player : players){
-            player.drawTiles(gameBag, 7);
+            player.drawTiles(gameBag, 7, this);
         }
         currentPlayerIndex = 0;
 
@@ -171,10 +171,11 @@ public class ScrabbleModel {
      * @param currentPlayer the player whose turn it is
      */
     public void handleExchange(Player currentPlayer) {
-        //Players enter the tiles to exchange
-        String[] exchangeTiles = scanner.nextLine().split(",");
-        for (int i = 0; i < exchangeTiles.length; i++) {
-            exchangeTiles[i] = exchangeTiles[i].trim();
+        ArrayList<String> exchangeTiles = new ArrayList<>();
+
+        // get selected tiles to exchange
+        for (Tile tile : view.getPlayerRackPanel().getSelectedTilesForExchange()){
+            exchangeTiles.add(String.valueOf(tile.getLetter()));
         }
 
         int numTilesToDraw = 0;
@@ -187,8 +188,7 @@ public class ScrabbleModel {
             }
         }
         //Draw tiles from game bag
-        currentPlayer.drawTiles(gameBag, numTilesToDraw);
-        currentPlayer.showTiles();
+        currentPlayer.drawTiles(gameBag, numTilesToDraw, this);
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         successiveScorelessTurns++;
         turnNumber++;
@@ -365,7 +365,7 @@ public class ScrabbleModel {
         for(Tile tileToRemove : tilesToPlay.keySet()){
             currentPlayer.removeTile(String.valueOf(tileToRemove.getLetter()));
         }
-        currentPlayer.drawTiles(gameBag, tilesToPlay.size());
+        currentPlayer.drawTiles(gameBag, tilesToPlay.size(), this);
         int turnScore = calculateScore(newWords);
         currentPlayer.setScore(currentPlayer.getScore() + turnScore);
         showMessage(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
@@ -500,12 +500,20 @@ public class ScrabbleModel {
     }
 
     /**
+     * Getter for model view
+     * @return model view
+     */
+    public ScrabbleView getView() {
+        return view;
+    }
+
+    /**
      * Method to display message
      *
      * @param message a string message to display
      */
     //method to display messages
-    private void showMessage(String message) {
+    public void showMessage(String message) {
         if(!isTest) {
             JOptionPane.showMessageDialog(view.getFrame(), message);
         }

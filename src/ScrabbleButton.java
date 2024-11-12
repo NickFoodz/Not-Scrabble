@@ -16,6 +16,22 @@ public class ScrabbleButton extends JButton {
     private Color tileColor = new Color(227,207,170);
     private boolean empty;
 
+    /**
+     * Default constructor for scrabble button
+     */
+    public ScrabbleButton() {
+        //Button initialization
+        super();
+        setOpaque(true);
+        setBackground(Color.WHITE);
+        setForeground(Color.BLACK);
+        setEnabled(true); // enable button for use
+        //Field initialization
+        this.score = 0;
+        this.empty= true; //Active for play.
+        this.tile = null; //Starts with no tile
+    }
+
     public ScrabbleButton(int rw, int col){
         //Button initialization
         super();
@@ -29,7 +45,6 @@ public class ScrabbleButton extends JButton {
         this.score = 0;
         this.empty= true; //Active for play.
         this.tile = null; //Starts with no tile
-
     }
     /**
      * Gets the row of the button
@@ -77,6 +92,15 @@ public class ScrabbleButton extends JButton {
         setEnabled(true); // enable button for use
         char ch = 'A';
         setText(Character.toString(ch + column) + (row + 1));
+    }
+
+    public void revertExchangeTile(){
+        this.empty = true;
+        setOpaque(true);
+        setBackground(Color.WHITE);
+        setForeground(Color.BLACK);
+        setEnabled(true); // enable button for use
+        setText("");
     }
 
     /**
