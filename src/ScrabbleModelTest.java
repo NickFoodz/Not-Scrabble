@@ -33,6 +33,7 @@ public class ScrabbleModelTest {
         assertEquals(game.getCurrentPlayer(), player2);
         game.handlePass(game.getCurrentPlayer());
         assertEquals(game.getCurrentPlayer(), player1);
+        System.out.println("handlePass test successful\n");
     }
 
     @Test
@@ -54,24 +55,27 @@ public class ScrabbleModelTest {
         //Save current rack before exchange to check if it is different from next
         ArrayList<Tile> hand = new ArrayList<>();
         hand.addAll(game.getCurrentPlayer().getRack());
-
-        for(Tile tile : hand){System.out.print(tile.getLetter()+ "|");}
-        System.out.println();
+        //for(Tile tile : hand){System.out.print(tile.getLetter()+ "|");}
+        //System.out.println();
         ArrayList<String> toExchange = new ArrayList<>();
         //Set two tiles to exchange
         toExchange.add(String.valueOf(game.getCurrentPlayer().getRack().get(0).getLetter()));
+
         //Prints letter to be exchanged
-        for(String str: toExchange){System.out.println(str);}
+        //for(String str: toExchange){System.out.println(str);}
+
+        //Set tiles to exchange and use turn to exchange
         game.getCurrentPlayer().setTilesToExchange(toExchange);
         game.handleExchange(game.getCurrentPlayer());
         assertEquals(game.getCurrentPlayer(), player2);
         //Switch back to player 1
         game.handlePass(game.getCurrentPlayer());
+
         //Prints the new rack
-        System.out.println("Rack from game:");
-        for(Tile tile : game.getCurrentPlayer().getRack()){System.out.print(tile.getLetter()+ "|");}
-        System.out.println("\nRack stored from before exchange:");
-        for(Tile tile : hand){System.out.print(tile.getLetter()+ "|");}
+        //System.out.println("Rack from game:");
+        //for(Tile tile : game.getCurrentPlayer().getRack()){System.out.print(tile.getLetter()+ "|");}
+        //System.out.println("\nRack stored from before exchange:");
+        //for(Tile tile : hand){System.out.print(tile.getLetter()+ "|");}
 
         boolean sameRack = true;
         for(Tile tile : hand){
@@ -79,6 +83,7 @@ public class ScrabbleModelTest {
         }
         //Check if rack is different
         assertFalse(sameRack);
+        System.out.println("handleExchange test successful\n");
     }
 
     @Test
@@ -114,7 +119,7 @@ public class ScrabbleModelTest {
         map.put(i, i8);
         game.getCurrentPlayer().setTilesPlayed(map);
         assertTrue(game.handlePlay(game.getCurrentPlayer()));
-
+        System.out.println("handlePlay test successful\n");
 
     }
 
@@ -132,6 +137,7 @@ public class ScrabbleModelTest {
         //Switches player and should be player 2
         game.nextPlayerTurn();
         assertEquals(game.getCurrentPlayer(), player2);
+        System.out.println("nextPlayerTurn test successful\n");
     }
 
     @Test
@@ -145,6 +151,7 @@ public class ScrabbleModelTest {
         ScrabbleModel game = new ScrabbleModel(playerList);
         //Test that current player is player 1
         assertEquals(game.getCurrentPlayer(), (player1));
+        System.out.println("getCurrentPlayer test successful\n");
 
     }
 
@@ -159,6 +166,7 @@ public class ScrabbleModelTest {
         ScrabbleModel game = new ScrabbleModel(playerList);
         //Test that current game players list has same players as the one we made
         assertEquals(game.getPlayers(),playerList);
+        System.out.println("getPlayers test successful\n");
     }
 
     //    @Test - Nothing to test
