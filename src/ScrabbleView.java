@@ -107,8 +107,6 @@ public class ScrabbleView extends JFrame{
      */
     public void handlePassAction() {
         game.handlePass(game.getCurrentPlayer());
-        game.showMessage("You passed your turn");
-        game.showMessage(game.getCurrentPlayer().getName() + "'s score: " + game.getCurrentPlayer().getScore());
         updateViewForCurrentPlayer();  // refresh display after pass
     }
 

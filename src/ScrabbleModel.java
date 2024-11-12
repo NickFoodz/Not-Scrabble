@@ -22,6 +22,7 @@ public class ScrabbleModel {
     private ArrayList<String> dictionary;
     private int turnNumber;
     private ScrabbleView view;
+    private boolean isTest;
 
     /**
      * Constructor for Game class
@@ -39,6 +40,7 @@ public class ScrabbleModel {
         this.view = view;
         dictionary = new ArrayList<String>();
         dictionary = createDictionary();
+        isTest = false;
 
 
         for (int i = 1; i <= numPlayers; i++) {
@@ -70,6 +72,7 @@ public class ScrabbleModel {
         this.wordsInPlay = new ArrayList<>();
         dictionary = new ArrayList<String>();
         dictionary = createDictionary();
+        isTest = true;
 
         for(Player player : players){
             player.drawTiles(gameBag, 7);
@@ -198,7 +201,7 @@ public class ScrabbleModel {
      *
      * @param currentPlayer the player whose turn it is
      */
-    public int handlePlay(Player currentPlayer) {
+    public boolean handlePlay(Player currentPlayer) {
 
         // Step 1: get tiles played
         Map<Tile, Position> tilesToPlay = currentPlayer.getTilesPlayed();
@@ -210,16 +213,16 @@ public class ScrabbleModel {
         // check if at least one tile was played
         if (tilesToPlay.isEmpty()) {
             showMessage("No tiles placed on the board. Please place tiles before playing.");
-            return 5;
+            return false;
         }
 
         // Step 2: Validate tile alignment and adjacency
         List<Position> positions = new ArrayList<>(tilesToPlay.values());
-        if (validateAlignmentAndAdjacency(positions) != 0) {
+        if (!validateAlignmentAndAdjacency(positions)) {
             revertTiles(tilesToPlay); // revert tiles on board
-            view.getBoardPanel().revertTiles(currentPlayer); // clear gui
+            if(!isTest) {view.getBoardPanel().revertTiles(currentPlayer);} // clear gui
             currentPlayer.clearTilesPlayed(); // clear played tiles
-            return validateAlignmentAndAdjacency(positions);
+            return false;
         }
 
         // Step 3: Place tiles and validate words
@@ -229,7 +232,7 @@ public class ScrabbleModel {
             turnNumber++;
         } else {
             revertTiles(tilesToPlay); // Revert if play fails
-            view.getBoardPanel().revertTiles(currentPlayer); // clear gui
+            if(!isTest) {view.getBoardPanel().revertTiles(currentPlayer);} // clear gui
             currentPlayer.clearTilesPlayed(); // Clear the played tiles to reset
         }
         checkGameOver();
@@ -237,7 +240,7 @@ public class ScrabbleModel {
         gameBoard.displayBoard(); // test
         System.out.println("Turn#: " + turnNumber); // test
         System.out.println("WIP: " + wordsInPlay); // test
-        return 0;
+        return true;
     }
 //      From Milestone 1
 //    // Parses and validates the player's input, returns tiles to play if valid, null otherwise
@@ -283,24 +286,24 @@ public class ScrabbleModel {
      * @param positions the positions of the tiles to be placed
      * @return true if valid alignment and adjacency
      */
-    private int validateAlignmentAndAdjacency(List<Position> positions) {
+    private boolean validateAlignmentAndAdjacency(List<Position> positions) {
         WordValidator wordValidator = new WordValidator(gameBoard, dictionary);
 
         if (!wordValidator.arePositionsAligned(positions)) {
-            //showMessage("Invalid formation, tiles must be in a straight line");
-            return 1;
+            showMessage("Invalid formation, tiles must be in a straight line");
+            return false;
         }
 
         if (!wordsInPlay.isEmpty() && !wordValidator.isConnectedToAdjacentTiles(positions)) {
-            //showMessage("Invalid formation, must be adjacent to existing tiles");
-            return 2;
+            showMessage("Invalid formation, must be adjacent to existing tiles");
+            return false;
         }
 
         if (wordsInPlay.isEmpty()) {
             return validateFirstPlay(positions);
         }
 
-        return 0;
+        return true;
     }
 
     /**
@@ -310,21 +313,21 @@ public class ScrabbleModel {
      * @return true if valid first move
      */
     // Validates the first play to ensure it covers the center and has at least 2 tiles
-    private int validateFirstPlay(List<Position> positions) {
+    private boolean validateFirstPlay(List<Position> positions) {
         Position center = gameBoard.parsePosition("H8");
         WordValidator wordValidator = new WordValidator(gameBoard, dictionary);
         //Check if tile placed on H8
         if (!positions.contains(center)) {
             showMessage("First word must cover center square (H8)");
-            return 3;
+            return false;
         }
 
         //Check if word has at least 2 letters
         if (positions.size() < 2) {
             showMessage("First turn must play at least 2 tiles");
-            return 4;
+            return false;
         }
-        return 0;
+        return true;
     }
 
     /**
@@ -359,6 +362,9 @@ public class ScrabbleModel {
 
         // Update game state for valid play
         wordsInPlay = attemptedWords;
+        for(Tile tileToRemove : tilesToPlay.keySet()){
+            currentPlayer.removeTile(String.valueOf(tileToRemove.getLetter()));
+        }
         currentPlayer.drawTiles(gameBag, tilesToPlay.size());
         int turnScore = calculateScore(newWords);
         currentPlayer.setScore(currentPlayer.getScore() + turnScore);
@@ -499,20 +505,11 @@ public class ScrabbleModel {
      * @param message a string message to display
      */
     //method to display messages
-    public void showMessage(String message) {
-        JOptionPane.showMessageDialog(view.getFrame(), message);
+    private void showMessage(String message) {
+        if(!isTest) {
+            JOptionPane.showMessageDialog(view.getFrame(), message);
+        }
     }
 
-    private String errorMessage(int errorCode){
-        switch(errorCode){
-            case 0: return null;
-            case 1: return "Invalid Formation, tiles must be in straight lines.";
-            case 2: return "Invalid Formation, must be adjacent to existing tiles";
-            case 3: return "First word must cover center square (H8)";
-            case 4: return "First turn must play at least 2 tiles";
-            case 5: return "No tiles placed on board, please place tiles before playing";
-        }
-        return null;
-    }
 
 }

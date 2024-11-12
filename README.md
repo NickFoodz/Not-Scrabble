@@ -9,7 +9,7 @@ Created by Nick Fuda and Andrew Roberts
 Known Bugs:
 - When inputting a non integer input for number of players, the game can crash.
 - An invalid placement of 2 or more tiles sometimes registers as valid if they are in the same row/column
--**ADD MORE**
+- Clicking a button twice may cause the input to read invalid until you pass. Next player should have it work.
 
 
 ***************************************************************************************************************

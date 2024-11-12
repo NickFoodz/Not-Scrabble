@@ -174,4 +174,18 @@ public class Player {
     public void clearTilesPlayed() {
         tilesPlayed.clear();
     }
+
+    /**
+     * Sets player's rack for testing purposes
+     * @param tiles the tiles you want the player to have
+     */
+    public void setRack(ArrayList<Tile> tiles){this.rack = tiles;}
+
+    /**
+     * Sets tiles played for player; for testing purposes
+     */
+    public void setTilesPlayed(Map<Tile,Position> playTiles){
+        tilesPlayed = playTiles;
+    }
+
 }
