@@ -98,7 +98,7 @@ public class WordValidator {
                    }
                 }
                 //Check if there is a tile occupying each space between
-                for(int i = min; i < max; i++){
+                for(int i = min + 1; i < max; i++){
                     if(!board.getPosition(i,sameRowOrColumn).isOccupied()){
                         return false;
                     }
@@ -122,7 +122,7 @@ public class WordValidator {
                     }
                 }
                 //Check if there is a tile occupying each space between first and last tiles to place
-                for(int i = min; i < max; i++){
+                for(int i = min + 1; i < max; i++){
                     if(!board.getPosition(sameRowOrColumn, i).isOccupied()){
                         return false;
                     }
