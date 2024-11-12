@@ -203,10 +203,6 @@ public class ScrabbleModel {
         // Step 1: get tiles played
         Map<Tile, Position> tilesToPlay = currentPlayer.getTilesPlayed();
 
-        gameBoard.displayBoard(); // test
-        System.out.println("Turn#: " + turnNumber); // test
-        System.out.println("WIP: " + wordsInPlay); // test
-
         // check if at least one tile was played
         if (tilesToPlay.isEmpty()) {
             showMessage("No tiles placed on the board. Please place tiles before playing.");
@@ -238,9 +234,6 @@ public class ScrabbleModel {
         }
         checkGameOver();
 
-        gameBoard.displayBoard(); // test
-        System.out.println("Turn#: " + turnNumber); // test
-        System.out.println("WIP: " + wordsInPlay); // test
         return true;
     }
 //      From Milestone 1
@@ -485,6 +478,10 @@ public class ScrabbleModel {
 
     public Player getCurrentPlayer() {
         return players.get(currentPlayerIndex);
+    }
+
+    public Player getLastPlayer(){
+        return players.get((currentPlayerIndex - 1 + players.size()) % players.size());
     }
 
     public List<Player> getPlayers() {
