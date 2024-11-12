@@ -62,7 +62,7 @@ public class ScrabbleModel {
     /**
      * Constructor primarily used for test-cases. Does not use GUI, just tests model.
      */
-    public ScrabbleModel(ArrayList<Player> playerList){
+    public ScrabbleModel(ArrayList<Player> playerList) {
         gameBoard = new Board();
         gameBag = new Bag();
         players = playerList;
@@ -74,7 +74,7 @@ public class ScrabbleModel {
         dictionary = createDictionary();
         isTest = true;
 
-        for(Player player : players){
+        for (Player player : players) {
             player.drawTiles(gameBag, 7, this);
         }
         currentPlayerIndex = 0;
@@ -171,12 +171,8 @@ public class ScrabbleModel {
      * @param currentPlayer the player whose turn it is
      */
     public void handleExchange(Player currentPlayer) {
-        ArrayList<String> exchangeTiles = new ArrayList<>();
-
         // get selected tiles to exchange
-        for (Tile tile : view.getPlayerRackPanel().getSelectedTilesForExchange()){
-            exchangeTiles.add(String.valueOf(tile.getLetter()));
-        }
+        ArrayList<String> exchangeTiles = currentPlayer.getTilesToExchange();
 
         int numTilesToDraw = 0;
         //Determine how many tiles to replace, remove tiles from rack
@@ -220,7 +216,9 @@ public class ScrabbleModel {
         List<Position> positions = new ArrayList<>(tilesToPlay.values());
         if (!validateAlignmentAndAdjacency(positions)) {
             revertTiles(tilesToPlay); // revert tiles on board
-            if(!isTest) {view.getBoardPanel().revertTiles(currentPlayer);} // clear gui
+            if (!isTest) {
+                view.getBoardPanel().revertTiles(currentPlayer);
+            } // clear gui
             currentPlayer.clearTilesPlayed(); // clear played tiles
             return false;
         }
@@ -232,7 +230,9 @@ public class ScrabbleModel {
             turnNumber++;
         } else {
             revertTiles(tilesToPlay); // Revert if play fails
-            if(!isTest) {view.getBoardPanel().revertTiles(currentPlayer);} // clear gui
+            if (!isTest) {
+                view.getBoardPanel().revertTiles(currentPlayer);
+            } // clear gui
             currentPlayer.clearTilesPlayed(); // Clear the played tiles to reset
         }
         checkGameOver();
@@ -362,7 +362,7 @@ public class ScrabbleModel {
 
         // Update game state for valid play
         wordsInPlay = attemptedWords;
-        for(Tile tileToRemove : tilesToPlay.keySet()){
+        for (Tile tileToRemove : tilesToPlay.keySet()) {
             currentPlayer.removeTile(String.valueOf(tileToRemove.getLetter()));
         }
         currentPlayer.drawTiles(gameBag, tilesToPlay.size(), this);
@@ -501,6 +501,7 @@ public class ScrabbleModel {
 
     /**
      * Getter for model view
+     *
      * @return model view
      */
     public ScrabbleView getView() {
@@ -514,7 +515,7 @@ public class ScrabbleModel {
      */
     //method to display messages
     public void showMessage(String message) {
-        if(!isTest) {
+        if (!isTest) {
             JOptionPane.showMessageDialog(view.getFrame(), message);
         }
     }

@@ -116,6 +116,15 @@ public class ScrabbleView extends JFrame{
      * Handle Exchange
      */
     public void handleSwapAction() {
+        // get tiles to exchange
+        ArrayList<String> tilesToExchange = new ArrayList<>();
+        for (Tile tile : playerRackPanel.getSelectedTilesForExchange()){
+            tilesToExchange.add(String.valueOf(tile.getLetter()));
+        }
+        // set tiles to exchange
+        game.getCurrentPlayer().setTilesToExchange(tilesToExchange);
+
+        // handle exchange
         game.handleExchange(game.getCurrentPlayer());
         playerRackPanel.clearExchangePanel();
         updateViewForCurrentPlayer();  // refresh display after swap

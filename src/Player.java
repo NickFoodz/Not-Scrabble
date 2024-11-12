@@ -1,8 +1,4 @@
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Class Player represents a player in "Not Scrabble" games. Deals with actions
@@ -15,6 +11,7 @@ public class Player {
     private ArrayList<Tile> rack; //the tiles the player currently holds
     private int score; //the players score
     private Map<Tile, Position> tilesPlayed; // tiles played in current turn
+    private ArrayList<String> tilesToExchange; // tiles the play wishes to exchange
 
     /**
      * Creates new player object with corresponding name
@@ -26,6 +23,7 @@ public class Player {
         rack = new ArrayList<Tile>();
         score = 0;
         tilesPlayed = new HashMap<>();
+        tilesToExchange = new ArrayList<>();
     }
 
     /**
@@ -191,4 +189,19 @@ public class Player {
         tilesPlayed = playTiles;
     }
 
+    /**
+     * getter for tiles to exchange
+     * @return the tiles the player wishes to exchange
+     */
+    public ArrayList<String> getTilesToExchange() {
+        return tilesToExchange;
+    }
+
+    /**
+     * Sets tiles to exchange
+     * @param tilesToExchange the tiles the player is exchanging
+     */
+    public void setTilesToExchange(ArrayList<String> tilesToExchange){
+        this.tilesToExchange = tilesToExchange;
+    }
 }
