@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.Character;
+import java.util.ArrayList;
 
 /**
  * Class ScrabbleBoardPanel represents the Scrabble Board in a game of scrabble. It provides
@@ -15,6 +16,7 @@ public class ScrabbleBoardPanel extends JPanel {
     private final ScrabbleButton[][] boardButtons; // the board buttons
     private final PlayerRackPanel playerRackPanel; // the players rack
     private final ScrabbleView scrabbleView; // reference to scrabble view
+    private ArrayList<Position> placedTilesPosition; // tiles placed this turn
 
     public ScrabbleBoardPanel(PlayerRackPanel rackPanel, ScrabbleView view) {
         this.playerRackPanel = rackPanel;
@@ -56,7 +58,7 @@ public class ScrabbleBoardPanel extends JPanel {
                 boardButtons[row][col].setEnabled(false);
                 scrabbleView.setSelectedTile(null);
 
-                // Add tile to playedTiles field for current player
+                // Add tile to playedTiles field for current player and add it to placedTiles
                 Position position = ScrabbleModel.getGameBoard().getPosition(row, col);
                 scrabbleView.getGame().getCurrentPlayer().addTilesPlayed(tile, position);
             }

@@ -74,7 +74,7 @@ public class ScrabbleView extends JFrame{
      */
     private void updateViewForCurrentPlayer(){
         playerRackPanel.updateRack(game.getCurrentPlayer().getRack());
-        playerScoreLabel.get(game.getCurrentPlayer()).setText(game.getCurrentPlayer().getName()+" score: " + game.getCurrentPlayer().getScore());
+        playerScoreLabel.get(game.getLastPlayer()).setText(game.getLastPlayer().getName()+" score: " + game.getLastPlayer().getScore());
         frame.repaint();
     }
 
@@ -107,8 +107,9 @@ public class ScrabbleView extends JFrame{
      * Handle Pass
      */
     public void handlePassAction() {
+        boardPanel.revertTiles(game.getCurrentPlayer()); // clear any tiles that were placed on board before pass
         game.handlePass(game.getCurrentPlayer());
-        playerRackPanel.clearExchangePanel();
+        playerRackPanel.clearExchangePanel(); // clear exchange panel
         updateViewForCurrentPlayer();  // refresh display after pass
     }
 
@@ -116,6 +117,8 @@ public class ScrabbleView extends JFrame{
      * Handle Exchange
      */
     public void handleSwapAction() {
+        boardPanel.revertTiles(game.getCurrentPlayer()); // clear any tiles that were placed on board before swap
+
         // get tiles to exchange
         ArrayList<String> tilesToExchange = new ArrayList<>();
         for (Tile tile : playerRackPanel.getSelectedTilesForExchange()){
@@ -126,7 +129,8 @@ public class ScrabbleView extends JFrame{
 
         // handle exchange
         game.handleExchange(game.getCurrentPlayer());
-        playerRackPanel.clearExchangePanel();
+
+        playerRackPanel.clearExchangePanel(); // clear exchange panel
         updateViewForCurrentPlayer();  // refresh display after swap
     }
 
