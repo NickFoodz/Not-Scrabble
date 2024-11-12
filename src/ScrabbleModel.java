@@ -207,7 +207,7 @@ public class ScrabbleModel {
         }
 
         // Step 3: Place tiles and validate words
-        if (attemptPlay(currentPlayer, tilesToPlay)) {
+        if (attemptPlay(currentPlayer, tilesToPlay, positions)) {
             currentPlayer.clearTilesPlayed(); // clear stored played tiles
             currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
             turnNumber++;
@@ -278,6 +278,7 @@ public class ScrabbleModel {
             showMessage("Invalid formation, must be adjacent to existing tiles");
             return false;
         }
+
         if (wordsInPlay.isEmpty()) {
             return validateFirstPlay(positions);
         }
@@ -317,11 +318,16 @@ public class ScrabbleModel {
      * @return true if successful move, false otherwise
      */
     // Places tiles on the board, validates words, and updates score if valid
-    private boolean attemptPlay(Player currentPlayer, Map<Tile, Position> tilesToPlay) {
+    private boolean attemptPlay(Player currentPlayer, Map<Tile, Position> tilesToPlay, List<Position> positions) {
         WordValidator wordValidator = new WordValidator(gameBoard, dictionary);
 
         for (Map.Entry<Tile, Position> entry : tilesToPlay.entrySet()) {
             gameBoard.placeTile(entry.getKey(), entry.getValue().getRow(), entry.getValue().getCol());
+        }
+
+        if (!wordValidator.isConnectedToOtherTilesInTurn(positions)) {
+            showMessage("Invalid formation, there must not be empty spaces between tiles");
+            return false;
         }
 
         List<String> attemptedWords = gameBoard.gatherWordsOnBoard();
