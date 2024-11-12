@@ -52,7 +52,9 @@ public class ScrabbleModelTest {
         assertEquals(game.getCurrentPlayer(), (player1));
 
         //Save current rack before exchange to check if it is different from next
-        final ArrayList<Tile> hand = game.getCurrentPlayer().getRack();
+        ArrayList<Tile> hand = new ArrayList<>();
+        hand.addAll(game.getCurrentPlayer().getRack());
+
         for(Tile tile : hand){System.out.print(tile.getLetter()+ "|");}
         System.out.println();
         ArrayList<String> toExchange = new ArrayList<>();
@@ -68,7 +70,7 @@ public class ScrabbleModelTest {
         //Prints the new rack
         System.out.println("Rack from game:");
         for(Tile tile : game.getCurrentPlayer().getRack()){System.out.print(tile.getLetter()+ "|");}
-        System.out.println("Rack stored from before exchange:");
+        System.out.println("\nRack stored from before exchange:");
         for(Tile tile : hand){System.out.print(tile.getLetter()+ "|");}
 
         boolean sameRack = true;
