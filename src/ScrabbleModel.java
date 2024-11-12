@@ -75,32 +75,33 @@ public class ScrabbleModel {
         return dictionary;
     }
 
-    /**
-     * Method start initializes the game and checks if it is over.
-     */
-    public void start() {
-        showMessage("Welcome to \"Not Scrabble\"");
-        //Checks if game is over. If not, repeat
-        while (!gameOver) {
-            takeTurn();
-            checkGameOver();
-        }
-        displayScores();
-    }
+    // from milestone 1
+//    /**
+//     * Method start initializes the game and checks if it is over.
+//     */
+//    public void start() {
+//        showMessage("Welcome to \"Not Scrabble\"");
+//        //Checks if game is over. If not, repeat
+//        while (!gameOver) {
+//            takeTurn();
+//            checkGameOver();
+//        }
+//        displayScores();
+//    }
 
-    /**
-     * Method takeTurn() allows players to choose to Pass, Exchange Tiles, or Play their turn.
-     */
-    public void takeTurn() {
-        Player currentPlayer = players.get(currentPlayerIndex);
-        showMessage(currentPlayer.getName() + " 's turn");
-
-        //Display board and score
-        gameBoard.displayBoard();
-        currentPlayer.showTiles();
-        showMessage(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
-
-//         Part of the first milestone
+    //         Part of the first milestone
+//    /**
+//     * Method takeTurn() allows players to choose to Pass, Exchange Tiles, or Play their turn.
+//     */
+//    public void takeTurn() {
+//        Player currentPlayer = players.get(currentPlayerIndex);
+//        showMessage(currentPlayer.getName() + " 's turn");
+//
+//        //Display board and score
+//        gameBoard.displayBoard();
+//        currentPlayer.showTiles();
+//        showMessage(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
+//
 //        //Ask player to make choice for their turn
 //        boolean validChoice = false;
 //        do {
@@ -127,10 +128,11 @@ public class ScrabbleModel {
 //                    showMessage("Invalid choice");
 //            }
 //        } while (!validChoice);
-    }
+//  }
 
     /**
      * Handler for passing a turn
+     *
      * @param currentPlayer the player who will pass the turn
      */
     public void handlePass(Player currentPlayer) {
@@ -139,6 +141,7 @@ public class ScrabbleModel {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         successiveScorelessTurns++;
         turnNumber++;
+        checkGameOver();
     }
 
     /**
@@ -170,6 +173,7 @@ public class ScrabbleModel {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         successiveScorelessTurns++;
         turnNumber++;
+        checkGameOver();
 
     }
 
@@ -185,7 +189,7 @@ public class ScrabbleModel {
 
         gameBoard.displayBoard(); // test
         System.out.println("Turn#: " + turnNumber); // test
-        System.out.println("WIP: "+ wordsInPlay); // test
+        System.out.println("WIP: " + wordsInPlay); // test
 
         // check if at least one tile was played
         if (tilesToPlay.isEmpty()) {
@@ -212,9 +216,11 @@ public class ScrabbleModel {
             view.getBoardPanel().revertTiles(currentPlayer); // clear gui
             currentPlayer.clearTilesPlayed(); // Clear the played tiles to reset
         }
+        checkGameOver();
+
         gameBoard.displayBoard(); // test
         System.out.println("Turn#: " + turnNumber); // test
-        System.out.println("WIP: "+ wordsInPlay); // test
+        System.out.println("WIP: " + wordsInPlay); // test
     }
 //      From Milestone 1
 //    // Parses and validates the player's input, returns tiles to play if valid, null otherwise
@@ -256,6 +262,7 @@ public class ScrabbleModel {
 
     /**
      * Checks tile adjacency, alignment, and rule compliance
+     *
      * @param positions the positions of the tiles to be placed
      * @return true if valid alignment and adjacency
      */
@@ -280,6 +287,7 @@ public class ScrabbleModel {
 
     /**
      * Validates the first play to ensure it covers the center tile H8 and has at least 2 tiles
+     *
      * @param positions positions of the tiles to be played
      * @return true if valid first move
      */
@@ -292,11 +300,7 @@ public class ScrabbleModel {
             showMessage("First word must cover center square (H8)");
             return false;
         }
-        //Check if positions are aligned
-        if (!wordValidator.arePositionsAligned(positions)) {
-            showMessage("Invalid formation, tiles must be in a straight line");
-            return false;
-        }
+
         //Check if word has at least 2 letters
         if (positions.size() < 2) {
             showMessage("First turn must play at least 2 tiles");
@@ -307,8 +311,9 @@ public class ScrabbleModel {
 
     /**
      * Attempts to play a turn
+     *
      * @param currentPlayer the player whose turn it is
-     * @param tilesToPlay the tiles the player is trying to play
+     * @param tilesToPlay   the tiles the player is trying to play
      * @return true if successful move, false otherwise
      */
     // Places tiles on the board, validates words, and updates score if valid
@@ -375,11 +380,10 @@ public class ScrabbleModel {
         } else if (successiveScorelessTurns >= 6) {
             //If players are skipping consecutively, give them the option to end the game
             boolean validChoice = false;
-            showMessage(successiveScorelessTurns + " scoreless turns have passed, would you like to continue the game? Type Yes or No");
 
             //if not yes or no, demand a valid command
             while (!validChoice) {
-                String continuePlaying = scanner.nextLine();
+                String continuePlaying = JOptionPane.showInputDialog(successiveScorelessTurns + " scoreless turns have passed, would you like to continue the game? Type Yes or No");
                 if (continuePlaying.equalsIgnoreCase("yes")) {
                     validChoice = true;
                     gameOver = false;
@@ -409,21 +413,21 @@ public class ScrabbleModel {
     }
 
     /**
-     * Method displayScores() will display each player's score and also choose the winenr based on the highest score
+     * Iterates through the player list and finds the player with the highest score
+     *
+     * @Return the winning player
      */
-    private void displayScores() {
+    private Player getWinner() {
         //Make winner variable the first player by default
         Player winner = players.get(currentPlayerIndex);
-        showMessage("Game over! Final scores:");
-        //Print each player's score
+
+        // find player with the highest score
         for (Player player : players) {
             if (player.getScore() > winner.getScore()) {
                 winner = player;
             }
-            showMessage(player.getName() + ": " + player.getScore());
         }
-        //Print winner and score
-        showMessage("The winner is " + winner.getName() + " with a score of " + winner.getScore() + "!");
+        return winner;
     }
 
     /**
@@ -453,7 +457,9 @@ public class ScrabbleModel {
         return players.get(currentPlayerIndex);
     }
 
-    public List<Player> getPlayers(){return players;}
+    public List<Player> getPlayers() {
+        return players;
+    }
 
     /**
      * Getter for game board
@@ -466,6 +472,7 @@ public class ScrabbleModel {
 
     /**
      * Method to display message
+     *
      * @param message a string message to display
      */
     //method to display messages
