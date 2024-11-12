@@ -52,13 +52,31 @@ public class ScrabbleModelTest {
         assertEquals(game.getCurrentPlayer(), (player1));
 
         //Save current rack before exchange to check if it is different from next
-        ArrayList<Tile> hand = game.getCurrentPlayer().getRack();
+        final ArrayList<Tile> hand = game.getCurrentPlayer().getRack();
+        for(Tile tile : hand){System.out.print(tile.getLetter()+ "|");}
+        System.out.println();
+        ArrayList<String> toExchange = new ArrayList<>();
+        //Set two tiles to exchange
+        toExchange.add(String.valueOf(game.getCurrentPlayer().getRack().get(0).getLetter()));
+        //Prints letter to be exchanged
+        for(String str: toExchange){System.out.println(str);}
+        game.getCurrentPlayer().setTilesToExchange(toExchange);
         game.handleExchange(game.getCurrentPlayer());
         assertEquals(game.getCurrentPlayer(), player2);
         //Switch back to player 1
         game.handlePass(game.getCurrentPlayer());
+        //Prints the new rack
+        System.out.println("Rack from game:");
+        for(Tile tile : game.getCurrentPlayer().getRack()){System.out.print(tile.getLetter()+ "|");}
+        System.out.println("Rack stored from before exchange:");
+        for(Tile tile : hand){System.out.print(tile.getLetter()+ "|");}
+
+        boolean sameRack = true;
+        for(Tile tile : hand){
+            if(!game.getCurrentPlayer().getRack().contains(tile)){sameRack = false;}
+        }
         //Check if rack is different
-        assertNotEquals(hand, game.getCurrentPlayer().getRack());
+        assertFalse(sameRack);
     }
 
     @Test
