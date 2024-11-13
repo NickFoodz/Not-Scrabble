@@ -9,6 +9,7 @@ import java.util.Map;
 
 /**
  * PlayerRackPanel is a JPanel that shows the player rack
+ *
  * @author Andrew Roberts
  * @version 1
  */
@@ -30,6 +31,7 @@ public class PlayerRackPanel extends JPanel {
 
     /**
      * Constructor for PlayerRackPanel
+     *
      * @param rack the player's rack to be represented
      * @param view the JFrame GUI instance
      */
@@ -116,6 +118,7 @@ public class PlayerRackPanel extends JPanel {
 
     /**
      * Updates the rack display
+     *
      * @param tiles the tiles in the rack
      */
     public void updateRack(List<Tile> tiles) {
@@ -147,16 +150,27 @@ public class PlayerRackPanel extends JPanel {
         }
     }
 
+    /**
+     * Method for getting a list of the tiles the player selected for exchanging
+     *
+     * @return List of selected tiles
+     */
     public List<Tile> getSelectedTilesForExchange() {
         return selectedTilesForExchange;
     }
 
+    /**
+     * Method for getting the list of exchange buttons in a player's rack
+     *
+     * @return List of exchange buttons
+     */
     public List<ScrabbleButton> getExchangeButtons() {
         return exchangeButtons;
     }
 
     /**
      * Helper Class for TileButtons
+     *
      * @author Andrew Roberts
      * @version 1
      */
@@ -164,11 +178,22 @@ public class PlayerRackPanel extends JPanel {
         private Tile tile;
         private JButton tileButton;
 
+        /**
+         * Action listener for player's rack tiles
+         *
+         * @param tile       the tile assigned to the button
+         * @param tileButton the tile button selected
+         */
         public TileButtonListener(Tile tile, JButton tileButton) {
             this.tile = tile;
             this.tileButton = tileButton;
         }
 
+        /**
+         * action event to pass the selected tile to the view and disable button
+         *
+         * @param e the event to be processed
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             scrabbleView.setSelectedTile(tile);
@@ -178,16 +203,27 @@ public class PlayerRackPanel extends JPanel {
 
     /**
      * Helper class for Exchange buttons
+     *
      * @author Andrew Roberts
      * @version 1
      */
     private class ExchangeButtonListener implements ActionListener {
         private int index;
 
+        /**
+         * Action listener for exchange buttons
+         *
+         * @param index the index of the exchange button the player selected
+         */
         public ExchangeButtonListener(int index) {
             this.index = index;
         }
 
+        /**
+         * Action event to pass tiles to view to be stored for an exchange
+         *
+         * @param e the event to be processed
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             Tile tile = scrabbleView.getSelectedTile();

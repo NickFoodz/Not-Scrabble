@@ -10,7 +10,7 @@ Known Bugs:
 - When inputting a non integer input for number of players, the game can crash.
 - An invalid placement of 2 or more tiles sometimes registers as valid if they are in the same row/column
 - Clicking a button twice may cause the input to read invalid until you pass. Next player should have it work.
-
+- Undo button does not re-enable the selected tile from the player's rack.
 
 ***************************************************************************************************************
 
@@ -115,6 +115,7 @@ Milestone 2:
 -Changed "Game" class to "ScrabbleModel" to better reflect the nature of what it is
 -Added ScrabbleView, ScrabbleBoardPanel, PlayerRackPanel, and ScrabbleButton GUI classes.
 -Removed the Parser class and implemented it as a method into ScrabbleModel
+-Created ScrabbleModelTest class
 -Main class removed, replaced with view
 
 - ScrabbleView
@@ -135,6 +136,7 @@ Milestone 2:
   - Changes depending on the current player
   - Allows the players to click a tile, then place it on the board.
     - Data Structures:None
+  - Added an incomplete implementation of UNDO (Undo does not re-enable selected rack tile)
 
 - ScrabbleButton
   - Makes up each place on the board, has coordinates and stores the score and Tile
@@ -150,9 +152,20 @@ Milestone 2:
   - Methods updated to work without Parser
   - Added method to check if tile placements will have gaps.
 
+- Player
+  - Added field to track player's moves in a turn.
+  - Added field to track what tiles a player wishes to exchange in a turn.
+  - Updated drawTiles method to work with the GUI.
+  - Added corresponding getter, setter, add and remove methods for gameplay execution .
+
 - ScrabbleModel
-  - Added getters and setters for fields
-  - Changed handler methods to not require text input 
+  - Completely overhauled class to work with GUI.
+  - Added ScrabbleView field to pass a reference of the game view.
+  - Field isTest to simplify testing applications.
+  - handlePlay was refactored to make adjustments easier and improve readability.
+  - checkGameOver now makes use of GUI to get player input.
+  - Added method showMessage to make GUI feedback dependent on isTest variable.
+  - Added getters and setters for fields.
 ***************************************************************************************************************
 
 Future Goals;
@@ -170,8 +183,10 @@ Milestone 2:
 - Better implementing MVC, which was difficult to do for this milestone, as the two of us were quite busy
   - Such as creating a controller, having view be an interface, having the current view become modelview or frame
 - Get better with GUI, as both of us did not learn programming prior to university.
-- Fix bugs in model and logic
+- Fix bugs in model, logic and GUI.
 - More time to test and develop, especially GUI related components.
+- Addition of blank tiles, premium squares and AI Players.
+- Aim for looser coupling and have higher cohesion
 
 ***************************************************************************************************************
 Other Notes:

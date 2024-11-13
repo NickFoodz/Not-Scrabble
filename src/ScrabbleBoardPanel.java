@@ -8,6 +8,7 @@ import java.util.ArrayList;
 /**
  * Class ScrabbleBoardPanel represents the Scrabble Board in a game of scrabble. It provides
  * the necessary GUI and methods to play the game with an interactive board
+ *
  * @author Andrew Roberts
  * @author Nick Fuda
  * @version 1
@@ -42,11 +43,23 @@ public class ScrabbleBoardPanel extends JPanel {
         private final int row;
         private final int col;
 
+        /**
+         * Action listener for board buttons
+         *
+         * @param row the row of the button selected
+         * @param col the column of the button selected
+         */
         public BoardButtonClickListener(int row, int col) {
             this.row = row;
             this.col = col;
         }
 
+        /**
+         * Action event for board buttons that will place the selected tile
+         * on the board and add it to played tiles of the player for play action
+         *
+         * @param e the event to be processed
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             Tile tile = scrabbleView.getSelectedTile();
@@ -66,17 +79,23 @@ public class ScrabbleBoardPanel extends JPanel {
         }
     }
 
+    /**
+     * Method for getting the board buttons
+     *
+     * @return the board buttons
+     */
     public ScrabbleButton[][] getBoardButtons() {
         return boardButtons;
     }
 
     /**
      * Reverts Tiles if move was invalid
+     *
      * @param player the player to revert tiles to
      */
     public void revertTiles(Player player) {
         for (Position pos : player.getTilesPlayed().values()) {
-                boardButtons[pos.getRow()][pos.getCol()].revertTile();
+            boardButtons[pos.getRow()][pos.getCol()].revertTile();
         }
     }
 }

@@ -3,7 +3,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * The main GUI class for a game of Scrabble. Contains the Frame with the necessary components to play
@@ -13,11 +12,11 @@ import java.util.Map;
  * @version 1
  */
 public class ScrabbleView extends JFrame {
-    private JFrame frame;
-    private ScrabbleBoardPanel boardPanel;
-    private Tile selectedTile;
-    private PlayerRackPanel playerRackPanel;
-    private ScrabbleModel game;
+    private JFrame frame; // main frame for the game
+    private ScrabbleBoardPanel boardPanel; // panel for the board
+    private Tile selectedTile; // tile the player currently has selected
+    private PlayerRackPanel playerRackPanel; // the players' rack
+    private ScrabbleModel game; // the game instance
     private HashMap<Player, JLabel> playerScoreLabel = new HashMap<>() {
     };
 
@@ -161,7 +160,7 @@ public class ScrabbleView extends JFrame {
     }
 
     /**
-     * Handle Undo
+     * Handle Undo (INCOMPLETE)
      */
     public void handleUndoAction() {
         if (game.getCurrentPlayer().getActionsPerformed() != null) {
@@ -211,6 +210,10 @@ public class ScrabbleView extends JFrame {
         return boardPanel;
     }
 
+    /**
+     * Called when the game is over, a window showing each players' score as well the winner is displayed
+     * Quit will exit the program
+     */
     private void displayWinnerScreen() {
         JDialog winnerDialog = new JDialog((Frame) null, "Game Over", true);
         winnerDialog.setLayout(new BorderLayout());
@@ -247,6 +250,12 @@ public class ScrabbleView extends JFrame {
         winnerDialog.setVisible(true);
     }
 
+    /**
+     * Panel to get input on if the user wishes to continue the game
+     *
+     * @param scorelessTurns the number of consecutive scoreless turns
+     * @return 1 if they wish to continue, 0 otherwise
+     */
     public int showGameOverDialog(int scorelessTurns) {
         // Create a custom Yes/No confirmation dialog
         return JOptionPane.showConfirmDialog(

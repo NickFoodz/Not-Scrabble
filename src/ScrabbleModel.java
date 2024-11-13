@@ -16,7 +16,6 @@ public class ScrabbleModel {
     private static Bag gameBag;
     private int currentPlayerIndex;
     private boolean gameOver;
-    private Scanner scanner; //likely leftover code, will test before next milestone
     private int successiveScorelessTurns;
     private List<String> wordsInPlay;
     private ArrayList<String> dictionary;
@@ -43,7 +42,6 @@ public class ScrabbleModel {
         dictionary = createDictionary();
 
 
-
         for (int i = 1; i <= numPlayers; i++) {
             String playerName = JOptionPane.showInputDialog(view.getFrame(), "Enter player " + i + "'s name");
 
@@ -62,6 +60,8 @@ public class ScrabbleModel {
 
     /**
      * Constructor primarily used for test-cases. Does not use GUI, just tests model.
+     *
+     * @param playerList the list of players in the game
      */
     public ScrabbleModel(ArrayList<Player> playerList) {
         gameBoard = new Board();
@@ -82,6 +82,11 @@ public class ScrabbleModel {
 
     }
 
+    /**
+     * creates the dictionary used for the game
+     *
+     * @return array list of all valid words for the game
+     */
     private ArrayList<String> createDictionary() {
         ArrayList<String> dictionary = new ArrayList<String>();
         File dictFile = new File("scrabblewords.txt");
@@ -97,61 +102,6 @@ public class ScrabbleModel {
         }
         return dictionary;
     }
-
-    // from milestone 1
-//    /**
-//     * Method start initializes the game and checks if it is over.
-//     */
-//    public void start() {
-//        showMessage("Welcome to \"Not Scrabble\"");
-//        //Checks if game is over. If not, repeat
-//        while (!gameOver) {
-//            takeTurn();
-//            checkGameOver();
-//        }
-//        displayScores();
-//    }
-
-    //         Part of the first milestone
-//    /**
-//     * Method takeTurn() allows players to choose to Pass, Exchange Tiles, or Play their turn.
-//     */
-//    public void takeTurn() {
-//        Player currentPlayer = players.get(currentPlayerIndex);
-//        showMessage(currentPlayer.getName() + " 's turn");
-//
-//        //Display board and score
-//        gameBoard.displayBoard();
-//        currentPlayer.showTiles();
-//        showMessage(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
-//
-//        //Ask player to make choice for their turn
-//        boolean validChoice = false;
-//        do {
-//            showMessage("Please type Pass, Exchange or Play if you would like to pass your turn, exchange tiles or play tiles respectively");
-//            String choice = scanner.nextLine().toLowerCase();
-//
-//            switch (choice) {
-//                case ("pass"):
-//                    validChoice = true;
-//                    handlePass(currentPlayer);
-//                    break;
-//
-//                case ("exchange"):
-//                    validChoice = true;
-//                    handleExchange(currentPlayer);
-//                    break;
-//
-//                case ("play"):
-//                    validChoice = true;
-//                    handlePlay(currentPlayer);
-//                    break;
-//
-//                default:
-//                    showMessage("Invalid choice");
-//            }
-//        } while (!validChoice);
-//  }
 
     /**
      * Handler for passing a turn
@@ -232,47 +182,11 @@ public class ScrabbleModel {
             } // clear gui
             currentPlayer.clearTilesPlayed(); // Clear the played tiles to reset
         }
+        successiveScorelessTurns = 0; // reset successive scoreless turns counter
         checkGameOver();
 
         return true;
     }
-//      From Milestone 1
-//    // Parses and validates the player's input, returns tiles to play if valid, null otherwise
-//    private Map<Tile, Position> parsePlayerInput(Player currentPlayer) {
-//        showMessage("Please enter tiles and positions (e.g. R:A6, R:A8, E:A9)");
-//        String input = scanner.nextLine();
-//        String[] tilePositionCords = input.split(",");
-//        Map<Tile, Position> tilesToPlay = new HashMap<>();
-//
-//        for (String tileInfo : tilePositionCords) {
-//            String[] info = tileInfo.split(":");
-//            if (info.length != 2) {
-//                showMessage("Invalid format, please use Tile:Position format");
-//                return null;
-//            }
-//
-//            char tileLetter = info[0].trim().toUpperCase().charAt(0);
-//            if (!Character.isLetter(tileLetter)) {
-//                showMessage("Invalid tile letter: " + tileLetter);
-//                return null;
-//            }
-//
-//            Position position = gameBoard.parsePosition(info[1]);
-//            if (position == null || position.isOccupied()) {
-//                showMessage("Invalid position: " + info[1]);
-//                return null;
-//            }
-//
-//            Tile tile = currentPlayer.getTile(String.valueOf(tileLetter));
-//            if (tile == null) {
-//                showMessage("You do not have this tile in your rack: " + tileLetter);
-//                return null;
-//            }
-//
-//            tilesToPlay.put(tile, position);
-//        }
-//        return tilesToPlay;
-//    }
 
     /**
      * Checks tile adjacency, alignment, and rule compliance
@@ -453,19 +367,37 @@ public class ScrabbleModel {
         return score;
     }
 
+    /**
+     * Method for advancing the turn
+     */
     public void nextPlayerTurn() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         successiveScorelessTurns++;
     }
 
+    /**
+     * Method for getting the current player
+     *
+     * @return the current player
+     */
     public Player getCurrentPlayer() {
         return players.get(currentPlayerIndex);
     }
 
-    public Player getLastPlayer(){
+    /**
+     * Method for getter the last player that acted
+     *
+     * @return the last player that acted
+     */
+    public Player getLastPlayer() {
         return players.get((currentPlayerIndex - 1 + players.size()) % players.size());
     }
 
+    /**
+     * Method for getting the list of players in the game
+     *
+     * @return list of game players
+     */
     public List<Player> getPlayers() {
         return players;
     }
@@ -481,6 +413,7 @@ public class ScrabbleModel {
 
     /**
      * determine if game is over
+     *
      * @return true if game is over, false otherwise
      */
     public boolean isGameOver() {
