@@ -32,6 +32,11 @@ public class ScrabbleButton extends JButton {
         this.tile = null; //Starts with no tile
     }
 
+    /**
+     * Constructor for int and row to be assigned, used in ScrabbleBoardPanel
+     * @param rw the row of the button
+     * @param col the column of the button
+     */
     public ScrabbleButton(int rw, int col){
         //Button initialization
         super();

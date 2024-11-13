@@ -16,7 +16,7 @@ public class ScrabbleModel {
     private static Bag gameBag;
     private int currentPlayerIndex;
     private boolean gameOver;
-    private Scanner scanner;
+    private Scanner scanner; //likely leftover code, will test before next milestone
     private int successiveScorelessTurns;
     private List<String> wordsInPlay;
     private ArrayList<String> dictionary;
