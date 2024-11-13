@@ -261,6 +261,8 @@ public class ScrabbleModelTest {
         assertTrue(game.handlePlay(game.getCurrentPlayer()));
         //Check that player's score added correctly (6 from before, played a 2+3 = 5. Should be 11)
         assertEquals(player1.getScore(), 11);
+        System.out.println("testScoring test successful\n");
+
     }
 
 
