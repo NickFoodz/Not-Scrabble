@@ -3,7 +3,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * PlayerRackPanel is a JPanel that shows the player rack
@@ -149,6 +151,10 @@ public class PlayerRackPanel extends JPanel {
         return selectedTilesForExchange;
     }
 
+    public List<ScrabbleButton> getExchangeButtons() {
+        return exchangeButtons;
+    }
+
     /**
      * Helper Class for TileButtons
      * @author Andrew Roberts
@@ -189,7 +195,8 @@ public class PlayerRackPanel extends JPanel {
 
                 exchangeButtons.get(index).placeTile(tile);
                 selectedTilesForExchange.add(tile);
-                tile = null; // Clear selected tile after adding
+                scrabbleView.getGame().getCurrentPlayer().addActionPerformed(tile, true); // add action to hashmap of actions performed by the player
+                scrabbleView.setSelectedTile(null); // Clear selected tile after adding
 
             }
         }

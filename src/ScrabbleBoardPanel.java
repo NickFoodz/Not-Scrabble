@@ -61,8 +61,13 @@ public class ScrabbleBoardPanel extends JPanel {
                 // Add tile to playedTiles field for current player and add it to placedTiles
                 Position position = ScrabbleModel.getGameBoard().getPosition(row, col);
                 scrabbleView.getGame().getCurrentPlayer().addTilesPlayed(tile, position);
+                scrabbleView.getGame().getCurrentPlayer().addActionPerformed(tile, false); // add action to hashmap of actions performed by the player
             }
         }
+    }
+
+    public ScrabbleButton[][] getBoardButtons() {
+        return boardButtons;
     }
 
     /**

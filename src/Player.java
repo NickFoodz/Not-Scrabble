@@ -12,6 +12,7 @@ public class Player {
     private int score; //the players score
     private Map<Tile, Position> tilesPlayed; // tiles played in current turn
     private ArrayList<String> tilesToExchange; // tiles the play wishes to exchange
+    private LinkedHashMap<Tile, Boolean> actionsPerformed; // actions the play took before click play, pass or swap, boolean indicates whether its in exchange panel (0) or board (1)
 
     /**
      * Creates new player object with corresponding name
@@ -24,6 +25,7 @@ public class Player {
         score = 0;
         tilesPlayed = new HashMap<>();
         tilesToExchange = new ArrayList<>();
+        actionsPerformed = new LinkedHashMap<>();
     }
 
     /**
@@ -203,5 +205,29 @@ public class Player {
      */
     public void setTilesToExchange(ArrayList<String> tilesToExchange){
         this.tilesToExchange = tilesToExchange;
+    }
+
+    /**
+     * gets the map of actions played this turn
+     * @return hashmap of actions
+     */
+    public LinkedHashMap<Tile, Boolean> getActionsPerformed() {
+        return actionsPerformed;
+    }
+
+    /**
+     * adds an action to the linked hashmap
+     * @param tilePlaced the tile placed
+     * @param isExecution true if action was an execution, false otherwise
+     */
+    public void addActionPerformed(Tile tilePlaced, Boolean isExecution) {
+        actionsPerformed.put(tilePlaced, isExecution);
+    }
+
+    /**
+     * Removes last action in linked hash map
+     */
+    public void removeLastAction(){
+        actionsPerformed.remove(actionsPerformed.lastEntry().getKey());
     }
 }
