@@ -160,12 +160,38 @@ Milestone 2:
 
 - ScrabbleModel
   - Completely overhauled class to work with GUI.
+  - Added a constructor specifically for test cases
   - Added ScrabbleView field to pass a reference of the game view.
   - Field isTest to simplify testing applications.
   - handlePlay was refactored to make adjustments easier and improve readability.
   - checkGameOver now makes use of GUI to get player input.
   - Added method showMessage to make GUI feedback dependent on isTest variable.
   - Added getters and setters for fields.
+
+
+- ScrabbleModelTest
+  - Contains all the tests we did for the model
+  - test handlePass() ensures that the handlePass method switches to the next player
+    - Also checks that the rack of the current player isn't the rack of the former
+  - test handleExchange() ensures that handleExchange swaps tiles, and the player does not have the same tiles afterwords
+    - also ensures the game switches whose turn it is
+  - test handlePlay() tests if a player's move is valid, and if it switches players afterwords
+    -first tests an invalid move, then tests a valid one  
+  - test testPlacements() tests that valid moves allow handlePlay to return true, and invalid returns false.
+    - Tests to check first move in invalid spot, with valid word and alignment returns false after play attempt
+    - Checks that a word is fully aligned but in invalid spot returns false after play attempt
+    - Checks that word that covers center square for first move but has invalid positions returns false after attempt
+    - Checks that valid word returns true for first move
+    - Checks that valid word in invalid position returns false for second move
+    - Checks that valid word returns true for second move
+      - Checks that word can use existing tiles to create a new word and returns true
+      - Checks that a valid play switches players
+  - test testScoring() checks that scores are properly calculated
+    - Checks that scores are initialized to 0
+    - Checks that valid turns add to score
+  - test NextPlayerTurn() checks that the NextPlayerTurn() function returns the correct player
+  - test getCurrentPlayer() checks that the player whose turn it is returns
+  - test getPlayers() checks that the player list contains all the players in the game
 ***************************************************************************************************************
 
 Future Goals;

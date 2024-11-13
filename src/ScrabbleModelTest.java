@@ -29,11 +29,15 @@ public class ScrabbleModelTest {
 
         //Create new game from the model's testing constructor
         ScrabbleModel game = new ScrabbleModel(playerList);
+        //Check that its player 1, then pass
         assertEquals(game.getCurrentPlayer(), (player1));
         game.handlePass(game.getCurrentPlayer());
         assertEquals(game.getCurrentPlayer(), player2);
+        //Pass back to player 1
         game.handlePass(game.getCurrentPlayer());
         assertEquals(game.getCurrentPlayer(), player1);
+        //Confirm that the racks switched too
+        assertNotEquals(game.getCurrentPlayer().getRack(), player2.getRack());
         System.out.println("handlePass test successful\n");
     }
 
