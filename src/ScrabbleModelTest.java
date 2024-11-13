@@ -124,6 +124,148 @@ public class ScrabbleModelTest {
     }
 
     @Test
+    public void testPlacements(){
+
+        //base of each test
+        ArrayList<Player> playerList = new ArrayList<Player>();
+        Player player1 = new Player("Andrew");
+        Player player2 = new Player("Nick");
+        playerList.add(player1);
+        playerList.add(player2);
+
+        //Create new game
+        ScrabbleModel game = new ScrabbleModel(playerList);
+        //confirm player 1 is the first player
+        assertEquals(game.getCurrentPlayer(), (player1));
+        Tile h = new Tile('H',2);
+        Tile i = new Tile('I',1);
+        Tile t = new Tile('T', 3);
+        Map<Tile,Position> map = new HashMap<>();
+
+        //Positions for top left corner of board
+        //vertical word (won't work first turn and if no tiles attached)
+        Position a1 = new Position(0,0);
+        Position a2 = new Position(1,0);
+        Position a3 = new Position(2,0);
+        //Test for placement for first turn needing to be centered
+        map.put(h, a1);
+        map.put(i, a2);
+        map.put(t, a3);
+        game.getCurrentPlayer().setTilesPlayed(map);
+        //Should be invalid, as first turn must be H8
+        assertFalse(game.handlePlay(game.getCurrentPlayer()));
+
+
+        //valid for horizontal word in center of board (first turn)
+        Position h8 = new Position(7,7);
+        Position i8= new Position(7,8);
+        Position j8 = new Position(7,9);
+
+        //to check that tiles can only be placed in same row or column
+        Position h9 = new Position(8,7);
+        //Second test invalid move (not in line)
+        map.put(h, h8);
+        map.put(i,h9);
+        map.put(t,j8);
+        game.getCurrentPlayer().setTilesPlayed(map);
+        assertFalse(game.handlePlay(game.getCurrentPlayer()));
+
+
+        //Now test valid move
+        map.clear();
+        map.put(h, h8);
+        map.put(i, i8);
+        map.put(t, j8);
+        game.getCurrentPlayer().setTilesPlayed(map);
+        assertTrue(game.handlePlay(game.getCurrentPlayer()));
+
+        //now let second player try to play in corner
+        map.clear();
+        assertEquals(game.getCurrentPlayer(), player2);
+        //Try to play same word in corner
+        map.put(h, a1);
+        map.put(i, a2);
+        map.put(t, a3);
+        game.getCurrentPlayer().setTilesPlayed(map);
+        //Should be invalid, as no tiles are connected
+        assertFalse(game.handlePlay(game.getCurrentPlayer()));
+
+        //Let player 2 play same word, vertically, only needs to place h and t at i7 and i9
+        Position i7 = new Position(6,8);
+        Position i9 = new Position(6,8);
+        Tile h2 = new Tile('H',2);
+        Tile t2 = new Tile('T',3);
+        map.clear();
+        map.put(h2, i7);
+        map.put(t2, i9);
+        game.getCurrentPlayer().setTilesPlayed(map);
+        assertTrue(game.handlePlay(game.getCurrentPlayer()));
+
+
+
+        System.out.println("testPlacements test successful\n");
+    }
+
+    @Test
+    public void testScoring(){
+        //base of each test
+        ArrayList<Player> playerList = new ArrayList<Player>();
+        Player player1 = new Player("Andrew");
+        Player player2 = new Player("Nick");
+        playerList.add(player1);
+        playerList.add(player2);
+
+        //Create new game
+        ScrabbleModel game = new ScrabbleModel(playerList);
+        //Check that both player's scores are 0 at start
+        assertEquals(player1.getScore(),0);
+        assertEquals(player2.getScore(),0);
+
+        //confirm player 1 is the first player
+        assertEquals(game.getCurrentPlayer(), (player1));
+        Tile h = new Tile('H',2);
+        Tile i = new Tile('I',1);
+        Tile t = new Tile('T', 3);
+        Map<Tile,Position> map = new HashMap<>();
+
+        //valid for horizontal word in center of board (first turn)
+        Position h8 = new Position(7,7);
+        Position i8= new Position(7,8);
+        Position j8 = new Position(7,9);
+
+        //Now test valid move
+        map.clear();
+        map.put(h, h8);
+        map.put(i, i8);
+        map.put(t, j8);
+        game.getCurrentPlayer().setTilesPlayed(map);
+        assertTrue(game.handlePlay(game.getCurrentPlayer()));
+        //Tests that word hit gave 6 points
+        assertEquals(player1.getScore(), 6);
+
+        assertEquals(game.getCurrentPlayer(), player2);
+        assertEquals(game.getCurrentPlayer().getScore(), 0);
+        game.handlePass(game.getCurrentPlayer());
+        //Pass doesn't give points
+        assertEquals(player2.getScore(), 0);
+        assertEquals(game.getCurrentPlayer(), player1);
+        //Let player 1 play same word, vertically, only needs to place h and t at i7 and i9
+        Position i7 = new Position(6,8);
+        Position i9 = new Position(6,8);
+        Tile h2 = new Tile('H',2);
+        Tile t2 = new Tile('T',3);
+        map.clear();
+        map.put(h2, i7);
+        map.put(t2, i9);
+        game.getCurrentPlayer().setTilesPlayed(map);
+        assertTrue(game.handlePlay(game.getCurrentPlayer()));
+        //Check that player's score added correctly (6 from before, played a 2+3 = 5. Should be 11)
+        assertEquals(player1.getScore(), 11);
+    }
+
+
+
+    @Test
     public void nextPlayerTurn() {
         //base of each test
         ArrayList<Player> playerList = new ArrayList<Player>();
