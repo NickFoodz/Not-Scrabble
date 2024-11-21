@@ -77,17 +77,6 @@ public class ScrabbleView extends JFrame {
      * @param tile the tile to place
      */
     public void setSelectedTile(Tile tile) {
-        //Code for blank tile letter selection (works but gives null pointer)
-//        if(tile.getLetter() == ' '){
-//            char blankLetter = ' ';
-//            String blankInput;
-//            //Ask to enter a letter, continuously
-//            while((blankInput = JOptionPane.showInputDialog("Please enter the letter you wish to play")).length() != 1){
-//                blankLetter = blankInput.toUpperCase().charAt(0);
-//                JOptionPane.showMessageDialog(this, "Please enter only a single letter");
-//            }
-//            tile.setLetter(blankLetter);
-//        }
         this.selectedTile = tile;
     }
 
