@@ -89,16 +89,16 @@ public class ScrabbleModel {
      */
     private ArrayList<String> createDictionary() {
         ArrayList<String> dictionary = new ArrayList<String>();
-        File dictFile = new File("scrabblewords.txt");
+        File dictFile = new File("bigDictionary.txt");
         Scanner scanner;
         try {
             scanner = new Scanner(dictFile);
         } catch (FileNotFoundException e) {
-            System.out.println("Dictionary File \"scrabblewords.txt\" is missing");
+            System.out.println("Dictionary File \"bigDictionary.txt\" is missing");
             throw new RuntimeException(e);
         }
         while (scanner.hasNextLine()) {
-            dictionary.add(scanner.nextLine());
+            dictionary.add(scanner.nextLine().toLowerCase());
         }
         return dictionary;
     }
