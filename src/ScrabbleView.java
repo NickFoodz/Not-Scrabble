@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
  * @author Andrew Roberts
  * @author Nick Fuda
  * @version 1
+ *
  */
 public class ScrabbleView extends JFrame {
     private JFrame frame; // main frame for the game
@@ -21,6 +22,7 @@ public class ScrabbleView extends JFrame {
     };
 
     /**
+     *
      * Constructor for class ScrabbleView
      */
     public ScrabbleView() {
