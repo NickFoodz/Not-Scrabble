@@ -74,6 +74,8 @@ public class Bag {
         letterFrequencies.put('X', 1);
         letterFrequencies.put('Q', 1);
         letterFrequencies.put('Z', 1);
+        //blank tile
+        letterFrequencies.put(' ',2);
     }
 
     /**
@@ -106,6 +108,8 @@ public class Bag {
         letterPoints.put('X', 8);
         letterPoints.put('Q', 10);
         letterPoints.put('Z', 10);
+        //Blank tile points
+        letterPoints.put(' ',0);
     }
 
     /**
