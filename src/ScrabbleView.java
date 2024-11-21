@@ -29,8 +29,22 @@ public class ScrabbleView extends JFrame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1000, 1000);
 
-        int numPlayers = Integer.parseInt(JOptionPane.showInputDialog(frame, "Enter the number of players for the game"));
-
+        //Get the number of players, reject non-integer inputs
+        int numPlayers = 0;
+        while(numPlayers == 0 | numPlayers >4) {
+            String getPlayers = (JOptionPane.showInputDialog(frame, "Enter the number of players for the game"));
+            try {
+                numPlayers = Integer.parseInt(getPlayers);
+                if (numPlayers > 4){
+                    JOptionPane.showMessageDialog(frame, "Only 4 or fewer players can play a game at a time");
+                }
+            } catch (NumberFormatException e) {
+                if(getPlayers == null){
+                    System.exit(0);
+                }
+                JOptionPane.showMessageDialog(frame, "Value must be an integer");
+            }
+        }
         // initialize game with specified number of players
         this.game = new ScrabbleModel(numPlayers, this);
 
@@ -61,6 +75,17 @@ public class ScrabbleView extends JFrame {
      * @param tile the tile to place
      */
     public void setSelectedTile(Tile tile) {
+        //Code for blank tile letter selection (works but gives null pointer)
+//        if(tile.getLetter() == ' '){
+//            char blankLetter = ' ';
+//            String blankInput;
+//            //Ask to enter a letter, continuously
+//            while((blankInput = JOptionPane.showInputDialog("Please enter the letter you wish to play")).length() != 1){
+//                blankLetter = blankInput.toUpperCase().charAt(0);
+//                JOptionPane.showMessageDialog(this, "Please enter only a single letter");
+//            }
+//            tile.setLetter(blankLetter);
+//        }
         this.selectedTile = tile;
     }
 

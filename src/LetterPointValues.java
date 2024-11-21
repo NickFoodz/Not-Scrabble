@@ -36,6 +36,7 @@ public class LetterPointValues {
         letterPoints.put('X', 8);
         letterPoints.put('Q', 10);
         letterPoints.put('Z', 10);
+        letterPoints.put(' ', 0);
     }
 
     /**
