@@ -180,4 +180,17 @@ public class Board {
         }
         return words;
     }
+
+    public ArrayList<Character> getLettersFromBoard(){
+        ArrayList<Character> lettersOnBoard = new ArrayList<>();
+        //Iterate over board, and gather letters
+        for(int i=0; i < 15; i++){
+            for(int j = 0; j < 15; j++){
+                if(this.board[i][j].getTile().getLetter() != ' '){
+                    lettersOnBoard.add(this.board[i][j].getTile().getLetter());
+                }
+            }
+        }
+        return lettersOnBoard;
+    }
 }

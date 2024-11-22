@@ -236,6 +236,10 @@ public class Player {
         actionsPerformed.put(tilePlaced, isExecution);
     }
 
+    public boolean checkAIPlayer(){
+        return false;
+    }
+
     /**
      * Removes last action in linked hash map
      */
