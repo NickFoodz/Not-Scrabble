@@ -34,11 +34,11 @@ public class ScrabbleView extends JFrame {
         //Get the number of players, reject non-integer inputs
         int numPlayers = 0;
         while(numPlayers == 0 | numPlayers >4) {
-            String getPlayers = (JOptionPane.showInputDialog(frame, "Enter the number of players for the game"));
+            String getPlayers = (JOptionPane.showInputDialog(frame, "Enter the number of human players"));
             try {
                 numPlayers = Integer.parseInt(getPlayers);
                 if (numPlayers > 4){
-                    JOptionPane.showMessageDialog(frame, "Only 4 or fewer players can play a game at a time");
+                    JOptionPane.showMessageDialog(frame, "Only 4 players or fewer can play at a time");
                 }
             } catch (NumberFormatException e) {
                 if(getPlayers == null){
@@ -47,8 +47,27 @@ public class ScrabbleView extends JFrame {
                 JOptionPane.showMessageDialog(frame, "Value must be an integer");
             }
         }
+
+        int numAI = 0;
+        String getNumAI;
+        do {
+            getNumAI = (JOptionPane.showInputDialog(frame, "Enter the number of AI Players?"));
+            try {
+                numAI = Integer.parseInt(getNumAI);
+                if (numAI + numPlayers > 4) {
+                    JOptionPane.showMessageDialog(frame, "Only 4 players or fewer can play at a time");
+                }
+            } catch (NumberFormatException e) {
+                if (getNumAI == null) {
+                    System.exit(0);
+                }
+                JOptionPane.showMessageDialog(frame, "Value must be an integer");
+            }
+        }while((numPlayers + numAI) > 4);
+
         // initialize game with specified number of players
-        this.game = new ScrabbleModel(numPlayers, this);
+        this.game = new ScrabbleModel(numPlayers, this, numAI);
+
 
         // initialize player rack, score, and board panels
         playerRackPanel = new PlayerRackPanel(game.getCurrentPlayer().getRack(), this);
@@ -132,6 +151,10 @@ public class ScrabbleView extends JFrame {
         if (game.isGameOver()) {
             displayWinnerScreen();
         }
+        //Handle AI at the end of the turn after the player is switched
+        if(game.getCurrentPlayer().checkAIPlayer()){
+            game.handleAI(game.getCurrentPlayer());
+        }
     }
 
     /**
@@ -146,6 +169,10 @@ public class ScrabbleView extends JFrame {
         // check if game is over
         if (game.isGameOver()) {
             displayWinnerScreen();
+        }
+        //Handle AI at the end of the turn after the player is switched
+        if(game.getCurrentPlayer().checkAIPlayer()){
+            game.handleAI(game.getCurrentPlayer());
         }
     }
 
@@ -172,6 +199,10 @@ public class ScrabbleView extends JFrame {
         // check if game is over
         if (game.isGameOver()) {
             displayWinnerScreen();
+        }
+        //Handle AI at the end of the turn after the player is switched
+        if(game.getCurrentPlayer().checkAIPlayer()){
+            game.handleAI(game.getCurrentPlayer());
         }
     }
 

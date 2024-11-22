@@ -5,6 +5,7 @@ import java.util.*;
  * such as drawing tiles
  *
  * @author Andrew Roberts
+ * @author Nick Fuda
  * @version 2
  */
 public class Player {
@@ -236,6 +237,10 @@ public class Player {
         actionsPerformed.put(tilePlaced, isExecution);
     }
 
+    /**
+     * Method to be overwritten by child, AI. Returning false for this player has no bearing on the game
+     * @return false, as this class is for human players
+     */
     public boolean checkAIPlayer(){
         return false;
     }
@@ -245,5 +250,13 @@ public class Player {
      */
     public void removeLastAction() {
         actionsPerformed.remove(actionsPerformed.lastEntry().getKey());
+    }
+
+    /**
+     * Included to be overridden by subclass AI
+     * @return null, as this will not be used and will only be used by AI player
+     */
+    public String play() {
+        return null;
     }
 }

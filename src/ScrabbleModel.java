@@ -28,7 +28,7 @@ public class ScrabbleModel {
      *
      * @param numPlayers the number of players who will be playing the game
      */
-    public ScrabbleModel(int numPlayers, ScrabbleView view) {
+    public ScrabbleModel(int numPlayers, ScrabbleView view, int numAI) {
         gameBoard = new Board();
         isTest = false;
         gameBag = new Bag(isTest);
@@ -41,7 +41,7 @@ public class ScrabbleModel {
         dictionary = new ArrayList<String>();
         dictionary = createDictionary();
 
-
+        //Set up human players
         for (int i = 1; i <= numPlayers; i++) {
             String playerName = JOptionPane.showInputDialog(view.getFrame(), "Enter player " + i + "'s name");
 
@@ -53,6 +53,18 @@ public class ScrabbleModel {
             Player player = new Player(playerName);
             player.drawTiles(gameBag, 7, this);
             players.add(player);
+        }
+
+        //Set up AI Players
+        if(numAI != 0) {
+            for (int i = 1; i <= numAI; i++) {
+                String aiName = "Bot" + i; //e.g. Bot 1, Bot 2, Bot3, etc.
+
+                Player ai = new AI(this,aiName,dictionary);
+                ai.drawTiles(gameBag, 7, this);
+                players.add(ai);
+            }
+
         }
 
         currentPlayerIndex = 0;
@@ -101,6 +113,23 @@ public class ScrabbleModel {
             dictionary.add(scanner.nextLine().toLowerCase());
         }
         return dictionary;
+    }
+
+    /**
+     * Method that checks if current player is AI, and if so, handles their turn
+     * @param currentPlayer the player to check if they are AI
+     */
+    public void handleAI(Player currentPlayer){
+        //If the current player is AI
+        if(currentPlayer.checkAIPlayer()){
+            String command = currentPlayer.play();
+            switch(command){
+                case "exchange": handleExchange(currentPlayer);
+                case "play": handlePlay(currentPlayer);
+                case "pass": handlePass(currentPlayer);
+            }
+        }
+        //Otherwise it does nothing
     }
 
     /**
@@ -420,6 +449,7 @@ public class ScrabbleModel {
         return gameOver;
     }
 
+
     /**
      * Method to display message
      *
@@ -427,7 +457,7 @@ public class ScrabbleModel {
      */
     //method to display messages
     public void showMessage(String message) {
-        if (!isTest) {
+        if (!isTest | !getCurrentPlayer().checkAIPlayer()) {
             JOptionPane.showMessageDialog(view.getFrame(), message);
         }
     }
