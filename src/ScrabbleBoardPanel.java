@@ -23,6 +23,7 @@ public class ScrabbleBoardPanel extends JPanel {
         this.playerRackPanel = rackPanel;
         this.scrabbleView = view;  // Set the reference to ScrabbleView
         setLayout(new GridLayout(15, 15));
+        setBackground(new Color(50, 138, 73));
 
         // initialize button array and add buttons to panel
         boardButtons = new ScrabbleButton[15][15];

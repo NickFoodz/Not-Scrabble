@@ -56,31 +56,47 @@ public class AI extends Player {
     // end of testing methods */
 
     /**
-     * Returns a String of what the AI wants to do. Calls methods to do the actions.
-     * @return exchange to exchange blank tiles, play to play tilesPlayed, and pass to pass turn.
+     * Returns a String of what the AI wants to do. Calls methods to do the actions. The AI will prioritize exchanging
+     * a blank tile, as the play logic does not allow for blanks. If there are no blanks, the AI will then try to
+     * play a word, calling upon other methods to do so. If no words can be played, the AI will pass the turn.
+     * Currently, the AI will not exchange letter tiles, as it can try to formulate words with all of them
+     *
+     * @author Nick Fuda
+     * @return "exchange" to exchange blank tiles, "play" to play tilesPlayed, and "pass" to pass turn.
      */
     @Override
     public String play(){
         //First, check if there are blank tiles in rack. The logic is too complex to have the AI play that for now
-        if(checkForBlankTile()){
-            //set up tile for exchange
-//            ArrayList<Tile> rack = getRack();
-//            for(Tile t : rack)
-//            setTilesToExchange(" ");
+        if(checkForBlankTile() > 0){
+            int numBlanks = checkForBlankTile();
+            //Checks tiles letters for debugging
+            ArrayList<Character> tc = new ArrayList<>();
+            for(Tile t : getRack()){
+                tc.add(t.getLetter());
+            }
+            System.out.println(tc);
+            //String for exchange
+            ArrayList<String> blankTile = new ArrayList<>();
+            for(int i = 1; i<=numBlanks; i++){
+                blankTile.add(" ");
+            }
+            setTilesToExchange(blankTile);
             //Return exchange
             return "exchange";
         }
-        //No blank tile? Try playing a word
+
+        //No blank tiles? Try playing a word
         //method for play
         //return play
 
-        //Can't play a turn? Pass
+        //Can't play a turn or exchange? Pass
         return "pass";
 
     }
 
     /**
      * Overrides parent method so that the model knows this player is AI and handles it accordingly
+     * @author Nick Fuda
      * @return true
      */
     @Override
@@ -90,23 +106,26 @@ public class AI extends Player {
 
     /**
      * Checks for a blank tile in the rack. If there is a blank tile, exchange it.
-     * @return true if there is a blank tile, false otherwise
+     * @author Nick Fuda
+     * @return number of blank tiles
      */
-    private boolean checkForBlankTile(){
+    public int checkForBlankTile(){
         ArrayList<Tile> rack = getRack();
+        int numBlankTiles=0;
         for(Tile tile : rack){
             //If there is a blank tile
             if(tile.getLetter() == ' '){
-                return true;
+                numBlankTiles ++;
             }
         }
         //If not found, return false
-        return false;
+        return numBlankTiles;
     }
 
 
     /**
      * Creates a possible list of words from the tiles held
+     * @author Nick Fuda
      * @return an ArrayList of strings of all valid words with current hand ONLY
      */
     public ArrayList<String> getValidWordCombinations() {
