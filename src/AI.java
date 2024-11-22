@@ -15,7 +15,6 @@ public class AI extends Player {
 
     /**
      * Constructor for AI class
-     *
      */
     public AI(ScrabbleModel scrabble, String name, ArrayList<String> dictionary){
         super(name);
@@ -38,8 +37,6 @@ public class AI extends Player {
         setRack(AIT);
 
     }
-
-
 
     private ArrayList<String> createDictionary() {
         ArrayList<String> dictionary = new ArrayList<String>();

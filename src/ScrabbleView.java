@@ -154,6 +154,8 @@ public class ScrabbleView extends JFrame {
         //Handle AI at the end of the turn after the player is switched
         if(game.getCurrentPlayer().checkAIPlayer()){
             game.handleAI(game.getCurrentPlayer());
+            playerRackPanel.clearExchangePanel(); // clear exchange panel
+            updateViewForCurrentPlayer();  // refresh display after pass
         }
     }
 
@@ -173,6 +175,8 @@ public class ScrabbleView extends JFrame {
         //Handle AI at the end of the turn after the player is switched
         if(game.getCurrentPlayer().checkAIPlayer()){
             game.handleAI(game.getCurrentPlayer());
+            playerRackPanel.clearExchangePanel(); // clear exchange panel
+            updateViewForCurrentPlayer();  // refresh display after pass
         }
     }
 
@@ -203,6 +207,8 @@ public class ScrabbleView extends JFrame {
         //Handle AI at the end of the turn after the player is switched
         if(game.getCurrentPlayer().checkAIPlayer()){
             game.handleAI(game.getCurrentPlayer());
+            playerRackPanel.clearExchangePanel(); // clear exchange panel
+            updateViewForCurrentPlayer();  // refresh display after pass
         }
     }
 
