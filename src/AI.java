@@ -156,6 +156,36 @@ public class AI extends Player {
         }
         return possibleWords;
     }
+    /**
+     * Returns a list of strings of the highest scoring words that can be formed, in order from highest to lowest
+     *
+     * @return A list of strings for highest scoring words, in order of highest to lowest
+     */
+    private ArrayList<String> getHighestScoringWordList(){
+        ArrayList<String> formableWords = getValidWordCombinations();
+        ArrayList<String> sortedWords = new ArrayList<>();
+        while(!formableWords.isEmpty()){
+            int maxPoints = 0;
+            String currentBestWord = "";
+            for(String word: formableWords){
+                int wordPoints = 0;
+                char[] toArray = word.toCharArray();
+                for(int i=0; i < word.length(); i++){
+                    wordPoints += LetterPointValues.getPointValue(toArray[i]);
+                }
+                if(wordPoints > maxPoints){
+                    maxPoints = wordPoints;
+                    currentBestWord = word;
+                }
+
+            }
+            sortedWords.add(currentBestWord);
+            formableWords.remove(currentBestWord);
+        }
+
+        return sortedWords;
+
+    }
 
 
 }

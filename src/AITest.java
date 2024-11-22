@@ -28,6 +28,11 @@ public class AITest {
         AIT.add(new Tile('E', 1));
         AIT.add(new Tile('Y', 2));
         ai.setRack(AIT);
+        tc.clear();
+        for(Tile t : ai.getRack()) {
+            tc.add(t.getLetter());
+        }
+        System.out.println(tc);
         assertEquals(ai.play(), "pass");
         assertTrue(ai.getValidWordCombinations().contains("cheese"));
     }
