@@ -10,10 +10,15 @@ public class AITest {
     /**
      * Tests that having a blank tile in the rack makes the AI exchange the tile.
      */
-    public void testCheckBlankTile(){
+    public void testCheckBlankTile() {
+        ArrayList<Player> playerList = new ArrayList<Player>();
         AI ai = new AI("Tim");
+        playerList.add(ai);
+        //Create new game from the model's testing constructor
+        ScrabbleModel game = new ScrabbleModel(playerList);
+
         ArrayList<Character> tc = new ArrayList<>();
-        for(Tile t : ai.getRack()){
+        for (Tile t : ai.getRack()) {
             tc.add(t.getLetter());
         }
         System.out.println(ai.checkForBlankTile());
@@ -29,7 +34,7 @@ public class AITest {
         AIT.add(new Tile('Y', 2));
         ai.setRack(AIT);
         tc.clear();
-        for(Tile t : ai.getRack()) {
+        for (Tile t : ai.getRack()) {
             tc.add(t.getLetter());
         }
         System.out.println(tc);
