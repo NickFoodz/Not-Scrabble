@@ -30,8 +30,6 @@ public class ScrabbleBoardPanel extends JPanel {
         for (int row = 0; row < 15; row++) {
             for (int col = 0; col < 15; col++) {
                 Position buttonPosition = new Position(row,col);
-                String bPString = buttonPosition.toString();
-                System.out.println(bPString+" with int : ");
                 ScrabbleButton button = new ScrabbleButton(row, col);
                 char ch = 'A';
                 button.setText(Character.toString(ch + col) + (row + 1));
