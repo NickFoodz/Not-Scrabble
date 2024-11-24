@@ -60,7 +60,7 @@ public class ScrabbleModel {
             for (int i = 1; i <= numAI; i++) {
                 String aiName = "Bot" + i; //e.g. Bot 1, Bot 2, Bot3, etc.
 
-                Player ai = new AI(this,aiName,dictionary);
+                Player ai = new AI(this, aiName,dictionary, gameBoard);
                 ai.drawTiles(gameBag, 7, this);
                 players.add(ai);
             }
@@ -214,6 +214,8 @@ public class ScrabbleModel {
         successiveScorelessTurns = 0; // reset successive scoreless turns counter
         checkGameOver();
 
+        // TEST
+        gameBoard.displayBoard();
         return true;
     }
 
@@ -287,9 +289,12 @@ public class ScrabbleModel {
             return false;
         }
 
-        List<String> attemptedWords = gameBoard.gatherWordsOnBoard();
+        Map<String, List<Tile>> attemptedWords = gameBoard.gatherWordsOnBoard();
 
-        List<String> newWords = (turnNumber == 0) ? attemptedWords : getNewWords(attemptedWords);
+        // get new words formed
+        List<String> newWords = (turnNumber == 0) ? new ArrayList<>(attemptedWords.keySet()) : getNewWords(new ArrayList<>(attemptedWords.keySet()));
+
+
         for (String word : newWords) {
             if (!wordValidator.isValidWord(dictionary, word)) {
                 showMessage("Invalid formation, please try again");
@@ -298,15 +303,18 @@ public class ScrabbleModel {
         }
 
         // Update game state for valid play
-        wordsInPlay = attemptedWords;
+        wordsInPlay = new ArrayList<>(attemptedWords.keySet());
         for (Tile tileToRemove : tilesToPlay.keySet()) {
             currentPlayer.removeTile(String.valueOf(tileToRemove.getLetter()));
         }
         currentPlayer.drawTiles(gameBag, tilesToPlay.size(), this);
-        int turnScore = calculateScore(newWords);
-        currentPlayer.setScore(currentPlayer.getScore() + turnScore);
-        showMessage(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
 
+        // calculate score
+        int turnScore = calculateScore(attemptedWords, newWords);
+        currentPlayer.setScore(currentPlayer.getScore() + turnScore);
+
+        // display updated score
+        showMessage(currentPlayer.getName() + "'s score: " + currentPlayer.getScore());
         return true;
     }
 
@@ -384,13 +392,16 @@ public class ScrabbleModel {
      * @param wordsFormed the words that are formed by the player
      * @return the score
      */
-    private int calculateScore(List<String> wordsFormed) {
+    private int calculateScore(Map<String, List<Tile>> wordsToTiles, List<String> wordsFormed) {
         //Initial Score is 0
         int score = 0;
+
         //Calculate each word of the score
         for (String word : wordsFormed) {
-            for (char letter : word.toCharArray()) {
-                score += LetterPointValues.getPointValue(letter);
+            List<Tile> tiles = wordsToTiles.get(word);
+
+            for (Tile tile : tiles) {
+                score += tile.getPointValue();
             }
         }
         return score;

@@ -6,7 +6,9 @@
  */
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class Board models a board in a game of scrabble
@@ -139,46 +141,54 @@ public class Board {
      * Gathers the words on the board
      * @return a List of Strings of the words on the board
      */
-    public List<String> gatherWordsOnBoard() {
-        List<String> words = new ArrayList<>();
+    public Map<String, List<Tile>> gatherWordsOnBoard() {
+        Map<String, List<Tile>> wordsToTiles = new HashMap<>();
 
         // check horizontal words
         for (int row = 0; row < 15; row++) {
             StringBuilder currentWord = new StringBuilder();
+            List<Tile> currentTiles = new ArrayList<>();
+
             for (int col = 0; col < 15; col++) {
                 Position position = this.getPosition(row, col);
                 if (position.isOccupied()) {
                     currentWord.append(position.getTile().getLetter());
+                    currentTiles.add(position.getTile());
                 } else {
                     if (currentWord.length() > 1) {
-                        words.add(currentWord.toString());
+                        wordsToTiles.put(currentWord.toString(), new ArrayList<>(currentTiles));
                     }
                     currentWord.setLength(0); // reset word
+                    currentTiles.clear(); // reset tile list
                 }
             }
             if (currentWord.length() > 1) {
-                words.add(currentWord.toString());
+                wordsToTiles.put(currentWord.toString(), currentTiles);
             }
         }
         // check vertical words
         for (int col = 0; col < 15; col++) {
             StringBuilder currentWord = new StringBuilder();
+            List<Tile> currentTiles = new ArrayList<>();
+
             for (int row = 0; row < 15; row++) {
                 Position position = this.getPosition(row, col);
                 if (position.isOccupied()) {
                     currentWord.append(position.getTile().getLetter());
+                    currentTiles.add(position.getTile());
                 } else {
                     if (currentWord.length() > 1) {
-                        words.add(currentWord.toString());
+                        wordsToTiles.put(currentWord.toString(), new ArrayList<>(currentTiles));
                     }
                     currentWord.setLength(0); // reset word
+                    currentTiles.clear(); // reset tile list
                 }
             }
             if (currentWord.length() > 1) {
-                words.add(currentWord.toString());
+                wordsToTiles.put(currentWord.toString(), currentTiles);
             }
         }
-        return words;
+        return wordsToTiles;
     }
 
     public ArrayList<Character> getLettersFromBoard(){
