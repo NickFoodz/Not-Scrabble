@@ -206,6 +206,9 @@ public class Board {
         return lettersOnBoard;
     }
 
+    /**
+     * method to initiate all premium positions
+     */
     private void init_premiums(){
         //2LS (double letter square)
         int doubleLetterScore = 2;
@@ -342,10 +345,18 @@ public class Board {
         premiumPositions.put(o15.toString(),tripleWordSquare);
     }
 
+    /**
+     * getter for premium positions
+     * @return premium positions
+     */
     public HashMap<String,Integer> getPremiumPositions(){
         return premiumPositions;
     }
 
+    /**
+     * method to remove position from premium position map once it's been used
+     * @param key the position to remove
+     */
     public void removePremiumPosition(String key){
         premiumPositions.remove(key);
     }

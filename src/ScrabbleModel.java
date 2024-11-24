@@ -116,27 +116,6 @@ public class ScrabbleModel {
     }
 
     /**
-     * Method that checks if current player is AI, and if so, handles their turn
-     *
-     * @param currentPlayer the player to check if they are AI
-     */
-    public void handleAI(Player currentPlayer) {
-        //If the current player is AI
-        if (currentPlayer.checkAIPlayer()) {
-            String command = currentPlayer.play();
-            switch (command) {
-                case "exchange":
-                    handleExchange(currentPlayer);
-                case "play":
-                    handlePlay(currentPlayer);
-                case "pass":
-                    handlePass(currentPlayer);
-            }
-        }
-        //Otherwise it does nothing
-    }
-
-    /**
      * Handler for passing a turn
      *
      * @param currentPlayer the player who will pass the turn
@@ -154,7 +133,7 @@ public class ScrabbleModel {
      *
      * @param currentPlayer the player whose turn it is
      */
-    public void handleExchange(Player currentPlayer) {
+    public boolean handleExchange(Player currentPlayer) {
         // get selected tiles to exchange
         ArrayList<String> exchangeTiles = currentPlayer.getTilesToExchange();
 
@@ -163,17 +142,18 @@ public class ScrabbleModel {
         for (String tileLetter : exchangeTiles) {
             if (currentPlayer.removeTile(tileLetter)) {
                 numTilesToDraw++;
-            } else {
-                showMessage("You don't have this tile: " + tileLetter);
             }
         }
         //Draw tiles from game bag
-        currentPlayer.drawTiles(gameBag, numTilesToDraw, this);
+        if (!currentPlayer.drawTiles(gameBag, numTilesToDraw, this)) {
+            return false;
+        }
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         successiveScorelessTurns++;
         turnNumber++;
         checkGameOver();
 
+        return true;
     }
 
     /**
@@ -218,8 +198,6 @@ public class ScrabbleModel {
         successiveScorelessTurns = 0; // reset successive scoreless turns counter
         checkGameOver();
 
-        // TEST
-        gameBoard.displayBoard();
         return true;
     }
 
@@ -344,7 +322,6 @@ public class ScrabbleModel {
             }
             wordsInPlayCount.put(word, currentCount + 1);
         }
-        System.out.println("new words: " + tempList);
         return tempList;
     }
 
@@ -424,19 +401,16 @@ public class ScrabbleModel {
                 if (premiumPositions.containsKey(positionKey) && premiumPositions.get(positionKey) == 2) {
                     score += tile.getPointValue() * 2;
                     gameBoard.removePremiumPosition(positionKey);
-                    System.out.println("Tile: " + tile.getLetter() + " Point Value on double letter: " + tile.getPointValue());
                 }
 
                 // handle triple letter square
                 else if (premiumPositions.containsKey(positionKey) && premiumPositions.get(positionKey) == 4) {
                     score += tile.getPointValue() * 3;
                     gameBoard.removePremiumPosition(positionKey);
-                    System.out.println("Tile: " + tile.getLetter() + " Point Value on triple letter: " + tile.getPointValue());
                 }
                 // no premium tile
                 else {
                     score += tile.getPointValue();
-                    System.out.println("Tile: " + tile.getLetter() + " Point Value: " + tile.getPointValue());
                 }
 
                 // handle double word score
@@ -452,8 +426,6 @@ public class ScrabbleModel {
                 }
             }
             score *= multiplier;
-            System.out.println("Total score for word '" + word + "' with multiplier: " + score);
-
         }
         return score;
     }

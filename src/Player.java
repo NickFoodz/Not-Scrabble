@@ -9,12 +9,12 @@ import java.util.*;
  * @version 2
  */
 public class Player {
-    private String name; // the player's name
-    private ArrayList<Tile> rack; //the tiles the player currently holds
-    private int score; //the players score
-    private Map<Tile, Position> tilesPlayed; // tiles played in current turn
-    private ArrayList<String> tilesToExchange; // tiles the play wishes to exchange
-    private LinkedHashMap<Tile, Boolean> actionsPerformed; // actions the play took before click play, pass or swap, boolean indicates whether its in exchange panel (0) or board (1)
+    protected String name; // the player's name
+    protected ArrayList<Tile> rack; //the tiles the player currently holds
+    protected int score; //the players score
+    protected Map<Tile, Position> tilesPlayed; // tiles played in current turn
+    protected ArrayList<String> tilesToExchange; // tiles the play wishes to exchange
+    protected LinkedHashMap<Tile, Boolean> actionsPerformed; // actions the play took before click play, pass or swap, boolean indicates whether its in exchange panel (0) or board (1)
 
     /**
      * Creates new player object with corresponding name
@@ -37,19 +37,20 @@ public class Player {
      * @param numTiles the number of tiles the player wishes to draw
      * @param gameRef  reference to the game instance
      */
-    public void drawTiles(Bag bag, int numTiles, ScrabbleModel gameRef) {
+    public boolean drawTiles(Bag bag, int numTiles, ScrabbleModel gameRef) {
         for (int i = 0; i < numTiles; i++) {
             if (!bag.isEmpty() && (rack.size() < 7)) {
                 Tile drawnTile = bag.drawTile();
                 rack.add(drawnTile);
             } else if (bag.isEmpty()) {
                 gameRef.showMessage("there are no more tiles in the bag");
-                break;
+                return false;
             } else if (rack.size() == 7) {
                 gameRef.showMessage("you already have 7 tiles");
-                break;
+                return false;
             }
         }
+        return true;
     }
 
     /**
@@ -254,6 +255,7 @@ public class Player {
 
     /**
      * Included to be overridden by subclass AI
+     *
      * @return null, as this will not be used and will only be used by AI player
      */
     public String play() {
