@@ -344,4 +344,8 @@ public class Board {
         return premiumPositions;
     }
 
+    public void removePremiumPosition(String key){
+        premiumPositions.remove(key);
+    }
+
 }

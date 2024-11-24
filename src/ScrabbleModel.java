@@ -423,12 +423,14 @@ public class ScrabbleModel {
                 // handle double letter square
                 if (premiumPositions.containsKey(positionKey) && premiumPositions.get(positionKey) == 2) {
                     score += tile.getPointValue() * 2;
+                    gameBoard.removePremiumPosition(positionKey);
                     System.out.println("Tile: " + tile.getLetter() + " Point Value on double letter: " + tile.getPointValue());
                 }
 
                 // handle triple letter square
                 else if (premiumPositions.containsKey(positionKey) && premiumPositions.get(positionKey) == 4) {
                     score += tile.getPointValue() * 2;
+                    gameBoard.removePremiumPosition(positionKey);
                     System.out.println("Tile: " + tile.getLetter() + " Point Value on triple letter: " + tile.getPointValue());
                 }
                 // no premium tile
@@ -440,11 +442,13 @@ public class ScrabbleModel {
                 // handle double word score
                 if (premiumPositions.containsKey(positionKey) && premiumPositions.get(positionKey) == 3) {
                     multiplier = 2;
+                    gameBoard.removePremiumPosition(positionKey);
                 }
 
                 // handle triple word score
                 else if (premiumPositions.containsKey(positionKey) && premiumPositions.get(positionKey) == 5) {
                     multiplier = 3;
+                    gameBoard.removePremiumPosition(positionKey);
                 }
             }
             score *= multiplier;
