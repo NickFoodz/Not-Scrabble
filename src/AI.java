@@ -16,7 +16,7 @@ public class AI extends Player {
     /**
      * Constructor for AI class
      */
-    public AI(ScrabbleModel scrabble, String name, ArrayList<String> dictionary){
+    public AI(ScrabbleModel scrabble, String name, ArrayList<String> dictionary, Board board){
         super(name);
         this.model = scrabble;
         this.dictionary = dictionary;

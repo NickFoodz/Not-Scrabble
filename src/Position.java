@@ -90,10 +90,21 @@ public class Position {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-
+        // Check if the object is the same reference
+        if (this == obj) {
+            return true;
+        }
+        // Check if the object is null or not of the same class
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        // Cast the object to Position and compare fields
         Position position = (Position) obj;
-        return this.row == position.row && this.col == position.col;
+        return row == position.row && col == position.col;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * row + col;
     }
 }

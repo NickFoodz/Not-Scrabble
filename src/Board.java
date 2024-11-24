@@ -18,10 +18,12 @@ import java.util.Map;
  */
 public class Board {
     private Position[][] board;
+    private HashMap<String, Integer> premiumPositions = new HashMap<>();
 
     public Board() {
         board = new Position[15][15];
         initializeBoard();
+        init_premiums();
     }
 
     /**
@@ -203,4 +205,143 @@ public class Board {
         }
         return lettersOnBoard;
     }
+
+    private void init_premiums(){
+        //2LS (double letter square)
+        int doubleLetterScore = 2;
+        Position a4 = new Position(3,0);
+        premiumPositions.put(a4.toString(),doubleLetterScore);
+        Position a12 = new Position(11,0);
+        premiumPositions.put(a12.toString(),doubleLetterScore);
+        Position c7 = new Position(6,2);
+        premiumPositions.put(c7.toString(),doubleLetterScore);
+        Position c9 = new Position(8,2);
+        premiumPositions.put(c9.toString(),doubleLetterScore);
+        Position d1= new Position(0,3);
+        premiumPositions.put(d1.toString(),doubleLetterScore);
+        Position d8 = new Position(7,3);
+        premiumPositions.put(d8.toString(),doubleLetterScore);
+        Position d15 = new Position(14,3);
+        premiumPositions.put(d15.toString(),doubleLetterScore);
+        Position g3 = new Position(2,6);
+        premiumPositions.put(g3.toString(),doubleLetterScore);
+        Position g7 = new Position(6,6);
+        premiumPositions.put(g7.toString(),doubleLetterScore);
+        Position g9 = new Position(8,6);
+        premiumPositions.put(g9.toString(),doubleLetterScore);
+        Position g13 = new Position(12,6);
+        premiumPositions.put(g13.toString(),doubleLetterScore);
+        Position h4 = new Position(3,7);
+        premiumPositions.put(h4.toString(),doubleLetterScore);
+        Position h12 = new Position(11,7);
+        premiumPositions.put(h12.toString(),doubleLetterScore);
+        Position i3 = new Position(2,8);
+        premiumPositions.put(i3.toString(),doubleLetterScore);
+        Position i7 = new Position(6,8);
+        premiumPositions.put(i7.toString(),doubleLetterScore);
+        Position i9 = new Position(8,8);
+        premiumPositions.put(i9.toString(),doubleLetterScore);
+        Position i13 = new Position(12,8);
+        premiumPositions.put(i13.toString(),doubleLetterScore);
+        Position l1 = new Position(0,11);
+        premiumPositions.put(l1.toString(),doubleLetterScore);
+        Position l8 = new Position(7,11);
+        premiumPositions.put(l8.toString(),doubleLetterScore);
+        Position l15 = new Position(14,11);
+        premiumPositions.put(l15.toString(),doubleLetterScore);
+        Position m7= new Position(6,12);
+        premiumPositions.put(m7.toString(),doubleLetterScore);
+        Position m9= new Position(8,12);
+        premiumPositions.put(m9.toString(),doubleLetterScore);
+        Position o4= new Position(3,14);
+        premiumPositions.put(o4.toString(),doubleLetterScore);
+        Position o12= new Position(11,14);
+        premiumPositions.put(o12.toString(),doubleLetterScore);
+
+        //2WS (double word square)
+        int doubleWordSquare = 3;
+        Position b2= new Position(1,1);
+        premiumPositions.put(b2.toString(),doubleWordSquare);
+        Position b14= new Position(13,1);
+        premiumPositions.put(b14.toString(),doubleWordSquare);
+        Position c3= new Position(2,2);
+        premiumPositions.put(c3.toString(),doubleWordSquare);
+        Position c13= new Position(12,2);
+        premiumPositions.put(c13.toString(),doubleWordSquare);
+        Position d4= new Position(3,3);
+        premiumPositions.put(d4.toString(),doubleWordSquare);
+        Position d12= new Position(11,3);
+        premiumPositions.put(d12.toString(),doubleWordSquare);
+        Position e5= new Position(4,4);
+        premiumPositions.put(e5.toString(),doubleWordSquare);
+        Position e11= new Position(10,4);
+        premiumPositions.put(e11.toString(),doubleWordSquare);
+        Position k5= new Position(4,10);
+        premiumPositions.put(k5.toString(),doubleWordSquare);
+        Position k11= new Position(10,10);
+        premiumPositions.put(k11.toString(),doubleWordSquare);
+        Position l4= new Position(3,11);
+        premiumPositions.put(l4.toString(),doubleWordSquare);
+        Position l12= new Position(11,11);
+        premiumPositions.put(l12.toString(),doubleWordSquare);
+        Position m3= new Position(2,12);
+        premiumPositions.put(m3.toString(),doubleWordSquare);
+        Position m13= new Position(12,12);
+        premiumPositions.put(m13.toString(),doubleWordSquare);
+        Position n2= new Position(1,13);
+        premiumPositions.put(n2.toString(),doubleWordSquare);
+        Position n14= new Position(13,13);
+        premiumPositions.put(n14.toString(),doubleWordSquare);
+
+        //3LS (triple letter square)
+        int tripleLetterSquare = 4;
+        Position b6 = new Position(5,1);
+        premiumPositions.put(b6.toString(),tripleLetterSquare);
+        Position b10= new Position(9,1);
+        premiumPositions.put(b10.toString(),tripleLetterSquare);
+        Position f2 = new Position(1,5);
+        premiumPositions.put(f2.toString(),tripleLetterSquare);
+        Position f6 = new Position(5,5);
+        premiumPositions.put(f6.toString(),tripleLetterSquare);
+        Position f10= new Position(9,5);
+        premiumPositions.put(f10.toString(),tripleLetterSquare);
+        Position f14= new Position(13,5);
+        premiumPositions.put(f14.toString(),tripleLetterSquare);
+        Position j2 = new Position(1,9);
+        premiumPositions.put(j2.toString(),tripleLetterSquare);
+        Position j6 = new Position(5,9);
+        premiumPositions.put(j6.toString(),tripleLetterSquare);
+        Position j10= new Position(9,9);
+        premiumPositions.put(j10.toString(),tripleLetterSquare);
+        Position j14= new Position(13,9);
+        premiumPositions.put(j14.toString(),tripleLetterSquare);
+        Position n6 = new Position(5,13);
+        premiumPositions.put(n6.toString(),tripleLetterSquare);
+        Position n10= new Position(9,13);
+        premiumPositions.put(n10.toString(),tripleLetterSquare);
+
+        //3WS (triple word square)
+        int tripleWordSquare = 5;
+        Position a1= new Position(0,0);
+        premiumPositions.put(a1.toString(),tripleWordSquare);
+        Position a8= new Position(7,0);
+        premiumPositions.put(a8.toString(),tripleWordSquare);
+        Position a15= new Position(14,0);
+        premiumPositions.put(a15.toString(),tripleWordSquare);
+        Position h1= new Position(0,7);
+        premiumPositions.put(h1.toString(),tripleWordSquare);
+        Position h15= new Position(14,7);
+        premiumPositions.put(h15.toString(),tripleWordSquare);
+        Position o1= new Position(0,14);
+        premiumPositions.put(o1.toString(),tripleWordSquare);
+        Position o8= new Position(8,14);
+        premiumPositions.put(o8.toString(),tripleWordSquare);
+        Position o15= new Position(14,14);
+        premiumPositions.put(o15.toString(),tripleWordSquare);
+    }
+
+    public HashMap<String,Integer> getPremiumPositions(){
+        return premiumPositions;
+    }
+
 }

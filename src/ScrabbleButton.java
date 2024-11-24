@@ -12,6 +12,7 @@ import java.lang.String;
 public class ScrabbleButton extends JButton {
     private int row; //Row location of the tile
     private int column; //Column location of the tile
+    private Position position;
     private int score; //Score of the tile
     private Tile tile; //Tile at this location (starts without one)
     private Color tileColor = new Color(227, 207, 170); // colour for placing a tile
@@ -52,6 +53,7 @@ public class ScrabbleButton extends JButton {
         this.score = 0;
         this.empty = true; //Active for play.
         this.tile = null; //Starts with no tile
+        this.position = new Position(rw,col);
     }
 
     /**
@@ -135,5 +137,12 @@ public class ScrabbleButton extends JButton {
         setForeground(Color.BLACK);
         setEnabled(true); // enable button for use
         setText("");
+    }
+    public void setColor(Color color){
+        this.setBackground(color);
+    }
+
+    public Position getPosition(){
+        return this.position;
     }
 }
