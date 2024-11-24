@@ -252,7 +252,7 @@ public class AI extends Player {
      *
      * @return A list of strings for highest scoring words, in order of highest to lowest
      */
-    private ArrayList<String> getHighestScoringWordList() {
+    public ArrayList<String> getHighestScoringWordList() {
         ArrayList<String> formableWords = getValidWordCombinations();
         ArrayList<String> sortedWords = new ArrayList<>();
         while (!formableWords.isEmpty()) {
