@@ -12,7 +12,7 @@ public class Player {
     protected String name; // the player's name
     protected ArrayList<Tile> rack; //the tiles the player currently holds
     protected int score; //the players score
-    protected Map<Tile, Position> tilesPlayed; // tiles played in current turn
+    protected Map<Position, Tile> tilesPlayed; // tiles played in current turn
     protected ArrayList<String> tilesToExchange; // tiles the play wishes to exchange
     protected LinkedHashMap<Tile, Boolean> actionsPerformed; // actions the play took before click play, pass or swap, boolean indicates whether its in exchange panel (0) or board (1)
 
@@ -166,7 +166,7 @@ public class Player {
      * @param tile       the tile played
      */
     public void addTilesPlayed(Tile tile, Position coordinate) {
-        tilesPlayed.put(tile, coordinate);
+        tilesPlayed.put(coordinate, tile);
     }
 
     /**
@@ -174,7 +174,7 @@ public class Player {
      *
      * @return Map with the tiles and position for the turn
      */
-    public Map<Tile, Position> getTilesPlayed() {
+    public Map<Position, Tile> getTilesPlayed() {
         return tilesPlayed;
     }
 
@@ -197,7 +197,7 @@ public class Player {
     /**
      * Sets tiles played for player; for testing purposes
      */
-    public void setTilesPlayed(Map<Tile, Position> playTiles) {
+    public void setTilesPlayed(Map<Position, Tile> playTiles) {
         tilesPlayed = playTiles;
     }
 

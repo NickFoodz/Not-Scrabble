@@ -1,9 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+
+import static java.util.Collections.min;
 
 /**
  * AI class is an implementation of an AI player for the game of Scrabble
@@ -15,6 +14,7 @@ public class AI extends Player {
     private ArrayList<String> dictionary;
     private Board board;
     private ScrabbleModel model;
+    private boolean isTest; // true if test case, false otherwise
 
     /**
      * Constructor for AI class
@@ -23,7 +23,8 @@ public class AI extends Player {
         super(name);
         this.model = scrabble;
         this.dictionary = dictionary;
-        this.board = new Board();
+        this.board = board;
+        isTest = false;
     }
 
     // /* Testing methods
@@ -39,7 +40,7 @@ public class AI extends Player {
         AIT.add(new Tile('E', 1));
         AIT.add(new Tile(' ', 2));
         setRack(AIT);
-
+        isTest = true;
     }
 
     private ArrayList<String> createDictionary() {
@@ -70,12 +71,12 @@ public class AI extends Player {
      */
     @Override
     public String play() {
-        //Checks tiles letters for debugging
-        ArrayList<Character> tc = new ArrayList<>();
-        for (Tile t : getRack()) {
-            tc.add(t.getLetter());
-        }
-        System.out.println(tc);
+//        //Checks tiles letters for debugging
+//        ArrayList<Character> tc = new ArrayList<>();
+//        for (Tile t : getRack()) {
+//            tc.add(t.getLetter());
+//        }
+//        System.out.println(tc);
 
         //First, check if there are blank tiles in rack. The logic is too complex to have the AI play that for now
         if (checkForBlankTile() > 0) {
@@ -94,12 +95,10 @@ public class AI extends Player {
         //No blank tiles? Try playing a word
         ArrayList<String> highestScoringWords = getHighestScoringWordList();
 
-        // TEST
-        System.out.println(highestScoringWords.size());
-
         // If there are no words to play, exchange 3 tiles from rack
         if (highestScoringWords.isEmpty()) {
-            for (int i = 0; i < 3; i++) {
+            System.out.println("Entered Exchange");
+            for (int i = 0; i < Math.min(3, rack.size()); i++) {
                 tilesToExchange.add(String.valueOf(rack.get(i).getLetter()));
             }
             if (model.handleExchange(this)) {
@@ -111,17 +110,13 @@ public class AI extends Player {
         for (String word : highestScoringWords) {
             for (int row = 0; row < 15; row++) {
                 for (int col = 0; col < 15; col++) {
-                    Position start = new Position(row, col);
+                    Position start = board.getPosition(row, col);
 
                     if (tryWordPlacement(word, start, true)) {
-                        // TEST
-                        System.out.println(word);
                         return "play";
                     }
                     // Attempt vertical placement
                     if (tryWordPlacement(word, start, false)) {
-                        // TEST
-                        System.out.println(word);
                         return "play";
                     }
                 }
@@ -142,32 +137,35 @@ public class AI extends Player {
      * @return true if play is successful, false otherwise
      */
     private boolean tryWordPlacement(String word, Position start, boolean isHorizontal) {
-        Map<Tile, Position> tilesToPlay = new LinkedHashMap<>();
+        Map<Position, Tile> tilesToPlay = new LinkedHashMap<>();
 
         int row = start.getRow();
         int col = start.getCol();
 
         for (char letter : word.toCharArray()) {
             // Ensure position is within bounds nad not occupied
-            if (row >= 15 || col >= 15 || board.getPosition(row, col).isOccupied()) {
+            if (row >= 15 || col >= 15 || row < 0 || col < 0) {
+                return false;
+            }
+            if (board.getPosition(row, col).isOccupied()) {
                 return false;
             }
 
             // Find the corresponding tile in the rack
             Tile tileToPlay = null;
             for (Tile tile : rack) {
-                if (tile.getLetter() == letter) {
+                if (Character.toUpperCase(tile.getLetter()) == Character.toUpperCase(letter)) {
                     tileToPlay = tile;
                     break;
                 }
             }
+
             if (tileToPlay == null) {
                 return false; // Missing tile in rack
             }
 
             // remove tile from rack and add it to tiles that will be played
-            rack.remove(tileToPlay);
-            tilesToPlay.put(tileToPlay, new Position(row, col));
+            tilesToPlay.put(board.getPosition(row, col), tileToPlay);
 
             // Move to the next position
             if (isHorizontal) {
@@ -179,13 +177,25 @@ public class AI extends Player {
 
         // Attempt to play the word
         setTilesPlayed(tilesToPlay); // Assign tiles to the AI
+        Map<Position, Tile> tempTilesToPlay = new HashMap<>(tilesToPlay); // stores copy of tiles to play for GUI update
+
         if (model.handlePlay(this)) {
-            clearTilesPlayed(); // Revert tiles for next turn
+            // updates the GUI
+            if (!isTest) {
+                for (Map.Entry<Position, Tile> entry : tempTilesToPlay.entrySet()) {
+                    Position position = entry.getKey();
+                    Tile tile = entry.getValue();
+
+                    int guiRow = position.getRow();
+                    int guiCol = position.getCol();
+
+                    model.getView().getBoardPanel().getBoardButtons()[guiRow][guiCol].placeTile(tile);
+                    model.getView().getBoardPanel().getBoardButtons()[guiRow][guiCol].setEnabled(false);
+                    model.getView().getBoardPanel().repaint();
+                }
+            }
             return true; // Valid play
         }
-
-        // Revert tiles on failure
-        clearTilesPlayed();
         return false;
     }
 
@@ -241,7 +251,7 @@ public class AI extends Player {
             char[] check = word.toUpperCase().toCharArray();
 
             for (int i = 0; i < word.length(); i++) {
-                if (word.length() > 7) {
+                if (word.length() > 7 || word.length() < 2) {
                     break;
                 }
                 lettersCopy.remove(Character.valueOf(check[i]));
@@ -285,13 +295,12 @@ public class AI extends Player {
         return sortedWords;
     }
 
-    public void setBoard(Board gameBoard){
+    public void setBoard(Board gameBoard) {
         this.board = gameBoard;
     }
 
-    public void setModel(ScrabbleModel model){
+    public void setModel(ScrabbleModel model) {
         this.model = model;
     }
 
 }
-

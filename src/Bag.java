@@ -166,4 +166,11 @@ public class Bag {
         letterFrequencies.put('Q', oneOfEach);
         letterFrequencies.put('Z', oneOfEach);
     }
+
+    /**
+     * Empties the bag, removing all tiles.
+     */
+    public void emptyBag() {
+        tiles.clear();  // Removes all tiles from the list
+    }
 }

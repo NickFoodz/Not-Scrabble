@@ -177,7 +177,7 @@ public class ScrabbleModel {
     public boolean handlePlay(Player currentPlayer) {
 
         // Step 1: get tiles played
-        Map<Tile, Position> tilesToPlay = currentPlayer.getTilesPlayed();
+        Map<Position, Tile> tilesToPlay = currentPlayer.getTilesPlayed();
 
         // check if at least one tile was played
         if (tilesToPlay.isEmpty()) {
@@ -186,7 +186,7 @@ public class ScrabbleModel {
         }
 
         // Step 2: Validate tile alignment and adjacency
-        List<Position> positions = new ArrayList<>(tilesToPlay.values());
+        List<Position> positions = new ArrayList<>(tilesToPlay.keySet());
         if (!validateAlignmentAndAdjacency(positions)) {
             revertTiles(tilesToPlay); // revert tiles on board
             if (!isTest) {
@@ -201,17 +201,18 @@ public class ScrabbleModel {
             currentPlayer.clearTilesPlayed(); // clear stored played tiles
             currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
             turnNumber++;
-        } else {
-            revertTiles(tilesToPlay); // Revert if play fails
-            if (!isTest) {
-                view.getBoardPanel().revertTiles(currentPlayer);
-            } // clear gui
-            currentPlayer.clearTilesPlayed(); // Clear the played tiles to reset
+            successiveScorelessTurns = 0; // reset successive scoreless turns counter
+            checkGameOver();
+            return true;
         }
-        successiveScorelessTurns = 0; // reset successive scoreless turns counter
-        checkGameOver();
 
-        return true;
+        revertTiles(tilesToPlay); // Revert if play fails
+        if (!isTest) {
+            view.getBoardPanel().revertTiles(currentPlayer);
+        } // clear gui
+        currentPlayer.clearTilesPlayed(); // Clear the played tiles to reset
+
+        return false;
     }
 
     /**
@@ -272,11 +273,13 @@ public class ScrabbleModel {
      * @return true if successful move, false otherwise
      */
     // Places tiles on the board, validates words, and updates score if valid
-    private boolean attemptPlay(Player currentPlayer, Map<Tile, Position> tilesToPlay, List<Position> positions) {
+    private boolean attemptPlay(Player currentPlayer, Map<Position, Tile> tilesToPlay, List<Position> positions) {
         WordValidator wordValidator = new WordValidator(gameBoard, dictionary);
 
-        for (Map.Entry<Tile, Position> entry : tilesToPlay.entrySet()) {
-            gameBoard.placeTile(entry.getKey(), entry.getValue().getRow(), entry.getValue().getCol());
+        for (Map.Entry<Position, Tile> entry : tilesToPlay.entrySet()) {
+            if (!gameBoard.placeTile(entry.getValue(), entry.getKey().getRow(), entry.getKey().getCol())) {
+                return false;
+            }
         }
 
         if (!wordValidator.isConnectedToOtherTilesInTurn(positions)) {
@@ -298,7 +301,7 @@ public class ScrabbleModel {
 
         // Update game state for valid play
         wordsInPlay = new ArrayList<>(attemptedWords.values());
-        for (Tile tileToRemove : tilesToPlay.keySet()) {
+        for (Tile tileToRemove : tilesToPlay.values()) {
             currentPlayer.removeTile(String.valueOf(tileToRemove.getLetter()));
         }
         currentPlayer.drawTiles(gameBag, tilesToPlay.size(), this);
@@ -373,9 +376,9 @@ public class ScrabbleModel {
      *
      * @param tilesToPlay the tiles the player attempted to play
      */
-    private void revertTiles(Map<Tile, Position> tilesToPlay) {
-        for (Map.Entry<Tile, Position> tile : tilesToPlay.entrySet()) {
-            Position position = tile.getValue();
+    public void revertTiles(Map<Position, Tile> tilesToPlay) {
+        for (Map.Entry<Position, Tile> tile : tilesToPlay.entrySet()) {
+            Position position = tile.getKey();
             position.setTile(null); // reset the position to empty
             //GUI to revert tile
         }
@@ -533,5 +536,21 @@ public class ScrabbleModel {
      */
     public List<String> getWordsInPlay() {
         return wordsInPlay;
+    }
+
+    /**
+     * getter for view reference
+     * @return view reference
+     */
+    public ScrabbleView getView() {
+        return view;
+    }
+
+    /**
+     * getter for game bag
+     * @return the game bag
+     */
+    public static Bag getGameBag() {
+        return gameBag;
     }
 }

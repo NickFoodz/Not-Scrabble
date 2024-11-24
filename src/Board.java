@@ -7,7 +7,6 @@
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -204,6 +203,18 @@ public class Board {
             }
         }
         return lettersOnBoard;
+    }
+
+    /**
+     * method to set all board positions to occupied (for testing)
+     */
+    public void setAllPositionsOccupied() {
+        for (int row = 0; row < 15; row++) {
+            for (int col = 0; col < 15; col++) {
+                Position position = getPosition(row, col);
+                position.setOccupied(true);
+            }
+        }
     }
 
     /**

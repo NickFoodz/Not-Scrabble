@@ -111,19 +111,19 @@ public class ScrabbleModelTest {
         assertEquals(game.getCurrentPlayer(), (player1));
         Tile h = new Tile('H', 2);
         Tile i = new Tile('I', 1);
-        Map<Tile, Position> map = new HashMap<>();
+        Map<Position, Tile> map = new HashMap<>();
         Position h8 = new Position(7, 7);
         Position i8 = new Position(7, 8);
         Position i9 = new Position(8, 8);
         //First test invalid move
-        map.put(h, i8);
-        map.put(i, i9);
+        map.put(i8, h);
+        map.put(i9, i);
         game.getCurrentPlayer().setTilesPlayed(map);
         assertFalse(game.handlePlay(game.getCurrentPlayer()));
         //Now test valid move
         map.clear();
-        map.put(h, h8);
-        map.put(i, i8);
+        map.put(h8, h);
+        map.put(i8, i);
         game.getCurrentPlayer().setTilesPlayed(map);
         assertTrue(game.handlePlay(game.getCurrentPlayer()));
         System.out.println("handlePlay test successful\n");
@@ -150,7 +150,7 @@ public class ScrabbleModelTest {
         Tile h = new Tile('H', 2);
         Tile i = new Tile('I', 1);
         Tile t = new Tile('T', 3);
-        Map<Tile, Position> map = new HashMap<>();
+        Map<Position, Tile> map = new HashMap<>();
 
         //Positions for top left corner of board
         //vertical word (won't work first turn and if no tiles attached)
@@ -158,9 +158,9 @@ public class ScrabbleModelTest {
         Position a2 = new Position(1, 0);
         Position a3 = new Position(2, 0);
         //Test for placement for first turn needing to be centered
-        map.put(h, a1);
-        map.put(i, a2);
-        map.put(t, a3);
+        map.put(a1, h);
+        map.put(a2, i);
+        map.put(a3, t);
         game.getCurrentPlayer().setTilesPlayed(map);
         //Should be invalid, as first turn must be H8
         assertFalse(game.handlePlay(game.getCurrentPlayer()));
@@ -174,18 +174,18 @@ public class ScrabbleModelTest {
         //to check that tiles can only be placed in same row or column
         Position h9 = new Position(8, 7);
         //Second test invalid move (not in line)
-        map.put(h, h8);
-        map.put(i, h9);
-        map.put(t, j8);
+        map.put(h8, h);
+        map.put(h9, i);
+        map.put(j8, t);
         game.getCurrentPlayer().setTilesPlayed(map);
         assertFalse(game.handlePlay(game.getCurrentPlayer()));
 
 
         //Now test valid move
         map.clear();
-        map.put(h, h8);
-        map.put(i, i8);
-        map.put(t, j8);
+        map.put(h8, h);
+        map.put(i8, i);
+        map.put(j8, t);
         game.getCurrentPlayer().setTilesPlayed(map);
         assertTrue(game.handlePlay(game.getCurrentPlayer()));
 
@@ -193,9 +193,9 @@ public class ScrabbleModelTest {
         map.clear();
         assertEquals(game.getCurrentPlayer(), player2);
         //Try to play same word in corner
-        map.put(h, a1);
-        map.put(i, a2);
-        map.put(t, a3);
+        map.put(a1, h);
+        map.put(a2, i);
+        map.put(a3, t);
         game.getCurrentPlayer().setTilesPlayed(map);
         //Should be invalid, as no tiles are connected
         assertFalse(game.handlePlay(game.getCurrentPlayer()));
@@ -206,8 +206,8 @@ public class ScrabbleModelTest {
         Tile h2 = new Tile('H', 2);
         Tile t2 = new Tile('T', 3);
         map.clear();
-        map.put(h2, i7);
-        map.put(t2, i9);
+        map.put(i7, h2);
+        map.put(i9, t2);
         game.getCurrentPlayer().setTilesPlayed(map);
         assertTrue(game.handlePlay(game.getCurrentPlayer()));
 
@@ -217,7 +217,7 @@ public class ScrabbleModelTest {
 
 
     @Test
-    public void testPremiumScoring(){
+    public void testPremiumScoring() {
         //base of each test
         ArrayList<Player> playerList = new ArrayList<Player>();
         Player player1 = new Player("Andrew");
@@ -228,7 +228,7 @@ public class ScrabbleModelTest {
         //Test that current player is player 1
         assertEquals(game.getCurrentPlayer(), (player1));
         //Map to set current player's tiles to
-        Map<Tile, Position> map = new HashMap<>();
+        Map<Position, Tile> map = new HashMap<>();
         Tile t1 = new Tile('T', 2);
         Tile e = new Tile('E', 1);
         Tile s = new Tile('S', 2);
@@ -238,14 +238,14 @@ public class ScrabbleModelTest {
         Position h8 = new Position(7, 7);
         Position i8 = new Position(7, 8);
         Position j8 = new Position(7, 9);
-        Position k8 = new Position(7,10);
-        Position l8 = new Position(7,11);
+        Position k8 = new Position(7, 10);
+        Position l8 = new Position(7, 11);
         //Place in map
-        map.put(t1,h8);
-        map.put(e,i8);
-        map.put(s,j8);
-        map.put(t2,k8);
-        map.put(s2,l8);
+        map.put(h8, t1);
+        map.put(i8, e);
+        map.put(j8, s);
+        map.put(k8, t2);
+        map.put(l8, s2);
         game.getCurrentPlayer().setTilesPlayed(map);
         game.handlePlay(game.getCurrentPlayer());
         //We are now on player 2. Player 2 will turn "TESTS" into "ATTESTS"
@@ -254,8 +254,8 @@ public class ScrabbleModelTest {
         Position f8 = new Position(7, 5);
         Tile a = new Tile('A', 1);
         Tile t3 = new Tile('T', 2);
-        map.put(a,f8);
-        map.put(t3,g8);
+        map.put(f8, a);
+        map.put(g8, t3);
         game.getCurrentPlayer().setTilesPlayed(map);
         game.handlePlay(game.getCurrentPlayer());
         map.clear();
@@ -268,63 +268,62 @@ public class ScrabbleModelTest {
         game.handlePass(game.getCurrentPlayer());
         //Back to player one, who will play the word Fists through 2 triple letters
         Tile f = new Tile('F', 3);
-        Tile i = new Tile('I',1);
+        Tile i = new Tile('I', 1);
         Tile s3 = new Tile('S', 2);
         Tile t4 = new Tile('T', 2);
         //Positions in order
         Position j6 = new Position(5, 9);
         Position j7 = new Position(6, 9);
-        Position j9 = new Position(8,9);
-        Position j10 = new Position(9,9);
+        Position j9 = new Position(8, 9);
+        Position j10 = new Position(9, 9);
         //Tiles F and S4 will be over triple letter squares.
-        map.put(f,j6);
-        map.put(i,j7);
-        map.put(t4,j9);
-        map.put(s3,j10);
+        map.put(j6, f);
+        map.put(j7, i);
+        map.put(j9, t4);
+        map.put(j10, s3);
         game.getCurrentPlayer().setTilesPlayed(map);
         game.handlePlay(game.getCurrentPlayer());
         game.handlePass(game.getCurrentPlayer());
-        assertEquals(game.getCurrentPlayer().getScore(),42);
+        assertEquals(game.getCurrentPlayer().getScore(), 42);
         game.handlePass(game.getCurrentPlayer());
         //clear map and give player tiles to Play "SLEEPY" from J10->O10 (I am sleepy its 3:33 a.m.)
         map.clear();
         assertEquals(game.getCurrentPlayer(), player2);
         Tile l = new Tile('L', 3);
-        Tile e2 = new Tile('E',1);
+        Tile e2 = new Tile('E', 1);
         Tile e3 = new Tile('E', 1);
         Tile p = new Tile('P', 2);
         Tile y = new Tile('Y', 4);
-        Position k10 = new Position(9,10);
-        Position l10 = new Position(9,11);
-        Position m10 = new Position(9,12);
-        Position n10 = new Position(9,13);
-        Position o10 = new Position(9,14);
-        map.put(l,k10);
-        map.put(e2,l10);
-        map.put(e3,m10);
-        map.put(p,n10);
-        map.put(y,o10);
+        Position k10 = new Position(9, 10);
+        Position l10 = new Position(9, 11);
+        Position m10 = new Position(9, 12);
+        Position n10 = new Position(9, 13);
+        Position o10 = new Position(9, 14);
+        map.put(k10, l);
+        map.put(l10, e2);
+        map.put(m10, e3);
+        map.put(n10, p);
+        map.put(o10, y);
         //Should add score of 2 + 3 + 1 + 1 + 3*2 + 4 =17 for total of 17 + 12 = 29
         game.getCurrentPlayer().setTilesPlayed(map);
         game.handlePlay(game.getCurrentPlayer());
         game.handlePass(game.getCurrentPlayer());
-        assertEquals(game.getCurrentPlayer().getScore(),29);
+        assertEquals(game.getCurrentPlayer().getScore(), 29);
         game.handlePass(game.getCurrentPlayer());
         //Back to player 1, will play the word "TRY" from O8 to O10, to use a triple word multiplier
         map.clear();
-        Position o8 = new Position(7,14);
-        Position o9 = new Position(8,14);
+        Position o8 = new Position(7, 14);
+        Position o9 = new Position(8, 14);
         Tile t5 = new Tile('T', 2);
-        Tile r = new Tile('R',3);
-        map.put(t5,o8);
-        map.put(r,o9);
+        Tile r = new Tile('R', 3);
+        map.put(o8, t5);
+        map.put(o9, r);
         game.getCurrentPlayer().setTilesPlayed(map);
         game.handlePlay(game.getCurrentPlayer());
         game.handlePass(game.getCurrentPlayer());
         //Score should be 69; 42 + (2+3+4)*3 = 69
-        assertEquals(game.getCurrentPlayer().getScore(),69);
+        assertEquals(game.getCurrentPlayer().getScore(), 69);
     }
-
 
     @Test
     /**

@@ -52,7 +52,7 @@ public class PlayerRackPanel extends JPanel {
         playButton.addActionListener(e -> view.handlePlayAction());
         passButton.addActionListener(e -> view.handlePassAction());
         swapButton.addActionListener(e -> view.handleSwapAction());
-        undoButton.addActionListener(e -> view.handleUndoAction());
+        //undoButton.addActionListener(e -> view.handleUndoAction()); // to be done for milestone 4
 
         // Initialize layout and sub-panels
         setLayout(new GridBagLayout());

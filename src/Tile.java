@@ -34,4 +34,9 @@ public class Tile {
     public void setPointValue(int pointValue) {
         this.pointValue = pointValue;
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(letter);
+    }
 }

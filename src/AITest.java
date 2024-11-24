@@ -44,7 +44,7 @@ public class AITest {
     }
 
     @Test
-    public void testExchange() {
+    public void testBlankExchange() {
         ArrayList<Player> playerList = new ArrayList<Player>();
         Player player1 = new Player("John");
         AI ai = new AI("AI");
@@ -156,5 +156,109 @@ public class AITest {
         assertEquals(rankedWords.get(5), "cheese");
     }
 
+    @Test
+    public void testAIPlayOptimalWord() {
+        ArrayList<Player> playerList = new ArrayList<>();
+        AI ai = new AI("AI");
+        playerList.add(ai);
 
+        ScrabbleModel game = new ScrabbleModel(playerList);
+        ai.setBoard(game.getGameBoard());
+        ai.setModel(game);
+
+        // Set the rack to contain tiles for a valid word
+        ArrayList<Tile> AIT = new ArrayList<>();
+        AIT.add(new Tile('C', 2));
+        AIT.add(new Tile('H', 4));
+        AIT.add(new Tile('E', 1));
+        AIT.add(new Tile('E', 1));
+        AIT.add(new Tile('S', 1));
+        AIT.add(new Tile('E', 1));
+        AIT.add(new Tile('Y', 4));
+        ai.setRack(AIT);
+
+        // AI should play a valid word (e.g., "CHEESY")
+        assertEquals("play", ai.play());
+        assertTrue(game.getWordsInPlay().contains("CHEESY"));
+    }
+
+    @Test
+    public void testAIPlayExchange() {
+        ArrayList<Player> playerList = new ArrayList<>();
+        AI ai = new AI("AI");
+        playerList.add(ai);
+
+        ScrabbleModel game = new ScrabbleModel(playerList);
+        ai.setBoard(game.getGameBoard());
+        ai.setModel(game);
+
+        // Set the rack to contain tiles that cannot form a word
+        ArrayList<Tile> AIT = new ArrayList<>();
+        AIT.add(new Tile('Q', 10));
+        AIT.add(new Tile('Q', 10));
+        AIT.add(new Tile('Q', 10));
+        AIT.add(new Tile('Q', 10));
+        AIT.add(new Tile('Q', 10));
+        AIT.add(new Tile('Q', 10));
+        AIT.add(new Tile('Q', 10));
+        ai.setRack(AIT);
+
+        // AI should pass
+        assertEquals("exchange", ai.play());
+    }
+
+    @Test
+    public void testAIPlayPassFromExchange() {
+        ArrayList<Player> playerList = new ArrayList<>();
+        AI ai = new AI("AI");
+        playerList.add(ai);
+
+        ScrabbleModel game = new ScrabbleModel(playerList);
+        ai.setBoard(game.getGameBoard());
+        ai.setModel(game);
+        game.getGameBag().emptyBag();
+
+        assertTrue(game.getGameBag().isEmpty());
+
+        // Set the rack to contain tiles that cannot form a word
+        ArrayList<Tile> AIT = new ArrayList<>();
+        AIT.add(new Tile('Q', 10));
+        AIT.add(new Tile('Q', 10));
+        AIT.add(new Tile('Q', 10));
+        AIT.add(new Tile('Q', 10));
+        AIT.add(new Tile('Q', 10));
+        AIT.add(new Tile('Q', 10));
+        AIT.add(new Tile('Q', 10));
+        ai.setRack(AIT);
+
+        // AI should pass as bag is empty
+        assertEquals("pass", ai.play());
+    }
+
+    @Test
+    public void testAIPlayPassFromPlay() {
+        ArrayList<Player> playerList = new ArrayList<>();
+        AI ai = new AI("AI");
+        playerList.add(ai);
+
+        ScrabbleModel game = new ScrabbleModel(playerList);
+        ai.setBoard(game.getGameBoard());
+        ai.setModel(game);
+
+        game.getGameBoard().setAllPositionsOccupied();
+
+        // Set the rack to contain tiles that cannot form a word
+        ArrayList<Tile> AIT = new ArrayList<>();
+        AIT.add(new Tile('C', 2));
+        AIT.add(new Tile('H', 4));
+        AIT.add(new Tile('E', 1));
+        AIT.add(new Tile('E', 1));
+        AIT.add(new Tile('S', 1));
+        AIT.add(new Tile('E', 1));
+        AIT.add(new Tile('Y', 4));
+        ai.setRack(AIT);
+
+        // AI should pass as it can form a word it just can't place it this turn
+        assertEquals("pass", ai.play());
+    }
 }

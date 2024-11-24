@@ -17,6 +17,7 @@ public class ScrabbleButton extends JButton {
     private Tile tile; //Tile at this location (starts without one)
     private Color tileColor = new Color(227, 207, 170); // colour for placing a tile
     private boolean empty; // tracks if button is available
+    private Color defultColor; // store default color
 
     /**
      * Default constructor for scrabble button
@@ -24,14 +25,8 @@ public class ScrabbleButton extends JButton {
     public ScrabbleButton() {
         //Button initialization
         super();
-        setOpaque(true);
-        setBackground(Color.WHITE);
-        setForeground(Color.BLACK);
-        setEnabled(true); // enable button for use
-        //Field initialization
-        this.score = 0;
-        this.empty = true; //Active for play.
-        this.tile = null; //Starts with no tile
+        initialize();
+
     }
 
     /**
@@ -43,17 +38,25 @@ public class ScrabbleButton extends JButton {
     public ScrabbleButton(int rw, int col) {
         //Button initialization
         super();
-        setOpaque(true);
-        setBackground(Color.WHITE);
-        setForeground(Color.BLACK);
-        setEnabled(true); // enable button for use
         //Field initialization
         this.row = rw;
         this.column = col;
-        this.score = 0;
-        this.empty = true; //Active for play.
-        this.tile = null; //Starts with no tile
         this.position = new Position(rw,col);
+        initialize();
+    }
+
+    /**
+     * initialize button
+     */
+    private void initialize() {
+        setOpaque(true);
+        setBackground(Color.WHITE);
+        setForeground(Color.BLACK);
+        setEnabled(true);
+        this.score = 0;
+        this.empty = true; // Active for play.
+        this.tile = null; // Starts with no tile
+        this.defultColor = null; // Default is no premium color
     }
 
     /**
@@ -111,14 +114,19 @@ public class ScrabbleButton extends JButton {
     }
 
     /**
-     * reverts the board tile to its default state in the event of an invalid play or pass
+     * Reverts the board tile to its default or premium state in the event of an invalid play or pass.
      */
     public void revertTile() {
         this.empty = true;
         setOpaque(true);
-        setBackground(Color.WHITE);
+
+        // Reset to premium color if it exists; otherwise, default to white
+        setBackground(defultColor != null ? defultColor : Color.WHITE);
+
         setForeground(Color.BLACK);
-        setEnabled(true); // enable button for use
+        setEnabled(true);
+
+        // Reset text to default coordinates
         char ch = 'A';
         setText(Character.toString(ch + column) + (row + 1));
     }
@@ -134,8 +142,14 @@ public class ScrabbleButton extends JButton {
         setEnabled(true); // enable button for use
         setText("");
     }
-    public void setColor(Color color){
+
+    /**
+     * Sets the color of the tile and remembers it as a premium color if applicable.
+     * @param color the color to set
+     */
+    public void setColor(Color color) {
         this.setBackground(color);
+        this.defultColor = color; // Save as the premium color
     }
 
     public Position getPosition(){

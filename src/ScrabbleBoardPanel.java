@@ -104,7 +104,7 @@ public class ScrabbleBoardPanel extends JPanel {
      * @param player the player to revert tiles to
      */
     public void revertTiles(Player player) {
-        for (Position pos : player.getTilesPlayed().values()) {
+        for (Position pos : player.getTilesPlayed().keySet()) {
             boardButtons[pos.getRow()][pos.getCol()].revertTile();
         }
     }

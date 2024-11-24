@@ -212,38 +212,38 @@ public class ScrabbleView extends JFrame {
         }
     }
 
-    /**
-     * Handle Undo (INCOMPLETE)
-     */
-    public void handleUndoAction() {
-        if (game.getCurrentPlayer().getActionsPerformed() != null) {
-            LinkedHashMap<Tile, Boolean> actionMap = game.getCurrentPlayer().getActionsPerformed();
-            Tile tile = actionMap.lastEntry().getKey();
-            Boolean isExecution = actionMap.lastEntry().getValue();
-
-            game.getCurrentPlayer().removeLastAction();
-
-            if (isExecution) {
-                int index = playerRackPanel.getSelectedTilesForExchange().indexOf(tile);
-                if (index != -1) {
-                    playerRackPanel.getExchangeButtons().get(index).revertExchangeTile();
-                    playerRackPanel.getSelectedTilesForExchange().remove(tile);
-                    game.getCurrentPlayer().getTilesToExchange().remove(String.valueOf(tile.getLetter()));
-                }
-            } else {
-                // Undo action was on the board
-                Position position = game.getCurrentPlayer().getTilesPlayed().get(tile);
-                if (position != null) {
-                    int row = position.getRow();
-                    int col = position.getCol();
-                    boardPanel.getBoardButtons()[row][col].revertTile();
-                    game.getCurrentPlayer().getTilesPlayed().remove(tile);
-                }
-            }
-            // Re-enable the corresponding button on the player's rack, to be completed in future milestones
-
-        }
-    }
+//    /**
+//     * Handle Undo (INCOMPLETE)
+//     */
+//    public void handleUndoAction() {
+//        if (game.getCurrentPlayer().getActionsPerformed() != null) {
+//            LinkedHashMap<Tile, Boolean> actionMap = game.getCurrentPlayer().getActionsPerformed();
+//            Tile tile = actionMap.lastEntry().getKey();
+//            Boolean isExecution = actionMap.lastEntry().getValue();
+//
+//            game.getCurrentPlayer().removeLastAction();
+//
+//            if (isExecution) {
+//                int index = playerRackPanel.getSelectedTilesForExchange().indexOf(tile);
+//                if (index != -1) {
+//                    playerRackPanel.getExchangeButtons().get(index).revertExchangeTile();
+//                    playerRackPanel.getSelectedTilesForExchange().remove(tile);
+//                    game.getCurrentPlayer().getTilesToExchange().remove(String.valueOf(tile.getLetter()));
+//                }
+//            } else {
+//                // Undo action was on the board
+//                Position position = game.getCurrentPlayer().getTilesPlayed().get(tile);
+//                if (position != null) {
+//                    int row = position.getRow();
+//                    int col = position.getCol();
+//                    boardPanel.getBoardButtons()[row][col].revertTile();
+//                    game.getCurrentPlayer().getTilesPlayed().remove(tile);
+//                }
+//            }
+//            // Re-enable the corresponding button on the player's rack, to be completed in future milestones
+//
+//        }
+//    }
 
     /**
      * Getter for frame

@@ -58,6 +58,14 @@ public class Position {
     }
 
     /**
+     * method to set a position as occupied
+     * @param occupied the position to be marked as occupied
+     */
+    public void setOccupied(boolean occupied) {
+        this.occupied = occupied;
+    }
+
+    /**
      * Returns if the tile is occupied
      * @return true if occupied, false if not
      */
