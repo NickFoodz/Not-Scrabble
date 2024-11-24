@@ -31,6 +31,14 @@ scoreless turns, you will be prompted on if you wish to continue. Yes continues,
 
 Once the game ends, the winner is announced.
 
+**NOTE**
+Some moves by the AI may appear to be invalid, such as placing letters beside each other that should not work.
+Unfortunately, this is a product of the dictionary we use, which is much larger than the one we previously had,
+and has some odd combinations. Feel free to Ctrl+F in the dictionary to validate this, as it is not an issue in the 
+code that validates words. The AI can only play combinations of letters that are found in the dictionary, so it cannot
+actually make an invalid move, while the wordValidator does not actually allow any invalid moves. This can be tested by 
+looking up two letters that don't go beside each other in the dictionary, not finding them, and trying to play them.
+
 ***************************************************************************************************************
 Known Bugs:
 Milestone 2
@@ -42,6 +50,7 @@ Milestone 2
 Milestone 3
 - Entering a blank tile sometimes does not show the placed tile's letter *FIXED*
 - Selecting a tile from the rack and then selecting a second tile from the rack without placement will disable the first
+- Selecting exchange while not selecting tiles to swap may cause your turn to pass with nothing being exchanged.
 
 ***************************************************************************************************************
 
