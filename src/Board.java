@@ -334,7 +334,7 @@ public class Board {
         premiumPositions.put(h15.toString(),tripleWordSquare);
         Position o1= new Position(0,14);
         premiumPositions.put(o1.toString(),tripleWordSquare);
-        Position o8= new Position(8,14);
+        Position o8= new Position(7,14);
         premiumPositions.put(o8.toString(),tripleWordSquare);
         Position o15= new Position(14,14);
         premiumPositions.put(o15.toString(),tripleWordSquare);
