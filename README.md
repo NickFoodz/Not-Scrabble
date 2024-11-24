@@ -4,6 +4,32 @@
 
 This is a school project for SYSC3110.
 Created by Nick Fuda and Andrew Roberts
+***************************************************************************************************************
+Configuration:
+
+The Game currently does not accept less than 1 human player. To start, run the ScrabbleView main method.
+
+You will be prompted to enter the number of human players for your game. You must have between 1 and 4 human players
+to begin a game of scrabble.
+
+You will then be prompted to enter the number of AI players in your game. You cannot exceed a maximum of four players,
+so if you choose 4 human players, enter 0. If you choose 1, you can have up to 3.
+
+After entering the number of players and AI, you will be prompted to enter the human player's names. Then the game will
+begin.
+
+For the rules of scrabble, follow this link https://www.scrabblepages.com/scrabble/rules/
+
+The first word must cover the center square (H8) and be at least 2 letters. Valid placements are horizontal (read
+left to right) and vertical (read top to bottom).
+
+Score is calculated based on tile value and based on premium tiles covered. Premium tiles can only be used once,
+and adding to a word that covers them does not allow reuse.
+
+You may exchange any number of tiles instead of playing your turn. You also may pass your turn. After 6 successive
+scoreless turns, you will be prompted on if you wish to continue. Yes continues, No finishes the game.
+
+Once the game ends, the winner is announced.
 
 ***************************************************************************************************************
 Known Bugs:
@@ -21,7 +47,7 @@ Milestone 3
 
 Contributions:
 Andrew Roberts: Position, Bag, Player, Game, WordValidator, Board, LetterPointValues, PlayerRackPanel,
-ScrabbleBoardPanel, ScrabbleView, readme.
+ScrabbleBoardPanel, ScrabbleView, readme, AI
 
 Nick Fuda: Board, Game, Position, WordValidator classes, javadocs, scrabblewords.txt, readme, ScrabbleButton, AI,
 ScrabbleBoardPanel, ScrabbleView, and UML
