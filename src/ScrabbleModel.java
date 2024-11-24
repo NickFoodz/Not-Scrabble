@@ -293,9 +293,8 @@ public class ScrabbleModel {
             return false;
         }
 
-        Map<List<Tile>, String> attemptedWords = gameBoard.gatherWordsOnBoard();
-
         // get new words formed
+        Map<Map<Position, Tile>, String> attemptedWords = gameBoard.gatherWordsOnBoard();
         List<String> newWords = (turnNumber == 0) ? new ArrayList<>(attemptedWords.values()) : getNewWords(new ArrayList<>(attemptedWords.values()));
 
 
@@ -399,21 +398,22 @@ public class ScrabbleModel {
      * @param wordsFormed  the words that are formed by the player
      * @return the score
      */
-    private int calculateScore(Map<List<Tile>, String> wordsToTiles, List<String> wordsFormed) {
+    private int calculateScore(Map<Map<Position, Tile>, String> wordsToTiles, List<String> wordsFormed) {
         // Initial score
         int score = 0;
 
         // Iterate through the list of newly formed words
         for (String word : wordsFormed) {
-            // Find the tiles corresponding to the current word
-            List<Tile> tiles = findTilesForWord(wordsToTiles, word);
+
+            Map<Position, Tile> positionTileMap = findTilesForWord(wordsToTiles, word);
 
             // Calculate score for this word
-            for (Tile tile : tiles) {
+            for (Tile tile : positionTileMap.values()) {
                 score += tile.getPointValue();
                 System.out.println("Tile: " + tile.getLetter() + " Point Value: " + tile.getPointValue());
             }
         }
+
 
         return score;
     }
@@ -425,14 +425,14 @@ public class ScrabbleModel {
      * @param word         the word to find tiles for
      * @return the list of tiles corresponding to the word
      */
-    private List<Tile> findTilesForWord(Map<List<Tile>, String> wordsToTiles, String word) {
+    private Map<Position, Tile> findTilesForWord(Map<Map<Position, Tile>, String> wordsToTiles, String word) {
         // Iterate through the map to find the matching word and return its tiles
-        for (Map.Entry<List<Tile>, String> entry : wordsToTiles.entrySet()) {
+        for (Map.Entry<Map<Position, Tile>, String> entry : wordsToTiles.entrySet()) {
             if (entry.getValue().equals(word)) {
                 return entry.getKey();
             }
         }
-        return Collections.emptyList(); // Return an empty list if no tiles found (shouldn't happen)
+        return Collections.emptyMap(); // Return an empty list if no tiles found (shouldn't happen)
     }
 
     /**

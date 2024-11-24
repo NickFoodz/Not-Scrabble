@@ -143,51 +143,51 @@ public class Board {
      * Gathers the words on the board
      * @return a List of Strings of the words on the board
      */
-    public Map<List<Tile>, String> gatherWordsOnBoard() {
-        Map<List<Tile>, String> wordsToTiles = new HashMap<>();
+    public Map<Map<Position, Tile>, String> gatherWordsOnBoard() {
+        Map<Map<Position, Tile>, String> wordsToTiles = new HashMap<>();
 
         // check horizontal words
         for (int row = 0; row < 15; row++) {
             StringBuilder currentWord = new StringBuilder();
-            List<Tile> currentTiles = new ArrayList<>();
+            Map<Position, Tile> currentTiles = new HashMap<>();
 
             for (int col = 0; col < 15; col++) {
                 Position position = this.getPosition(row, col);
                 if (position.isOccupied()) {
                     currentWord.append(position.getTile().getLetter());
-                    currentTiles.add(position.getTile());
+                    currentTiles.put(position, position.getTile());
                 } else {
                     if (currentWord.length() > 1) {
-                        wordsToTiles.put(new ArrayList<>(currentTiles), currentWord.toString());
+                        wordsToTiles.put(new HashMap<>(currentTiles), currentWord.toString());
                     }
                     currentWord.setLength(0); // reset word
                     currentTiles.clear(); // reset tile list
                 }
             }
             if (currentWord.length() > 1) {
-                wordsToTiles.put(new ArrayList<>(currentTiles), currentWord.toString());
+                wordsToTiles.put(new HashMap<>(currentTiles), currentWord.toString());
             }
         }
         // check vertical words
         for (int col = 0; col < 15; col++) {
             StringBuilder currentWord = new StringBuilder();
-            List<Tile> currentTiles = new ArrayList<>();
+            Map<Position, Tile> currentTiles = new HashMap<>();
 
             for (int row = 0; row < 15; row++) {
                 Position position = this.getPosition(row, col);
                 if (position.isOccupied()) {
                     currentWord.append(position.getTile().getLetter());
-                    currentTiles.add(position.getTile());
+                    currentTiles.put(position, position.getTile());
                 } else {
                     if (currentWord.length() > 1) {
-                        wordsToTiles.put(new ArrayList<>(currentTiles), currentWord.toString());
+                        wordsToTiles.put(new HashMap<>(currentTiles), currentWord.toString());
                     }
                     currentWord.setLength(0); // reset word
                     currentTiles.clear(); // reset tile list
                 }
             }
             if (currentWord.length() > 1) {
-                wordsToTiles.put(new ArrayList<>(currentTiles), currentWord.toString());
+                wordsToTiles.put(new HashMap<>(currentTiles), currentWord.toString());
             }
         }
         return wordsToTiles;
