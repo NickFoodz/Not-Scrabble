@@ -429,7 +429,7 @@ public class ScrabbleModel {
 
                 // handle triple letter square
                 else if (premiumPositions.containsKey(positionKey) && premiumPositions.get(positionKey) == 4) {
-                    score += tile.getPointValue() * 2;
+                    score += tile.getPointValue() * 3;
                     gameBoard.removePremiumPosition(positionKey);
                     System.out.println("Tile: " + tile.getLetter() + " Point Value on triple letter: " + tile.getPointValue());
                 }

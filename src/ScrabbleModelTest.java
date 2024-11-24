@@ -298,6 +298,78 @@ public class ScrabbleModelTest {
         assertEquals(player1.getScore(), 22);
     }
 
+    @Test
+    public void testPremiumScoring(){
+        //base of each test
+        ArrayList<Player> playerList = new ArrayList<Player>();
+        Player player1 = new Player("Andrew");
+        Player player2 = new Player("Nick");
+        playerList.add(player1);
+        playerList.add(player2);
+        ScrabbleModel game = new ScrabbleModel(playerList);
+        //Test that current player is player 1
+        assertEquals(game.getCurrentPlayer(), (player1));
+        //Map to set current player's tiles to
+        Map<Tile, Position> map = new HashMap<>();
+        Tile t1 = new Tile('T', 2);
+        Tile e = new Tile('E', 1);
+        Tile s = new Tile('S', 2);
+        Tile t2 = new Tile('T', 2);
+        Tile s2 = new Tile('S', 2);
+        //Writes out "Tests" horizontally from h8 to l8
+        Position h8 = new Position(7, 7);
+        Position i8 = new Position(7, 8);
+        Position j8 = new Position(7, 9);
+        Position k8 = new Position(7,10);
+        Position l8 = new Position(7,11);
+        //Place in map
+        map.put(t1,h8);
+        map.put(e,i8);
+        map.put(s,j8);
+        map.put(t2,k8);
+        map.put(s2,l8);
+        game.getCurrentPlayer().setTilesPlayed(map);
+        game.handlePlay(game.getCurrentPlayer());
+        //We are now on player 2. Player 2 will turn "TESTS" into "ATTESTS"
+        map.clear();
+        Position g8 = new Position(7, 6);
+        Position f8 = new Position(7, 5);
+        Tile a = new Tile('A', 1);
+        Tile t3 = new Tile('T', 2);
+        map.put(a,f8);
+        map.put(t3,g8);
+        game.getCurrentPlayer().setTilesPlayed(map);
+        game.handlePlay(game.getCurrentPlayer());
+        map.clear();
+        //Player 1 should get score of 22 [(T:2 + E:1: + S:2 + T:2 + S:2*2)*2] = 11*2 = 22
+        assertEquals(game.getCurrentPlayer().getScore(), 22);
+        game.handlePass(game.getCurrentPlayer());
+        //Player 2 should have score for entire word "attests" but without premium
+        //11 from tests + 1 from A, 2 from new T = 14
+        assertEquals(game.getCurrentPlayer().getScore(), 12);
+        game.handlePass(game.getCurrentPlayer());
+        //Back to player one, who will play the word Fists through 2 triple letters
+        Tile f = new Tile('F', 3);
+        Tile i = new Tile('I',1);
+        Tile s3 = new Tile('S', 2);
+        Tile t4 = new Tile('T', 2);
+        //Positions in order
+        Position j6 = new Position(5, 9);
+        Position j7 = new Position(6, 9);
+        Position j9 = new Position(8,9);
+        Position j10 = new Position(9,9);
+        //Tiles F and S4 will be over triple letter squares.
+        map.put(f,j6);
+        map.put(i,j7);
+        map.put(t4,j9);
+        map.put(s3,j10);
+        game.getCurrentPlayer().setTilesPlayed(map);
+        game.handlePlay(game.getCurrentPlayer());
+        game.handlePass(game.getCurrentPlayer());
+        assertEquals(game.getCurrentPlayer().getScore(),42);
+
+
+    }
 
 
     @Test

@@ -276,6 +276,8 @@ public class Board {
         premiumPositions.put(e5.toString(),doubleWordSquare);
         Position e11= new Position(10,4);
         premiumPositions.put(e11.toString(),doubleWordSquare);
+        Position h8 = new Position(7,7);
+        premiumPositions.put(h8.toString(), doubleWordSquare);
         Position k5= new Position(4,10);
         premiumPositions.put(k5.toString(),doubleWordSquare);
         Position k11= new Position(10,10);
