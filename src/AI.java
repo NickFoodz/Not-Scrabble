@@ -67,7 +67,7 @@ public class AI extends Player {
      * Currently, the AI will not exchange letter tiles, as it can try to formulate words with all of them
      *
      * @return "exchange" to exchange blank tiles, "play" to play tilesPlayed, and "pass" to pass turn.
-     * @author Nick Fuda
+     * @author Nick Fuda, Andrew Roberts
      */
     @Override
     public String play() {
@@ -134,6 +134,7 @@ public class AI extends Player {
      * @param word         the word to be played
      * @param start        the starting position
      * @param isHorizontal if the play is horizontal (true) or vertical (false)
+     * @author Andrew Roberts
      * @return true if play is successful, false otherwise
      */
     private boolean tryWordPlacement(String word, Position start, boolean isHorizontal) {

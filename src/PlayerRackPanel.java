@@ -160,15 +160,6 @@ public class PlayerRackPanel extends JPanel {
     }
 
     /**
-     * Method for getting the list of exchange buttons in a player's rack
-     *
-     * @return List of exchange buttons
-     */
-    public List<ScrabbleButton> getExchangeButtons() {
-        return exchangeButtons;
-    }
-
-    /**
      * Helper Class for TileButtons
      *
      * @author Andrew Roberts

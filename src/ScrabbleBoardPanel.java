@@ -17,7 +17,6 @@ public class ScrabbleBoardPanel extends JPanel {
     private final ScrabbleButton[][] boardButtons; // the board buttons
     private final PlayerRackPanel playerRackPanel; // the players rack
     private final ScrabbleView scrabbleView; // reference to scrabble view
-    private ArrayList<Position> placedTilesPosition; // tiles placed this turn
 
     public ScrabbleBoardPanel(PlayerRackPanel rackPanel, ScrabbleView view) {
         this.playerRackPanel = rackPanel;

@@ -22,7 +22,7 @@ public class Board {
     public Board() {
         board = new Position[15][15];
         initializeBoard();
-        init_premiums();
+        initPremiums();
     }
 
     /**
@@ -37,7 +37,7 @@ public class Board {
     }
 
     /**
-     *  Display the board in the console
+     *  Display the board in the console, used mostly for debugging
      */
     public void displayBoard() {
         System.out.print("\t  "); // Initial spacing for column headers
@@ -192,19 +192,6 @@ public class Board {
         return wordsToTiles;
     }
 
-    public ArrayList<Character> getLettersFromBoard(){
-        ArrayList<Character> lettersOnBoard = new ArrayList<>();
-        //Iterate over board, and gather letters
-        for(int i=0; i < 15; i++){
-            for(int j = 0; j < 15; j++){
-                if(this.board[i][j].getTile().getLetter() != ' '){
-                    lettersOnBoard.add(this.board[i][j].getTile().getLetter());
-                }
-            }
-        }
-        return lettersOnBoard;
-    }
-
     /**
      * method to set all board positions to occupied (for testing)
      */
@@ -220,7 +207,7 @@ public class Board {
     /**
      * method to initiate all premium positions
      */
-    private void init_premiums(){
+    private void initPremiums(){
         //2LS (double letter square)
         int doubleLetterScore = 2;
         Position a4 = new Position(3,0);

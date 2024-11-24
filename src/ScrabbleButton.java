@@ -17,7 +17,7 @@ public class ScrabbleButton extends JButton {
     private Tile tile; //Tile at this location (starts without one)
     private Color tileColor = new Color(227, 207, 170); // colour for placing a tile
     private boolean empty; // tracks if button is available
-    private Color defultColor; // store default color
+    private Color defaultColor; // store default color
 
     /**
      * Default constructor for scrabble button
@@ -26,7 +26,6 @@ public class ScrabbleButton extends JButton {
         //Button initialization
         super();
         initialize();
-
     }
 
     /**
@@ -56,7 +55,7 @@ public class ScrabbleButton extends JButton {
         this.score = 0;
         this.empty = true; // Active for play.
         this.tile = null; // Starts with no tile
-        this.defultColor = null; // Default is no premium color
+        this.defaultColor = null; // Default is no premium color
     }
 
     /**
@@ -121,7 +120,7 @@ public class ScrabbleButton extends JButton {
         setOpaque(true);
 
         // Reset to premium color if it exists; otherwise, default to white
-        setBackground(defultColor != null ? defultColor : Color.WHITE);
+        setBackground(defaultColor != null ? defaultColor : Color.WHITE);
 
         setForeground(Color.BLACK);
         setEnabled(true);
@@ -149,9 +148,13 @@ public class ScrabbleButton extends JButton {
      */
     public void setColor(Color color) {
         this.setBackground(color);
-        this.defultColor = color; // Save as the premium color
+        this.defaultColor = color; // Save as the premium color
     }
 
+    /**
+     * Get the position of the scrabbleTile if it exists in the board panel
+     * @return Position(row,column) format
+     */
     public Position getPosition(){
         return this.position;
     }

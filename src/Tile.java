@@ -25,16 +25,32 @@ public class Tile {
         return letter;
     }
 
+    /**
+     * Gets a tile's point value
+     * @return pointValue of tile
+     */
     public int getPointValue(){return pointValue;}
 
+    /**
+     * Sets the letter of the Tile
+     * @param newLetter the letter the tile will take
+     */
     public void setLetter(char newLetter){
         this.letter = newLetter;
     }
 
+    /**
+     * Set the point value of a tile
+     * @param pointValue the pointValue a tile will take
+     */
     public void setPointValue(int pointValue) {
         this.pointValue = pointValue;
     }
 
+    /**
+     * The String representation of a Tile
+     * @return the String representing the Tile
+     */
     @Override
     public String toString() {
         return String.valueOf(letter);

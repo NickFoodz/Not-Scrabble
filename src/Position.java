@@ -74,14 +74,6 @@ public class Position {
     }
 
     /**
-     * Displays the tile at a location
-     * @return tile letter at location
-     */
-    public char displayTile() {
-        return tile != null ? tile.getLetter() : ' '; //Letter of tile
-    }
-
-    /**
      * Overrides toString() method to represent the position as displayed
      * @return
      */

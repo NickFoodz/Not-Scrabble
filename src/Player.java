@@ -99,46 +99,6 @@ public class Player {
     }
 
     /**
-     * get tile from rack
-     *
-     * @param tileLetter the letter of the desired tile
-     * @return the desired tile on the rack or null if not in rack
-     */
-    public Tile getTile(String tileLetter) {
-        Iterator<Tile> iterator = this.getRack().iterator();
-
-        //Find tile in rack and return its properties
-        while (iterator.hasNext()) {
-            Tile currentTile = iterator.next();
-            if (String.valueOf(currentTile.getLetter()).equalsIgnoreCase(tileLetter)) {
-                return currentTile; // tile found
-            }
-        }
-
-        return null; // tile not found
-    }
-
-    /**
-     * Find a tile on the rack
-     *
-     * @param tileLetter the letter of the tile to search for
-     * @return true if the tile is on the rack, false otherwise
-     */
-    public boolean findTile(String tileLetter) {
-        Iterator<Tile> iterator = this.getRack().iterator();
-
-        //Find tile in rack iteratively
-        while (iterator.hasNext()) {
-            Tile currentTile = iterator.next();
-            if (String.valueOf(currentTile.getLetter()).equalsIgnoreCase(tileLetter)) {
-                return true; // tile found
-            }
-        }
-
-        return false; // tile not found
-    }
-
-    /**
      * Removes tile from rack, during exchange or play
      *
      * @param tileLetter the letter of the tile to remove

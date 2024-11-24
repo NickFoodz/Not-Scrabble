@@ -14,7 +14,8 @@ Milestone 2
 - Undo button does not re-enable the selected tile from the player's rack.
 
 Milestone 3
-- Entering a blank tile sometimes does not show the placed tile's letter
+- Entering a blank tile sometimes does not show the placed tile's letter *FIXED*
+- Selecting a tile from the rack and then selecting a second tile from the rack without placement will disable the first
 
 ***************************************************************************************************************
 
@@ -94,19 +95,13 @@ Some smaller classes with specific functions:
 that the attempted word is legal to play to check if it is a valid word according to the dictionary.
     - Data Structures:
       - String was used for dictionaryFilePath so that it could be used in the parser
-      
-- The Parser class is used to read from the dictionary (scrabblewords.txt). If a word is in there, it can be played.
-    - Data Structures: None
+
   
 - The LetterPointValues class is used to store the point values of each letter. This is planned to be modified
 for special tiles once those are implemented.
     - Data Structures:
       - A Map was used so that the Letters could be used as keys, as each key would have a value assigned as a
       point value for the letter.
-
-- The Main class is the class that we are currently running the game through. We also kept it primarily for testing the
-methods of each class prior to implementing Game.
-    - Data Structures: None
 
 Non-Classes
 - scrabblewords.txt is a text document representing a dictionary. Each line is a single word. This file exists so
@@ -204,15 +199,29 @@ Milestone 3
   - No longer accepts non-integer inputs leading to errors
   - No longer accepts values greater than 4 or under 0.
 - Added ability to add AI players
+
+- Added Blank Tiles
+  - 2 per game
+  - Blank tiles can be changed into any letter at a value of 0 points
+  - Only usable by human players, AI class will exchange them
+
 - Added new class: AI
   - Class AI allows for an AI player to make plays in Scrabble
     - Priority 1: If the AI has any blank pieces, they will exchange them. The AI will only exchange blank tiles.
     - Priority 2: If the AI can play a word, it plays it on the board.
-    - Priority 3: If the AI cannot play a word and has no blank tiles, it passes its turn
+    - Priority 3: If the AI cannot form a word, exchange 3 tiles
+    - Priority 3: If the AI cannot play a word, exchange, and has no blank tiles, it passes its turn
   - The priorities given were done to allow the play option to not be too complex to include blank tiles
   - Blank tiles are best left for human players given current functionality of the game
   - If no move can be made, the AI player would need to skip their turn.
   - The AI's tiles are not shown to the player to ensure a fair game.
+
+- Added Premium Squares
+  - The squares follow the coloration of an original scrabble board, and follow similar function
+    - Pink tiles are Double word score tiles
+    - Red tiles are Triple word score tiles
+    - Cyan tiles are double letter score tiles
+    - Blue tiles are triple letter score tiles.
 
 ***************************************************************************************************************
 
@@ -238,6 +247,11 @@ Milestone 2:
 
 ###############################################################################################################
 
+Milestone 3: 
+- Getting rid of code smell
+  - We would like to move more towards MVC
+- We would like to try to optimize the code and reduce any junk functions. Many of the functions and even some
+  constructors are results of needing to have a different test model that does not use GUI or player input.
 
 ***************************************************************************************************************
 Other Notes:
@@ -263,3 +277,9 @@ to make the GUI work and did not follow the proper MVC format. Now that we are c
 of the GUI made and mostly need to work on the model, we are hoping this allows us to create a better foundation.
 We unfortunately could not meet the Sunday deadline, but thankfully the professor put an announcement out that
 saved our confidence in being able to present something that is somewhat functional.
+
+#################################################################################################################
+
+Milestone 3: 
+
+Thus far, we have everyone in the Git repository, though this milestone was completed by only Nick and Andrew.

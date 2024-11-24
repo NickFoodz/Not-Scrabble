@@ -43,6 +43,9 @@ public class AITest {
         assertTrue(ai.getValidWordCombinations().contains("cheese"));
     }
 
+    /**
+     * Tests that the AI will exchange blank tiles
+     */
     @Test
     public void testBlankExchange() {
         ArrayList<Player> playerList = new ArrayList<Player>();
@@ -92,6 +95,9 @@ public class AITest {
         assertNotEquals(ai.play(), "exchange");
     }
 
+    /**
+     * Tests that the getValidWords() method works properly
+     */
     @Test
     public void testGetValidWords(){
         ArrayList<Player> playerList = new ArrayList<Player>();
@@ -130,8 +136,10 @@ public class AITest {
 
     }
 
+    /**
+     * Tests that the highestScoringWordList method works properly
+     */
     @Test
-
     public void getHighestScoringWordList(){
         ArrayList<Player> playerList = new ArrayList<Player>();
         AI ai = new AI("Tim");
@@ -156,6 +164,9 @@ public class AITest {
         assertEquals(rankedWords.get(5), "cheese");
     }
 
+    /**
+     * Tests that the AI plays the optimal word when possible, rather than the lowest point earning word
+     */
     @Test
     public void testAIPlayOptimalWord() {
         ArrayList<Player> playerList = new ArrayList<>();
@@ -182,6 +193,9 @@ public class AITest {
         assertTrue(game.getWordsInPlay().contains("CHEESY"));
     }
 
+    /**
+     * Tests that the AI exchanges 3 tiles when it cannot make a move, and the bag is not empty
+     */
     @Test
     public void testAIPlayExchange() {
         ArrayList<Player> playerList = new ArrayList<>();
@@ -207,6 +221,9 @@ public class AITest {
         assertEquals("exchange", ai.play());
     }
 
+    /**
+     * Tests that the AI passes if it cannot exchange because the bag is empty
+     */
     @Test
     public void testAIPlayPassFromExchange() {
         ArrayList<Player> playerList = new ArrayList<>();
@@ -235,6 +252,9 @@ public class AITest {
         assertEquals("pass", ai.play());
     }
 
+    /**
+     * Tests that the AI passes when it can form a word but cannot place it
+     */
     @Test
     public void testAIPlayPassFromPlay() {
         ArrayList<Player> playerList = new ArrayList<>();

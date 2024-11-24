@@ -19,9 +19,6 @@ public class Bag {
      */
     public Bag(boolean isTest) {
         tiles = new ArrayList<>(); // initialize the tiles list
-
-
-
         // initialize letter frequencies and points
         if(!isTest) {
             initializeLetterFrequencies();
@@ -134,7 +131,7 @@ public class Bag {
     }
 
     /**
-     * Initialize each letters' frequency
+     * Initialize each letters' frequency for a test
      */
     private void testLetterFrequencies() {
         //Need only one of each letter to not fail exchange test
