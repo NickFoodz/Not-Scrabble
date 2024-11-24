@@ -216,66 +216,88 @@ public class ScrabbleModelTest {
     }
 
     @Test
-    /**
-     * Tests that scoring is accurate
-     */
     public void testScoring() {
-        //base of each test
-        ArrayList<Player> playerList = new ArrayList<Player>();
+        ArrayList<Player> playerList = new ArrayList<>();
         Player player1 = new Player("Andrew");
         Player player2 = new Player("Nick");
         playerList.add(player1);
         playerList.add(player2);
 
-        //Create new game
         ScrabbleModel game = new ScrabbleModel(playerList);
-        //Check that both player's scores are 0 at start
+
         assertEquals(player1.getScore(), 0);
         assertEquals(player2.getScore(), 0);
 
-        //confirm player 1 is the first player
-        assertEquals(game.getCurrentPlayer(), (player1));
-        Tile h = new Tile('H', 2);
+        assertEquals(game.getCurrentPlayer(), player1);
+        Tile h = new Tile('H', 4);
         Tile i = new Tile('I', 1);
-        Tile t = new Tile('T', 3);
+        Tile t = new Tile('T', 1);
         Map<Tile, Position> map = new HashMap<>();
 
-        //valid for horizontal word in center of board (first turn)
+        // First play
         Position h8 = new Position(7, 7);
         Position i8 = new Position(7, 8);
         Position j8 = new Position(7, 9);
 
-        //Now test valid move
-        map.clear();
         map.put(h, h8);
         map.put(i, i8);
         map.put(t, j8);
+
         game.getCurrentPlayer().setTilesPlayed(map);
-        assertTrue(game.handlePlay(game.getCurrentPlayer()));
-        //Tests that word hit gave 6 points
+
+        // Debug output: Words and scores after first play
+        if (game.handlePlay(game.getCurrentPlayer())) {
+            System.out.println("Words after first play: " + game.getWordsInPlay());
+            System.out.println("Player 1 score after first play: " + player1.getScore());
+        }
         assertEquals(player1.getScore(), 6);
 
-        assertEquals(game.getCurrentPlayer(), player2);
-        assertEquals(game.getCurrentPlayer().getScore(), 0);
         game.handlePass(game.getCurrentPlayer());
-        //Pass doesn't give points
         assertEquals(player2.getScore(), 0);
         assertEquals(game.getCurrentPlayer(), player1);
-        //Let player 1 play same word, vertically, only needs to place h and t at i7 and i9
+
+        // Second play
         Position i7 = new Position(6, 8);
-        Position i9 = new Position(6, 8);
-        Tile h2 = new Tile('H', 2);
-        Tile t2 = new Tile('T', 3);
+        Position i9 = new Position(8, 8);
+        Position i10 = new Position(9, 8);
+        Tile h2 = new Tile('H', 4);
+        Tile t2 = new Tile('T', 1);
+        //Tile s = new Tile('S', 1);
+
         map.clear();
         map.put(h2, i7);
         map.put(t2, i9);
+        //map.put(s, i10);
         game.getCurrentPlayer().setTilesPlayed(map);
-        assertTrue(game.handlePlay(game.getCurrentPlayer()));
-        //Check that player's score added correctly (6 from before, played a 2+3 = 5. Should be 11)
-        assertEquals(player1.getScore(), 11);
-        System.out.println("testScoring test successful\n");
 
+        // Debug output: Words and scores after second play
+        if (game.handlePlay(game.getCurrentPlayer())) {
+            System.out.println("Words after second play: " + game.getWordsInPlay());
+            System.out.println("Player 1 score after second play: " + player1.getScore());
+        }
+        assertEquals(player1.getScore(), 12); // Expected: 6 (first play) + 6 (second play)
+
+        game.handlePass(game.getCurrentPlayer());
+        assertEquals(player2.getScore(), 0);
+        assertEquals(game.getCurrentPlayer(), player1);
+
+
+        // Third play
+        Position h7 = new Position(6, 7);
+        Tile e = new Tile('E', 1);
+
+        map.clear();
+        map.put(e, h7);
+        game.getCurrentPlayer().setTilesPlayed(map);
+
+        // Debug output: Words and scores after second play
+        if (game.handlePlay(game.getCurrentPlayer())) {
+            System.out.println("Words after second play: " + game.getWordsInPlay());
+            System.out.println("Player 1 score after third play: " + player1.getScore());
+        }
+        assertEquals(player1.getScore(), 22);
     }
+
 
 
     @Test

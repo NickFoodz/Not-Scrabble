@@ -36,12 +36,12 @@ public class ScrabbleBoardPanel extends JPanel {
                 char ch = 'A';
                 button.setText(Character.toString(ch + col) + (row + 1));
                 switch(scrabbleView.getGame().getGameBoard().getPremiumPositions().get(buttonPosition.toString())){
-                    case null: button.setColor(Color.white);break;
                     case 2: button.setColor(Color.cyan); break;
                     case 3: button.setColor(Color.pink);break;
                     case 4: button.setColor(Color.blue);break;
                     case 5: button.setColor(Color.red);break;
-                    default: button.setColor(Color.white);break;
+                    case null, default:
+                        button.setColor(Color.white);break;
                 }
                 button.addActionListener(new BoardButtonClickListener(row, col));
                 boardButtons[row][col] = button;

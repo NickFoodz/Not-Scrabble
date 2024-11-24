@@ -143,8 +143,8 @@ public class Board {
      * Gathers the words on the board
      * @return a List of Strings of the words on the board
      */
-    public Map<String, List<Tile>> gatherWordsOnBoard() {
-        Map<String, List<Tile>> wordsToTiles = new HashMap<>();
+    public Map<List<Tile>, String> gatherWordsOnBoard() {
+        Map<List<Tile>, String> wordsToTiles = new HashMap<>();
 
         // check horizontal words
         for (int row = 0; row < 15; row++) {
@@ -158,14 +158,14 @@ public class Board {
                     currentTiles.add(position.getTile());
                 } else {
                     if (currentWord.length() > 1) {
-                        wordsToTiles.put(currentWord.toString(), new ArrayList<>(currentTiles));
+                        wordsToTiles.put(new ArrayList<>(currentTiles), currentWord.toString());
                     }
                     currentWord.setLength(0); // reset word
                     currentTiles.clear(); // reset tile list
                 }
             }
             if (currentWord.length() > 1) {
-                wordsToTiles.put(currentWord.toString(), currentTiles);
+                wordsToTiles.put(new ArrayList<>(currentTiles), currentWord.toString());
             }
         }
         // check vertical words
@@ -180,14 +180,14 @@ public class Board {
                     currentTiles.add(position.getTile());
                 } else {
                     if (currentWord.length() > 1) {
-                        wordsToTiles.put(currentWord.toString(), new ArrayList<>(currentTiles));
+                        wordsToTiles.put(new ArrayList<>(currentTiles), currentWord.toString());
                     }
                     currentWord.setLength(0); // reset word
                     currentTiles.clear(); // reset tile list
                 }
             }
             if (currentWord.length() > 1) {
-                wordsToTiles.put(currentWord.toString(), currentTiles);
+                wordsToTiles.put(new ArrayList<>(currentTiles), currentWord.toString());
             }
         }
         return wordsToTiles;

@@ -56,11 +56,11 @@ public class ScrabbleModel {
         }
 
         //Set up AI Players
-        if(numAI != 0) {
+        if (numAI != 0) {
             for (int i = 1; i <= numAI; i++) {
                 String aiName = "Bot" + i; //e.g. Bot 1, Bot 2, Bot3, etc.
 
-                Player ai = new AI(this, aiName,dictionary, gameBoard);
+                Player ai = new AI(this, aiName, dictionary, gameBoard);
                 ai.drawTiles(gameBag, 7, this);
                 players.add(ai);
             }
@@ -117,16 +117,20 @@ public class ScrabbleModel {
 
     /**
      * Method that checks if current player is AI, and if so, handles their turn
+     *
      * @param currentPlayer the player to check if they are AI
      */
-    public void handleAI(Player currentPlayer){
+    public void handleAI(Player currentPlayer) {
         //If the current player is AI
-        if(currentPlayer.checkAIPlayer()){
+        if (currentPlayer.checkAIPlayer()) {
             String command = currentPlayer.play();
-            switch(command){
-                case "exchange": handleExchange(currentPlayer);
-                case "play": handlePlay(currentPlayer);
-                case "pass": handlePass(currentPlayer);
+            switch (command) {
+                case "exchange":
+                    handleExchange(currentPlayer);
+                case "play":
+                    handlePlay(currentPlayer);
+                case "pass":
+                    handlePass(currentPlayer);
             }
         }
         //Otherwise it does nothing
@@ -289,10 +293,10 @@ public class ScrabbleModel {
             return false;
         }
 
-        Map<String, List<Tile>> attemptedWords = gameBoard.gatherWordsOnBoard();
+        Map<List<Tile>, String> attemptedWords = gameBoard.gatherWordsOnBoard();
 
         // get new words formed
-        List<String> newWords = (turnNumber == 0) ? new ArrayList<>(attemptedWords.keySet()) : getNewWords(new ArrayList<>(attemptedWords.keySet()));
+        List<String> newWords = (turnNumber == 0) ? new ArrayList<>(attemptedWords.values()) : getNewWords(new ArrayList<>(attemptedWords.values()));
 
 
         for (String word : newWords) {
@@ -303,7 +307,7 @@ public class ScrabbleModel {
         }
 
         // Update game state for valid play
-        wordsInPlay = new ArrayList<>(attemptedWords.keySet());
+        wordsInPlay = new ArrayList<>(attemptedWords.values());
         for (Tile tileToRemove : tilesToPlay.keySet()) {
             currentPlayer.removeTile(String.valueOf(tileToRemove.getLetter()));
         }
@@ -326,6 +330,7 @@ public class ScrabbleModel {
      */
     private List<String> getNewWords(List<String> attemptedWordsInPlay) {
         Map<String, Integer> wordsInPlayCount = new HashMap<>();
+
         for (String word : wordsInPlay) {
             wordsInPlayCount.put(word, wordsInPlayCount.getOrDefault(word, 0) + 1);
         }
@@ -340,6 +345,7 @@ public class ScrabbleModel {
             }
             wordsInPlayCount.put(word, currentCount + 1);
         }
+        System.out.println("new words: " + tempList);
         return tempList;
     }
 
@@ -389,22 +395,44 @@ public class ScrabbleModel {
     /**
      * Method calculateScore() will calculate the score for each word played.
      *
-     * @param wordsFormed the words that are formed by the player
+     * @param wordsToTiles the map of tile lists to their corresponding words
+     * @param wordsFormed  the words that are formed by the player
      * @return the score
      */
-    private int calculateScore(Map<String, List<Tile>> wordsToTiles, List<String> wordsFormed) {
-        //Initial Score is 0
+    private int calculateScore(Map<List<Tile>, String> wordsToTiles, List<String> wordsFormed) {
+        // Initial score
         int score = 0;
 
-        //Calculate each word of the score
+        // Iterate through the list of newly formed words
         for (String word : wordsFormed) {
-            List<Tile> tiles = wordsToTiles.get(word);
+            // Find the tiles corresponding to the current word
+            List<Tile> tiles = findTilesForWord(wordsToTiles, word);
 
+            // Calculate score for this word
             for (Tile tile : tiles) {
                 score += tile.getPointValue();
+                System.out.println("Tile: " + tile.getLetter() + " Point Value: " + tile.getPointValue());
             }
         }
+
         return score;
+    }
+
+    /**
+     * Helper method to find the list of tiles corresponding to a word.
+     *
+     * @param wordsToTiles the map of tile lists to words
+     * @param word         the word to find tiles for
+     * @return the list of tiles corresponding to the word
+     */
+    private List<Tile> findTilesForWord(Map<List<Tile>, String> wordsToTiles, String word) {
+        // Iterate through the map to find the matching word and return its tiles
+        for (Map.Entry<List<Tile>, String> entry : wordsToTiles.entrySet()) {
+            if (entry.getValue().equals(word)) {
+                return entry.getKey();
+            }
+        }
+        return Collections.emptyList(); // Return an empty list if no tiles found (shouldn't happen)
     }
 
     /**
@@ -468,10 +496,17 @@ public class ScrabbleModel {
      */
     //method to display messages
     public void showMessage(String message) {
-        if (!isTest | !getCurrentPlayer().checkAIPlayer()) {
+        if (!isTest && !getCurrentPlayer().checkAIPlayer()) {
             JOptionPane.showMessageDialog(view.getFrame(), message);
         }
     }
 
-
+    /**
+     * Getter for words in play
+     *
+     * @return words in play currently
+     */
+    public List<String> getWordsInPlay() {
+        return wordsInPlay;
+    }
 }
