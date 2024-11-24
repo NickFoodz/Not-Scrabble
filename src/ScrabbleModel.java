@@ -402,19 +402,55 @@ public class ScrabbleModel {
         // Initial score
         int score = 0;
 
+        // get premium positions
+        HashMap<String, Integer> premiumPositions = gameBoard.getPremiumPositions();
+
         // Iterate through the list of newly formed words
         for (String word : wordsFormed) {
 
             Map<Position, Tile> positionTileMap = findTilesForWord(wordsToTiles, word);
 
+            // track multiplier for premium tiles
+            int multiplier = 1;
+
             // Calculate score for this word
-            for (Tile tile : positionTileMap.values()) {
-                score += tile.getPointValue();
-                System.out.println("Tile: " + tile.getLetter() + " Point Value: " + tile.getPointValue());
+            for (Map.Entry<Position, Tile> entry : positionTileMap.entrySet()) {
+                Position position = entry.getKey();
+                Tile tile = entry.getValue();
+
+                String positionKey = position.toString();
+
+                // handle double letter square
+                if (premiumPositions.containsKey(positionKey) && premiumPositions.get(positionKey) == 2) {
+                    score += tile.getPointValue() * 2;
+                    System.out.println("Tile: " + tile.getLetter() + " Point Value on double letter: " + tile.getPointValue());
+                }
+
+                // handle triple letter square
+                else if (premiumPositions.containsKey(positionKey) && premiumPositions.get(positionKey) == 4) {
+                    score += tile.getPointValue() * 2;
+                    System.out.println("Tile: " + tile.getLetter() + " Point Value on triple letter: " + tile.getPointValue());
+                }
+                // no premium tile
+                else {
+                    score += tile.getPointValue();
+                    System.out.println("Tile: " + tile.getLetter() + " Point Value: " + tile.getPointValue());
+                }
+
+                // handle double word score
+                if (premiumPositions.containsKey(positionKey) && premiumPositions.get(positionKey) == 3) {
+                    multiplier = 2;
+                }
+
+                // handle triple word score
+                else if (premiumPositions.containsKey(positionKey) && premiumPositions.get(positionKey) == 5) {
+                    multiplier = 3;
+                }
             }
+            score *= multiplier;
+            System.out.println("Total score for word '" + word + "' with multiplier: " + score);
+
         }
-
-
         return score;
     }
 
