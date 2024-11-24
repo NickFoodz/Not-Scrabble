@@ -30,4 +30,8 @@ public class Tile {
     public void setLetter(char newLetter){
         this.letter = newLetter;
     }
+
+    public void setPointValue(int pointValue) {
+        this.pointValue = pointValue;
+    }
 }

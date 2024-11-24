@@ -84,19 +84,31 @@ public class ScrabbleButton extends JButton {
                 char blankLetter = ' ';
                 String blankInput;
                 //Ask to enter a letter, continuously
-                while ((blankInput = JOptionPane.showInputDialog("Please enter the letter you wish to play")).length() != 1) {
-                    blankLetter = blankInput.toUpperCase().charAt(0);
-                    JOptionPane.showMessageDialog(this, "Please enter only a single letter");
-                }
+                do {
+                    blankInput = JOptionPane.showInputDialog("Please enter the letter you wish to play");
+
+                    if (blankInput != null && blankInput.length() == 1) {
+                        blankLetter = blankInput.toUpperCase().charAt(0);
+                        break; // Valid input, exit the loop
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please enter only a single letter");
+                    }
+                } while (true);
                 this.setLetter(blankLetter);
                 this.score = 0;
+                t.setLetter(blankLetter);
+                t.setPointValue(0);
             } else {
                 //Sets letter of this button, and sets score
-                this.setLetter(this.tile.getLetter());
-                this.score = tile.getPointValue();
+                 this.setLetter(this.tile.getLetter());
+                 this.score = tile.getPointValue();
             }
             this.setBackground(tileColor);
             this.empty = false;
+
+            // TEST
+            System.out.println("tile t: " + t.getLetter());
+            System.out.println(this.tile.getLetter());
         }
     }
 
