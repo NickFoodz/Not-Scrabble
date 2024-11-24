@@ -275,9 +275,15 @@ public class AI extends Player {
         }
 
         return sortedWords;
-
     }
 
+    public void setBoard(Board gameBoard){
+        this.board = gameBoard;
+    }
+
+    public void setModel(ScrabbleModel model){
+        this.model = model;
+    }
 
 }
 

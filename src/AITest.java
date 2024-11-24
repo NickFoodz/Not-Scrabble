@@ -16,6 +16,8 @@ public class AITest {
         playerList.add(ai);
         //Create new game from the model's testing constructor
         ScrabbleModel game = new ScrabbleModel(playerList);
+        ai.setBoard(game.getGameBoard());
+        ai.setModel(game);
 
         ArrayList<Character> tc = new ArrayList<>();
         for (Tile t : ai.getRack()) {
@@ -49,7 +51,8 @@ public class AITest {
         playerList.add(player1);
         playerList.add(ai);
         ScrabbleModel game = new ScrabbleModel(playerList);
-
+        ai.setBoard(game.getGameBoard());
+        ai.setModel(game);
         //First check and store the ai's tiles
         ArrayList<Character> tc = new ArrayList<>();
         for (Tile t : ai.getRack()) {
