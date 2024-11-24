@@ -116,6 +116,19 @@ public class ScrabbleModel {
     }
 
     /**
+     * Method that checks if current player is AI, and if so, handles their turn
+     *
+     * @param currentPlayer the player to check if they are AI
+     */
+    public void handleAI(Player currentPlayer) {
+        //If the current player is AI
+        if (currentPlayer.checkAIPlayer()) {
+            currentPlayer.play();
+        }
+        //Otherwise it does nothing
+    }
+
+    /**
      * Handler for passing a turn
      *
      * @param currentPlayer the player who will pass the turn

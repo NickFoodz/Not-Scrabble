@@ -70,15 +70,16 @@ public class AI extends Player {
      */
     @Override
     public String play() {
+        //Checks tiles letters for debugging
+        ArrayList<Character> tc = new ArrayList<>();
+        for (Tile t : getRack()) {
+            tc.add(t.getLetter());
+        }
+        System.out.println(tc);
+
         //First, check if there are blank tiles in rack. The logic is too complex to have the AI play that for now
         if (checkForBlankTile() > 0) {
             int numBlanks = checkForBlankTile();
-            //Checks tiles letters for debugging
-            ArrayList<Character> tc = new ArrayList<>();
-            for (Tile t : getRack()) {
-                tc.add(t.getLetter());
-            }
-            System.out.println(tc);
             //String for exchange
             ArrayList<String> blankTile = new ArrayList<>();
             for (int i = 1; i <= numBlanks; i++) {
@@ -92,6 +93,9 @@ public class AI extends Player {
 
         //No blank tiles? Try playing a word
         ArrayList<String> highestScoringWords = getHighestScoringWordList();
+
+        // TEST
+        System.out.println(highestScoringWords.size());
 
         // If there are no words to play, exchange 3 tiles from rack
         if (highestScoringWords.isEmpty()) {
@@ -110,10 +114,14 @@ public class AI extends Player {
                     Position start = new Position(row, col);
 
                     if (tryWordPlacement(word, start, true)) {
+                        // TEST
+                        System.out.println(word);
                         return "play";
                     }
                     // Attempt vertical placement
                     if (tryWordPlacement(word, start, false)) {
+                        // TEST
+                        System.out.println(word);
                         return "play";
                     }
                 }

@@ -107,10 +107,6 @@ public class ScrabbleButton extends JButton {
             }
             this.setBackground(tileColor);
             this.empty = false;
-
-            // TEST
-            System.out.println("tile t: " + t.getLetter());
-            System.out.println(this.tile.getLetter());
         }
     }
 
