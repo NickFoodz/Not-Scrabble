@@ -33,7 +33,7 @@ public class ScrabbleView extends JFrame {
 
         //Get the number of players, reject non-integer inputs
         int numPlayers = 0;
-        while(numPlayers == 0 | numPlayers >4) {
+        while(numPlayers <= 0 | numPlayers >4) {
             String getPlayers = (JOptionPane.showInputDialog(frame, "Enter the number of human players"));
             try {
                 numPlayers = Integer.parseInt(getPlayers);

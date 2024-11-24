@@ -7,10 +7,14 @@ Created by Nick Fuda and Andrew Roberts
 
 ***************************************************************************************************************
 Known Bugs:
+Milestone 2
 - When inputting a non integer input for number of players, the game can crash.
 - An invalid placement of 2 or more tiles sometimes registers as valid if they are in the same row/column
 - Clicking a button twice may cause the input to read invalid until you pass. Next player should have it work.
 - Undo button does not re-enable the selected tile from the player's rack.
+
+Milestone 3
+- Entering a blank tile sometimes does not show the placed tile's letter
 
 ***************************************************************************************************************
 
@@ -18,7 +22,7 @@ Contributions:
 Andrew Roberts: Position, Bag, Player, Game, WordValidator, Board, LetterPointValues, PlayerRackPanel,
 ScrabbleBoardPanel, ScrabbleView, readme.
 
-Nick Fuda: Board, Game, Position, WordValidator classes, javadocs, scrabblewords.txt, readme, ScrabbleButton,
+Nick Fuda: Board, Game, Position, WordValidator classes, javadocs, scrabblewords.txt, readme, ScrabbleButton, AI,
 ScrabbleBoardPanel, ScrabbleView, and UML
 
 Both of us also committed many times, with many iterations of ideas pushed to GitHub as we collaborated and 
@@ -112,11 +116,11 @@ if it is valid in the game.
 ###############################################################################################################
 Milestone 2:
 
--Changed "Game" class to "ScrabbleModel" to better reflect the nature of what it is
--Added ScrabbleView, ScrabbleBoardPanel, PlayerRackPanel, and ScrabbleButton GUI classes.
--Removed the Parser class and implemented it as a method into ScrabbleModel
--Created ScrabbleModelTest class
--Main class removed, replaced with view
+- Changed "Game" class to "ScrabbleModel" to better reflect the nature of what it is
+- Added ScrabbleView, ScrabbleBoardPanel, PlayerRackPanel, and ScrabbleButton GUI classes.
+- Removed the Parser class and implemented it as a method into ScrabbleModel
+- Created ScrabbleModelTest class
+- Main class removed, replaced with view
 
 - ScrabbleView
   - The main GUI class, which creates the frame of the GUI and implements different java swing components.
@@ -192,6 +196,24 @@ Milestone 2:
   - test NextPlayerTurn() checks that the NextPlayerTurn() function returns the correct player
   - test getCurrentPlayer() checks that the player whose turn it is returns
   - test getPlayers() checks that the player list contains all the players in the game
+
+###############################################################################################################
+Milestone 3
+
+- Changed maximum players to 4, with a minimum of 1 human player.
+  - No longer accepts non-integer inputs leading to errors
+  - No longer accepts values greater than 4 or under 0.
+- Added ability to add AI players
+- Added new class: AI
+  - Class AI allows for an AI player to make plays in Scrabble
+    - Priority 1: If the AI has any blank pieces, they will exchange them. The AI will only exchange blank tiles.
+    - Priority 2: If the AI can play a word, it plays it on the board.
+    - Priority 3: If the AI cannot play a word and has no blank tiles, it passes its turn
+  - The priorities given were done to allow the play option to not be too complex to include blank tiles
+  - Blank tiles are best left for human players given current functionality of the game
+  - If no move can be made, the AI player would need to skip their turn.
+  - The AI's tiles are not shown to the player to ensure a fair game.
+
 ***************************************************************************************************************
 
 Future Goals;
@@ -213,6 +235,9 @@ Milestone 2:
 - More time to test and develop, especially GUI related components.
 - Addition of blank tiles, premium squares and AI Players.
 - Aim for looser coupling and have higher cohesion
+
+###############################################################################################################
+
 
 ***************************************************************************************************************
 Other Notes:
