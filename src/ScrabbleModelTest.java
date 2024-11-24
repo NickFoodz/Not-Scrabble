@@ -367,8 +367,44 @@ public class ScrabbleModelTest {
         game.handlePlay(game.getCurrentPlayer());
         game.handlePass(game.getCurrentPlayer());
         assertEquals(game.getCurrentPlayer().getScore(),42);
-
-
+        game.handlePass(game.getCurrentPlayer());
+        //clear map and give player tiles to Play "SLEEPY" from J10->O10 (I am sleepy its 3:33 a.m.)
+        map.clear();
+        assertEquals(game.getCurrentPlayer(), player2);
+        Tile l = new Tile('L', 3);
+        Tile e2 = new Tile('E',1);
+        Tile e3 = new Tile('E', 1);
+        Tile p = new Tile('P', 2);
+        Tile y = new Tile('Y', 4);
+        Position k10 = new Position(9,10);
+        Position l10 = new Position(9,11);
+        Position m10 = new Position(9,12);
+        Position n10 = new Position(9,13);
+        Position o10 = new Position(9,14);
+        map.put(l,k10);
+        map.put(e2,l10);
+        map.put(e3,m10);
+        map.put(p,n10);
+        map.put(y,o10);
+        //Should add score of 2 + 3 + 1 + 1 + 3*2 + 4 =17 for total of 17 + 12 = 29
+        game.getCurrentPlayer().setTilesPlayed(map);
+        game.handlePlay(game.getCurrentPlayer());
+        game.handlePass(game.getCurrentPlayer());
+        assertEquals(game.getCurrentPlayer().getScore(),29);
+        game.handlePass(game.getCurrentPlayer());
+        //Back to player 1, will play the word "TRY" from O8 to O10, to use a triple word multiplier
+        map.clear();
+        Position o8 = new Position(7,14);
+        Position o9 = new Position(8,14);
+        Tile t5 = new Tile('T', 2);
+        Tile r = new Tile('R',3);
+        map.put(t5,o8);
+        map.put(r,o9);
+        game.getCurrentPlayer().setTilesPlayed(map);
+        game.handlePlay(game.getCurrentPlayer());
+        game.handlePass(game.getCurrentPlayer());
+        //Score should be 69; 42 + (2+3+4)*3 = 69
+        assertEquals(game.getCurrentPlayer().getScore(),69);
     }
 
 
