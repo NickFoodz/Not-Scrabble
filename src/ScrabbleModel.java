@@ -579,21 +579,20 @@ public class ScrabbleModel implements Serializable {
         ScrabbleModel loadGame = null;
         try (FileInputStream inputStream = new FileInputStream(fileName);
              ObjectInputStream s = new ObjectInputStream(inputStream)) {
-            loadGame = (ScrabbleModel) s.readObject();
-            gameBoard = loadGame.getGameBoard();
-            players = loadGame.getPlayers();
-            gameBag = loadGame.getGameBag();
-            currentPlayerIndex = loadGame.getPlayerIndex();
-            gameOver = isGameOver();
-            successiveScorelessTurns = loadGame.successiveScorelessTurns;
-            wordsInPlay = loadGame.getWordsInPlay();
-            turnNumber = loadGame.turnNumber;
-            isTest = loadGame.isTest;
-            //Show that the model is successfully imported
-            System.out.println(getPlayers());
-            gameBoard.displayBoard();
-            System.out.println(getCurrentPlayer().getRack());
-
+                loadGame = (ScrabbleModel) s.readObject();
+                gameBoard = loadGame.getGameBoard();
+                players = loadGame.getPlayers();
+                gameBag = loadGame.getGameBag();
+                currentPlayerIndex = loadGame.getPlayerIndex();
+                gameOver = isGameOver();
+                successiveScorelessTurns = loadGame.successiveScorelessTurns;
+                wordsInPlay = loadGame.getWordsInPlay();
+                turnNumber = loadGame.turnNumber;
+                isTest = loadGame.isTest;
+                //Show that the model is successfully imported
+                System.out.println(getPlayers());
+                gameBoard.displayBoard();
+                System.out.println(getCurrentPlayer().getRack());
         } catch (IOException e) {
             e.printStackTrace();
         }

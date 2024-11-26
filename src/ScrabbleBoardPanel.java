@@ -29,17 +29,26 @@ public class ScrabbleBoardPanel extends JPanel implements Serializable {
         boardButtons = new ScrabbleButton[15][15];
         for (int row = 0; row < 15; row++) {
             for (int col = 0; col < 15; col++) {
-                Position buttonPosition = new Position(row,col);
+                Position buttonPosition = new Position(row, col);
                 ScrabbleButton button = new ScrabbleButton(row, col);
                 char ch = 'A';
                 button.setText(Character.toString(ch + col) + (row + 1));
-                switch(scrabbleView.getGame().getGameBoard().getPremiumPositions().get(buttonPosition.toString())){
-                    case 2: button.setColor(Color.cyan); break;
-                    case 3: button.setColor(Color.pink);break;
-                    case 4: button.setColor(Color.blue);break;
-                    case 5: button.setColor(Color.red);break;
+                switch (scrabbleView.getGame().getGameBoard().getPremiumPositions().get(buttonPosition.toString())) {
+                    case 2:
+                        button.setColor(Color.cyan);
+                        break;
+                    case 3:
+                        button.setColor(Color.pink);
+                        break;
+                    case 4:
+                        button.setColor(Color.blue);
+                        break;
+                    case 5:
+                        button.setColor(Color.red);
+                        break;
                     case null, default:
-                        button.setColor(Color.white);break;
+                        button.setColor(Color.white);
+                        break;
                 }
                 button.addActionListener(new BoardButtonClickListener(row, col));
                 boardButtons[row][col] = button;
@@ -47,6 +56,24 @@ public class ScrabbleBoardPanel extends JPanel implements Serializable {
             }
         }
     }
+
+    /**
+    * Updates from a load
+    */
+    public void updateBoard(){
+        Board board = scrabbleView.getGame().getGameBoard();
+        for (int row = 0; row < 15; row++) {
+            for (int col = 0; col < 15; col++) {
+                Position buttonPosition = new Position(row, col);
+                //If the board position has a tile, make the boardbutton have that tile
+                if(board.getPosition(row,col).getTile()!=null){
+                    boardButtons[row][col].placeTile(board.getPosition(row,col).getTile());
+                    boardButtons[row][col].setEnabled(false);
+                }
+
+            }
+        }
+               }
 
     // helper class for button click action listener
     private class BoardButtonClickListener implements ActionListener {
@@ -99,6 +126,9 @@ public class ScrabbleBoardPanel extends JPanel implements Serializable {
         return boardButtons;
     }
 
+
+
+
     /**
      * Reverts Tiles if move was invalid
      *
@@ -110,4 +140,5 @@ public class ScrabbleBoardPanel extends JPanel implements Serializable {
         }
     }
 }
+
 

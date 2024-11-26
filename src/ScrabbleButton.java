@@ -105,11 +105,12 @@ public class ScrabbleButton extends JButton implements Serializable {
                 t.setPointValue(0);
             } else {
                 //Sets letter of this button, and sets score
-                 this.setLetter(this.tile.getLetter());
-                 this.score = tile.getPointValue();
+                this.setLetter(this.tile.getLetter());
+                this.score = tile.getPointValue();
             }
             this.setBackground(tileColor);
             this.empty = false;
+
         }
     }
 

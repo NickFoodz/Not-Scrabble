@@ -21,7 +21,7 @@ public class ScrabbleView extends JFrame implements Serializable {
     private PlayerRackPanel playerRackPanel; // the players' rack
     private ScrabbleModel game; // the game instance
     private HashMap<Player, JLabel> playerScoreLabel = new HashMap<>() {};
-    private JPanel scores;
+    private JPanel scores = new JPanel();
 
     /**
      *
@@ -79,7 +79,6 @@ public class ScrabbleView extends JFrame implements Serializable {
         boardPanel = new ScrabbleBoardPanel(playerRackPanel, this);
 
         //Player scores panel
-        JPanel scores = new JPanel();
         scores.setLayout(new GridLayout(game.getPlayers().size(), 0));
         for (Player player : game.getPlayers()) {
             JLabel playerScore = new JLabel(player.getName() + " score: " + player.getScore());
@@ -354,6 +353,7 @@ public class ScrabbleView extends JFrame implements Serializable {
     private void loadGame() throws IOException, ClassNotFoundException {
         String fileName = JOptionPane.showInputDialog("Please enter the name of the save game file.");
         game.loadGame(fileName);
+        updateFromLoad();
     }
 
     /**
@@ -369,8 +369,26 @@ public class ScrabbleView extends JFrame implements Serializable {
      * Updates the GUI from a load.
      */
     public void updateFromLoad(){
+        boardPanel.updateBoard();
+        updatePlayerScoreLabel();
+        updateViewForCurrentPlayer();
+        frame.repaint();
         //Need to implement a method to update the GUI
     }
+
+    /**
+     * Updates the scores panel
+     */
+    private void updatePlayerScoreLabel(){
+        scores.removeAll();
+        for (Player player : game.getPlayers()) {
+            JLabel playerScore = new JLabel(player.getName() + " score: " + player.getScore());
+            playerScoreLabel.put(player, playerScore);
+            scores.add(playerScore);
+        }
+        scores.repaint();
+    }
+
     /**
      * Main method to run and test a game
      *
