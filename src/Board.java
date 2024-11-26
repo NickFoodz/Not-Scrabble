@@ -5,6 +5,7 @@
  * @author Andrew Roberts
  */
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.Map;
  * @author Andrew Roberts
  * @version 2
  */
-public class Board {
+public class Board implements Serializable {
     private Position[][] board;
     private HashMap<String, Integer> premiumPositions = new HashMap<>();
 

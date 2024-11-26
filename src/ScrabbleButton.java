@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.lang.String;
 
 /**
@@ -9,7 +10,7 @@ import java.lang.String;
  * @author Nick Fuda
  * @version 0.1
  */
-public class ScrabbleButton extends JButton {
+public class ScrabbleButton extends JButton implements Serializable {
     private int row; //Row location of the tile
     private int column; //Column location of the tile
     private Position position;

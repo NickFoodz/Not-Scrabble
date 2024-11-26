@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -12,14 +14,14 @@ import java.util.LinkedHashMap;
  * @version 1
  *
  */
-public class ScrabbleView extends JFrame {
+public class ScrabbleView extends JFrame implements Serializable {
     private JFrame frame; // main frame for the game
     private ScrabbleBoardPanel boardPanel; // panel for the board
     private Tile selectedTile; // tile the player currently has selected
     private PlayerRackPanel playerRackPanel; // the players' rack
     private ScrabbleModel game; // the game instance
-    private HashMap<Player, JLabel> playerScoreLabel = new HashMap<>() {
-    };
+    private HashMap<Player, JLabel> playerScoreLabel = new HashMap<>() {};
+    private JPanel scores;
 
     /**
      *
@@ -29,7 +31,7 @@ public class ScrabbleView extends JFrame {
         // partially set up frame
         frame = new JFrame("Not Scrabble"); // create JFrame with title of main window
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 1000);
+        frame.setSize(1200, 1000);
 
         //Get the number of players, reject non-integer inputs
         int numPlayers = 0;
@@ -49,6 +51,7 @@ public class ScrabbleView extends JFrame {
         }
 
         int numAI = 0;
+        boolean retry = false;
         String getNumAI;
         do {
             getNumAI = (JOptionPane.showInputDialog(frame, "Enter the number of AI Players?"));
@@ -56,14 +59,16 @@ public class ScrabbleView extends JFrame {
                 numAI = Integer.parseInt(getNumAI);
                 if (numAI + numPlayers > 4) {
                     JOptionPane.showMessageDialog(frame, "Only 4 players or fewer can play at a time");
-                }
+                    retry = true;
+                } else {retry=false;}
             } catch (NumberFormatException e) {
                 if (getNumAI == null) {
                     System.exit(0);
                 }
                 JOptionPane.showMessageDialog(frame, "Value must be an integer");
+                retry = true;
             }
-        }while((numPlayers + numAI) > 4);
+        }while((numPlayers + numAI) > 4 | retry);
 
         // initialize game with specified number of players
         this.game = new ScrabbleModel(numPlayers, this, numAI);
@@ -82,8 +87,32 @@ public class ScrabbleView extends JFrame {
             scores.add(playerScore);
         }
 
+        JPanel saveLoad = new JPanel();
+        JButton save = new JButton("Save Game");
+        JButton load = new JButton("Load Game");
+        save.addActionListener(e -> {
+            try {
+                saveGame();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        load.addActionListener(e -> {
+            try {
+                loadGame();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        saveLoad.add(save);
+        saveLoad.add(load);
 
         // set up rest of frame
+        frame.add(saveLoad, BorderLayout.WEST);
         frame.add(scores, BorderLayout.EAST);
         frame.add(playerRackPanel, BorderLayout.SOUTH);
         frame.add(boardPanel, BorderLayout.CENTER);
@@ -152,7 +181,7 @@ public class ScrabbleView extends JFrame {
             displayWinnerScreen();
         }
         //Handle AI at the end of the turn after the player is switched
-        if(game.getCurrentPlayer().checkAIPlayer()){
+        while(game.getCurrentPlayer().checkAIPlayer()){
             game.handleAI(game.getCurrentPlayer());
             playerRackPanel.clearExchangePanel(); // clear exchange panel
             updateViewForCurrentPlayer();  // refresh display after pass
@@ -173,7 +202,7 @@ public class ScrabbleView extends JFrame {
             displayWinnerScreen();
         }
         //Handle AI at the end of the turn after the player is switched
-        if(game.getCurrentPlayer().checkAIPlayer()){
+        while(game.getCurrentPlayer().checkAIPlayer()){
             game.handleAI(game.getCurrentPlayer());
             playerRackPanel.clearExchangePanel(); // clear exchange panel
             updateViewForCurrentPlayer();  // refresh display after pass
@@ -205,7 +234,7 @@ public class ScrabbleView extends JFrame {
             displayWinnerScreen();
         }
         //Handle AI at the end of the turn after the player is switched
-        if(game.getCurrentPlayer().checkAIPlayer()){
+        while(game.getCurrentPlayer().checkAIPlayer()){
             game.handleAI(game.getCurrentPlayer());
             playerRackPanel.clearExchangePanel(); // clear exchange panel
             updateViewForCurrentPlayer();  // refresh display after pass
@@ -317,6 +346,28 @@ public class ScrabbleView extends JFrame {
         );
     }
 
+    /**
+     * Loads the game from a java serialization using the filename
+     * @throws IOException if file is not found
+     * @throws ClassNotFoundException if Class is not found
+     */
+    private void loadGame() throws IOException, ClassNotFoundException {
+        String fileName = JOptionPane.showInputDialog("Please enter the name of the save game file.");
+        game.loadGame(fileName);
+    }
+
+    /**
+     * Saves the game using the model's serialization method
+     * @throws IOException
+     */
+    private void saveGame() throws IOException{
+        String fileName = JOptionPane.showInputDialog("Please enter a name for the Save");
+        game.saveGame(fileName);
+    }
+
+    public void updateFromLoad(ScrabbleView load){
+        //Need to implement a method to update the GUI
+    }
     /**
      * Main method to run and test a game
      *

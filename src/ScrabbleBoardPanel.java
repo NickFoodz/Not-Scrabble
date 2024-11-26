@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.lang.Character;
 import java.util.ArrayList;
 
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  * @author Nick Fuda
  * @version 1
  */
-public class ScrabbleBoardPanel extends JPanel {
+public class ScrabbleBoardPanel extends JPanel implements Serializable {
     private final ScrabbleButton[][] boardButtons; // the board buttons
     private final PlayerRackPanel playerRackPanel; // the players rack
     private final ScrabbleView scrabbleView; // reference to scrabble view
@@ -71,6 +72,7 @@ public class ScrabbleBoardPanel extends JPanel {
          */
         @Override
         public void actionPerformed(ActionEvent e) {
+            ScrabbleModel model = scrabbleView.getGame();
             Tile tile = scrabbleView.getSelectedTile();
             if (tile != null) {
                 // Place tile in GUI board
@@ -81,7 +83,7 @@ public class ScrabbleBoardPanel extends JPanel {
                 scrabbleView.setSelectedTile(null);
 
                 // Add tile to playedTiles field for current player and add it to placedTiles
-                Position position = ScrabbleModel.getGameBoard().getPosition(row, col);
+                Position position = model.getGameBoard().getPosition(row, col);
                 scrabbleView.getGame().getCurrentPlayer().addTilesPlayed(tile, position);
                 scrabbleView.getGame().getCurrentPlayer().addActionPerformed(tile, false); // add action to hashmap of actions performed by the player
             }

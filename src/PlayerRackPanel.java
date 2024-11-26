@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.Map;
  * @author Andrew Roberts
  * @version 1
  */
-public class PlayerRackPanel extends JPanel {
+public class PlayerRackPanel extends JPanel implements Serializable {
 
     private List<Tile> rack; // The players rack
     private ScrabbleView scrabbleView;  // Reference to ScrabbleView

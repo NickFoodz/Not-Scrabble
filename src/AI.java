@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.*;
 
 import static java.util.Collections.min;
@@ -10,7 +11,7 @@ import static java.util.Collections.min;
  * @author Nick Fuda
  * @version 1
  */
-public class AI extends Player {
+public class AI extends Player implements Serializable {
     private ArrayList<String> dictionary;
     private Board board;
     private ScrabbleModel model;

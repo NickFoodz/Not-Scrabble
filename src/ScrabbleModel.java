@@ -1,6 +1,5 @@
 import javax.swing.*;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -10,10 +9,11 @@ import java.util.*;
  * @author Nick Fuda
  * @version 1
  */
-public class ScrabbleModel {
-    private static Board gameBoard;
-    private static List<Player> players;
-    private static Bag gameBag;
+public class ScrabbleModel implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private  Board gameBoard;
+    private  List<Player> players;
+    private  Bag gameBag;
     private int currentPlayerIndex;
     private boolean gameOver;
     private int successiveScorelessTurns;
@@ -503,7 +503,7 @@ public class ScrabbleModel {
      *
      * @return game board
      */
-    public static Board getGameBoard() {
+    public Board getGameBoard() {
         return gameBoard;
     }
 
@@ -550,7 +550,54 @@ public class ScrabbleModel {
      * getter for game bag
      * @return the game bag
      */
-    public static Bag getGameBag() {
+    public Bag getGameBag() {
         return gameBag;
+    }
+
+    /**
+     * Getter for current player index
+     */
+    private int getPlayerIndex(){return currentPlayerIndex;}
+
+    /**
+     * Saves the game using Serialization
+     */
+
+    public void saveGame(String fileName) throws IOException {
+        try (FileOutputStream f = new FileOutputStream(fileName);
+             ObjectOutputStream s = new ObjectOutputStream(f)) {
+            s.writeObject(this);
+            s.flush();
+            s.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Saved Game");
+    }
+
+    public void loadGame(String fileName) throws FileNotFoundException, IOException, ClassNotFoundException {
+        ScrabbleModel loadGame = null;
+        try (FileInputStream inputStream = new FileInputStream(fileName);
+             ObjectInputStream s = new ObjectInputStream(inputStream)) {
+            loadGame = (ScrabbleModel) s.readObject();
+            gameBoard = loadGame.getGameBoard();
+            players = loadGame.getPlayers();
+            gameBag = loadGame.getGameBag();
+            currentPlayerIndex = loadGame.getPlayerIndex();
+            gameOver = isGameOver();
+            successiveScorelessTurns = loadGame.successiveScorelessTurns;
+            wordsInPlay = loadGame.getWordsInPlay();
+            turnNumber = loadGame.turnNumber;
+            isTest = loadGame.isTest;
+            //Show that the model is successfully imported
+            System.out.println(getPlayers());
+            gameBoard.displayBoard();
+            System.out.println(getCurrentPlayer().getRack());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Loaded Game");
+
     }
 }

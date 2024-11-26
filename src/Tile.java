@@ -1,9 +1,11 @@
+import java.io.Serializable;
+
 /**
  * Class Tile represents the Tiles in a game of Scrabble
  * @author Andrew Roberts
  * @version 1
  */
-public class Tile {
+public class Tile implements Serializable {
     private char letter; // the letter on the tile
     private int pointValue; // how much the tile is worth
 

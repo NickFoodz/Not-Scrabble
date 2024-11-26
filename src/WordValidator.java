@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import java.util.List;
  * @author Andrew Roberts
  * @author Nick Fuda
  */
-public class WordValidator {
+public class WordValidator implements Serializable {
     private Board board;
     private ArrayList<String> dictionary;
 

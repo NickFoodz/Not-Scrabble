@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -8,7 +9,7 @@ import java.util.*;
  * @author Nick Fuda
  * @version 2
  */
-public class Player {
+public class Player implements Serializable {
     protected String name; // the player's name
     protected ArrayList<Tile> rack; //the tiles the player currently holds
     protected int score; //the players score

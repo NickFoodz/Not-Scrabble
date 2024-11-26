@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -6,7 +7,7 @@ import java.util.Map;
  * @version 1
  * @author Andrew Roberts
  */
-public class LetterPointValues {
+public class LetterPointValues implements Serializable {
     private static final Map<Character, Integer> letterPoints = new HashMap<>();
 
     static {

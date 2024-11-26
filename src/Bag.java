@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,7 +10,7 @@ import java.util.HashMap;
  * @version 1
  * @author Andrew Roberts
  */
-public class Bag {
+public class Bag implements Serializable {
     private List<Tile> tiles; // a list containing all the available tiles
     private static final Map<Character, Integer> letterFrequencies = new HashMap<>(); // map containing the letters and corresponding frequencies
     private static final Map<Character, Integer> letterPoints = new HashMap<>(); // map containing the letters and corresponding point value
