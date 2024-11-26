@@ -5,6 +5,15 @@
  * @author Andrew Roberts
  */
 
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,11 +28,22 @@ import java.util.Map;
 public class Board implements Serializable {
     private Position[][] board;
     private HashMap<String, Integer> premiumPositions = new HashMap<>();
+    private boolean customBoard;
 
     public Board() {
         board = new Position[15][15];
         initializeBoard();
-        initPremiums();
+        initDefaultPremiums();
+    }
+
+    /**
+     *  Constructor for custom board
+     * @param customName the name of the file where the board XML is stored.
+     */
+    public Board(String customName){
+        board = new Position[15][15];
+        initializeBoard();
+        importCustomBoardXML(customName);
     }
 
     /**
@@ -208,7 +228,7 @@ public class Board implements Serializable {
     /**
      * method to initiate all premium positions
      */
-    private void initPremiums(){
+    private void initDefaultPremiums(){
         //2LS (double letter square)
         int doubleLetterScore = 2;
         Position a4 = new Position(3,0);
@@ -352,12 +372,71 @@ public class Board implements Serializable {
         return premiumPositions;
     }
 
+    private void setPremiumPositions(HashMap<String,Integer> customBoard){
+        premiumPositions = customBoard;
+    }
+
     /**
      * method to remove position from premium position map once it's been used
      * @param key the position to remove
      */
     public void removePremiumPosition(String key){
         premiumPositions.remove(key);
+    }
+
+    public void importCustomBoardXML(String fileName){
+        try {
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            SAXParser saxParser = factory.newSAXParser();
+
+            //Parse the XML file using a custom handler
+            saxParser.parse(new File(fileName), new BoardHandler(this));
+
+
+        } catch (IOException e){
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            throw new RuntimeException(e);
+        } catch (SAXException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static class BoardHandler extends DefaultHandler {
+        private Board customBoard;
+        private String position;
+        private int type;
+        private String currentElement;
+
+        public BoardHandler(Board board) {this.customBoard = board;}
+
+        @Override
+        public void startElement(String uri, String localName, String qName, Attributes attributes){
+            currentElement = qName;
+        }
+
+        @Override
+        public void endElement(String uri, String localName, String qName) throws SAXException{
+            if ("square".equalsIgnoreCase(qName)){
+                customBoard.premiumPositions.put(position, type);
+                position = null;
+                type = 0;
+            }
+            currentElement = null;
+        }
+
+        @Override
+        public void characters(char[] ch, int start, int length) throws SAXException{
+            String content = new String(ch, start, length).trim();
+            if (type !=0 && currentElement != null & !content.isEmpty()){
+                switch (currentElement.toLowerCase()){
+                    case "pos": position = content;
+                        break;
+                    case "type": type = Integer.parseInt(content);
+                }
+            }
+
+        }
     }
 
 }
