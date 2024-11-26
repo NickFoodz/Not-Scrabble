@@ -365,7 +365,10 @@ public class ScrabbleView extends JFrame implements Serializable {
         game.saveGame(fileName);
     }
 
-    public void updateFromLoad(ScrabbleView load){
+    /**
+     * Updates the GUI from a load.
+     */
+    public void updateFromLoad(){
         //Need to implement a method to update the GUI
     }
     /**
