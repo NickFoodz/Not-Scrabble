@@ -571,6 +571,7 @@ public class ScrabbleModel implements Serializable {
             s.close();
         } catch (IOException e) {
             e.printStackTrace();
+            showMessage("Error: Game not saved");
         }
         System.out.println("Saved Game");
     }
@@ -593,6 +594,9 @@ public class ScrabbleModel implements Serializable {
                 System.out.println(getPlayers());
                 gameBoard.displayBoard();
                 System.out.println(getCurrentPlayer().getRack());
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+            showMessage("Save File not Found");
         } catch (IOException e) {
             e.printStackTrace();
         }
