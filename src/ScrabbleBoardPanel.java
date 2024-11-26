@@ -65,6 +65,10 @@ public class ScrabbleBoardPanel extends JPanel implements Serializable {
         for (int row = 0; row < 15; row++) {
             for (int col = 0; col < 15; col++) {
                 Position buttonPosition = new Position(row, col);
+                //First, reset the square
+                char ch = 'A';
+                boardButtons[row][col].revertTile();
+
                 //If the board position has a tile, make the boardbutton have that tile
                 if(board.getPosition(row,col).getTile()!=null){
                     boardButtons[row][col].placeTile(board.getPosition(row,col).getTile());

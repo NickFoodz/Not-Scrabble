@@ -1,0 +1,6 @@
+<board>
+	<square>
+		<pos>H9</pos>
+		<type>5</type>
+	</square>
+<board>
