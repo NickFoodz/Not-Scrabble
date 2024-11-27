@@ -3,4 +3,24 @@
 		<pos>8H</pos>
 		<type>5</type>
 	</square>
+	<square>
+    	<pos>9H</pos>
+    	<type>2</type>
+    </square>
+    <square>
+        <pos>10H</pos>
+        <type>3</type>
+    </square>
+     <square>
+         <pos>11H</pos>
+         <type>4</type>
+     </square>
+     <square>
+          <pos>1H</pos>
+          <type>0</type>
+     </square>
+     <square>
+          <pos>2H</pos>
+          <type>1</type>
+     </square>
 </board>
