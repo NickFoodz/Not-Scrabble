@@ -1,6 +1,6 @@
 <board>
 	<square>
-		<pos>H9</pos>
+		<pos>8H</pos>
 		<type>5</type>
 	</square>
-<board>
+</board>
