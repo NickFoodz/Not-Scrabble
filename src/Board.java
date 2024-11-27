@@ -428,14 +428,16 @@ public class Board implements Serializable {
         @Override
         public void characters(char[] ch, int start, int length) throws SAXException{
             String content = new String(ch, start, length).trim();
-            if (type !=0 && currentElement != null & !content.isEmpty()){
+            if (currentElement != null & !content.isEmpty()){
                 switch (currentElement.toLowerCase()){
                     case "pos": position = content;
+                    System.out.println(position);
                         break;
                     case "type": type = Integer.parseInt(content);
+                    System.out.println(type);
+                        break;
                 }
             }
-
         }
     }
 
