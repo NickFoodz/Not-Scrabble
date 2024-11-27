@@ -46,12 +46,12 @@ public class AI extends Player implements Serializable {
 
     private ArrayList<String> createDictionary() {
         ArrayList<String> dictionary = new ArrayList<String>();
-        File dictFile = new File("bigDictionary.txt");
+        File dictFile = new File("CollinsScrabbleWords.txt");
         Scanner scanner;
         try {
             scanner = new Scanner(dictFile);
         } catch (FileNotFoundException e) {
-            System.out.println("Dictionary File \"bigDictionary.txt\" is missing");
+            System.out.println("Dictionary File \"CollinsScrabbleWords.txt\" is missing");
             throw new RuntimeException(e);
         }
         while (scanner.hasNextLine()) {
@@ -88,9 +88,13 @@ public class AI extends Player implements Serializable {
                 blankTile.add(" ");
             }
             setTilesToExchange(blankTile);
-            //Return exchange
-            model.handleExchange(this);
-            return "exchange";
+            //Return exchange or pass if exchange fails
+            if (model.handleExchange(this)) {
+                return "exchange";
+            } else {
+                model.handlePass(this);
+                return "pass";
+            }
         }
 
         //No blank tiles? Try playing a word
@@ -135,8 +139,8 @@ public class AI extends Player implements Serializable {
      * @param word         the word to be played
      * @param start        the starting position
      * @param isHorizontal if the play is horizontal (true) or vertical (false)
-     * @author Andrew Roberts
      * @return true if play is successful, false otherwise
+     * @author Andrew Roberts
      */
     private boolean tryWordPlacement(String word, Position start, boolean isHorizontal) {
         Map<Position, Tile> tilesToPlay = new LinkedHashMap<>();

@@ -58,7 +58,7 @@ public class ScrabbleModel implements Serializable {
         //Set up AI Players
         if (numAI != 0) {
             for (int i = 1; i <= numAI; i++) {
-                String aiName = "Bot" + i; //e.g. Bot 1, Bot 2, Bot3, etc.
+                String aiName = "Bot " + i; //e.g. Bot 1, Bot 2, Bot3, etc.
 
                 Player ai = new AI(this, aiName, dictionary, gameBoard);
                 ai.drawTiles(gameBag, 7, this);
@@ -101,12 +101,12 @@ public class ScrabbleModel implements Serializable {
      */
     private ArrayList<String> createDictionary() {
         ArrayList<String> dictionary = new ArrayList<String>();
-        File dictFile = new File("bigDictionary.txt");
+        File dictFile = new File("CollinsScrabbleWords.txt");
         Scanner scanner;
         try {
             scanner = new Scanner(dictFile);
         } catch (FileNotFoundException e) {
-            System.out.println("Dictionary File \"bigDictionary.txt\" is missing");
+            System.out.println("Dictionary File \"CollinsScrabbleWords.txt\" is missing");
             throw new RuntimeException(e);
         }
         while (scanner.hasNextLine()) {
