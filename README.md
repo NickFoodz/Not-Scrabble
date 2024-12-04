@@ -4,10 +4,11 @@
 
 This is a school project for SYSC3110.
 Created by Nick Fuda and Andrew Roberts
+
 ***************************************************************************************************************
 Configuration:
 
-The Game currently does not accept less than 1 human player. To start, run the ScrabbleView main method.
+The game can be played by up to 4 players, including up to 3 AI.
 
 You will be prompted to enter the number of human players for your game. You must have between 1 and 4 human players
 to begin a game of scrabble.
@@ -15,8 +16,26 @@ to begin a game of scrabble.
 You will then be prompted to enter the number of AI players in your game. You cannot exceed a maximum of four players,
 so if you choose 4 human players, enter 0. If you choose 1, you can have up to 3.
 
-After entering the number of players and AI, you will be prompted to enter the human player's names. Then the game will
-begin.
+After entering the number of players and AI, you will be prompted to enter the human player's names. 
+After doing so, you may choose a custom board. The example custom boards are SYSC3110CustomBoard.txt and XML.txt.
+Opening these in notepad or any text editor will show you how to input a custom tile with a premium.
+
+    XML Configuration
+    Generally, within <board>(format goes here)</board>, follow this format
+    For each square:
+    <square>
+	<pos>NumberLetter</pos>
+	<type>integer</type>
+    </square>
+    Number letter example: 9A
+    Integers can be between 2 and 5 for premium tiles, any other number is a normal tile
+        2 -> Double Letter Tile
+        3 -> Double Word Tile
+        4 -> Triple Letter Tile
+        5 -> Triple Word Tile
+
+If no board is selected, or the options "No" or "Cancel" are chosen, the default board will be used.
+Next, the game will begin.
 
 For the rules of scrabble, follow this link https://www.scrabblepages.com/scrabble/rules/
 
@@ -56,10 +75,10 @@ Milestone 3
 
 Contributions:
 Andrew Roberts: Position, Bag, Player, Game, WordValidator, Board, LetterPointValues, PlayerRackPanel,
-ScrabbleBoardPanel, ScrabbleView, readme, AI
+ScrabbleBoardPanel, ScrabbleView, readme, AI, Timer, Undo/Redo features, Save/Load GUI.
 
 Nick Fuda: Board, Game, Position, WordValidator classes, javadocs, scrabblewords.txt, readme, ScrabbleButton, AI,
-ScrabbleBoardPanel, ScrabbleView, and UML
+ScrabbleBoardPanel, ScrabbleView, XML, CustomBoard methods, and UML, Save/Load feature.
 
 Both of us also committed many times, with many iterations of ideas pushed to GitHub as we collaborated and 
 discussed future design decisions.
@@ -263,8 +282,15 @@ Milestone 4/Bonus
 
 - Added a save/load feature that allows the user to select/create a file to load/save their game from
   - Implemented using java serialization
+  - Changes all fields to the saved fields and updates the GUI to reflect.
+  - Uses FileChooser to choose a file, preventing errors from inputting the wrong file name
 
-- Added the option to import custom boards from an XML 
+  - Added the option to import custom boards from an XML
+    - Formatting can be seen in XML configuration at top of readme
+    - XML examples were included.
+    - Choosing an XML uses FileChooser.
+      -  Choosing an invalid file will give a blank board, as format is not checked.
+      - If not in the required XML format, no premium squares are added to the board.
 
 - Added multi-level Undo/Redo buttons to the game
   - Currently, you cannot undo/redo a move if you have a tile selected, you must first place it somewhere 
@@ -275,6 +301,8 @@ Milestone 4/Bonus
 
 - Changed how the number of players/AI is taken from the player to a drop-down menu to improve simplicity
   for the user
+
+- Added FileChooser GUI for the 
 ***************************************************************************************************************
 
 Future Goals;
@@ -340,4 +368,5 @@ Thus far, we have everyone in the Git repository, though this milestone was comp
 
 Milestone 4/Bonus:
 
-Milestone 4 & the bonus was completed exclusively by Nick and Andrew.
+Milestone 4, the bonus was completed exclusively by Nick and Andrew. 
+As this is the last milestone, this entire project was created by Nick and Andrew.
