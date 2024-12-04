@@ -188,7 +188,7 @@ public class AI extends Player implements Serializable {
                     int guiRow = position.getRow();
                     int guiCol = position.getCol();
 
-                    model.getView().getBoardPanel().getBoardButtons()[guiRow][guiCol].placeTile(tile);
+                    model.getView().getBoardPanel().getBoardButtons()[guiRow][guiCol].placeTile(tile, false);
                     model.getView().getBoardPanel().getBoardButtons()[guiRow][guiCol].setEnabled(false);
                     model.getView().getBoardPanel().repaint();
                 }

@@ -16,8 +16,9 @@ public class Player implements Serializable {
     protected int score; //the players score
     protected LinkedHashMap<Position, Tile> tilesPlayed; // tiles played in current turn
     protected ArrayList<String> tilesToExchange; // tiles the play wishes to exchange
-    protected HashMap<Integer,HashMap<Tile, Boolean>> actionsPerformed; // actions the play took before click play, pass or swap, boolean indicates whether its in exchange panel (0) or board (1)
+    protected HashMap<Integer, HashMap<Tile, Boolean>> actionsPerformed; // actions the play took before click play, pass or swap, boolean indicates whether its in exchange panel (0) or board (1)
     protected Integer actionCounter; // int to keep track of when an action was performed
+    protected HashMap<Integer, Position> actionsPerformedPositions; // the positions of the actions taken by the player this turn
 
     /**
      * Creates new player object with corresponding name
@@ -31,6 +32,7 @@ public class Player implements Serializable {
         tilesPlayed = new LinkedHashMap<>();
         tilesToExchange = new ArrayList<>();
         actionsPerformed = new HashMap<>();
+        actionsPerformedPositions = new HashMap<>();
         actionCounter = 0;
     }
 
@@ -193,7 +195,14 @@ public class Player implements Serializable {
     }
 
     /**
-     * adds an action to the linked hashmap
+     * gets the map of actions positions from this turn
+     */
+    public HashMap<Integer, Position> getActionsPerformedPositions() {
+        return actionsPerformedPositions;
+    }
+
+    /**
+     * adds an action to the hashmap
      *
      * @param actionPerformed the tile placed and a boolean indicating if it was an exchange move or not
      */
@@ -203,7 +212,17 @@ public class Player implements Serializable {
     }
 
     /**
+     * adds an action to the hashmap
+     *
+     * @param position the position of the tile played in the current move
+     */
+    public void addActionPerformedPosition(Position position) {
+        actionsPerformedPositions.put(actionCounter, position);
+    }
+
+    /**
      * getter for player action counter
+     *
      * @return the player's action counter
      */
     public Integer getActionCounter() {
@@ -211,25 +230,34 @@ public class Player implements Serializable {
     }
 
     /**
+     * increments the action counter so tact actions taken after a redo is performed start from the correct index
+     */
+    public void incrementActionCounter() {
+        actionCounter++;
+    }
+
+    /**
      * decrements the action counter so that actions taken after an undo is performed overwrite previously undone actions
      */
-    public void decrementActionCounter(){
+    public void decrementActionCounter() {
         actionCounter--;
     }
 
     /**
      * Clears the actions performed in preparation for next turn
      */
-    public void clearActionsPerformed(){
+    public void clearActionsPerformed() {
         actionsPerformed.clear();
+        actionsPerformedPositions.clear();
         actionCounter = 0;
     }
 
     /**
      * Method to be overwritten by child, AI. Returning false for this player has no bearing on the game
+     *
      * @return false, as this class is for human players
      */
-    public boolean checkAIPlayer(){
+    public boolean checkAIPlayer() {
         return false;
     }
 
@@ -241,4 +269,5 @@ public class Player implements Serializable {
     public String play() {
         return null;
     }
+
 }

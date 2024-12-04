@@ -193,12 +193,14 @@ public class ScrabbleModel implements Serializable {
                 view.getBoardPanel().revertTiles(currentPlayer);
             } // clear gui
             currentPlayer.clearTilesPlayed(); // clear played tiles
+            currentPlayer.clearActionsPerformed(); // clear stored actions taken this turn
             return false;
         }
 
         // Step 3: Place tiles and validate words
         if (attemptPlay(currentPlayer, tilesToPlay, positions)) {
             currentPlayer.clearTilesPlayed(); // clear stored played tiles
+            currentPlayer.clearActionsPerformed(); // clear stored actions taken this turn
             currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
             turnNumber++;
             successiveScorelessTurns = 0; // reset successive scoreless turns counter
@@ -211,6 +213,7 @@ public class ScrabbleModel implements Serializable {
             view.getBoardPanel().revertTiles(currentPlayer);
         } // clear gui
         currentPlayer.clearTilesPlayed(); // Clear the played tiles to reset
+        currentPlayer.clearActionsPerformed(); // clear stored actions taken this turn
 
         return false;
     }

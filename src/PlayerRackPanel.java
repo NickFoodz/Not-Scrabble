@@ -3,10 +3,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * PlayerRackPanel is a JPanel that shows the player rack
@@ -27,10 +25,11 @@ public class PlayerRackPanel extends JPanel implements Serializable {
     private JPanel tilePanel;  // Panel for holding tile buttons
     private JPanel exchangePanel; // panel to handle exchanges
     private List<ScrabbleButton> exchangeButtons; // Track exchange buttons for tile placement
-    private List<Tile> selectedTilesForExchange; // Track selected tiles
+    private LinkedHashMap<Integer, Tile> selectedTilesForExchange; // Track selected tiles
     private List<JButton> tileButtons; // List to store references to rack buttons
     private HashMap<Integer, JButton> actionsPerformed; // store a map of what buttons where pressed in the rack
     private Integer actionCounter; // int to keep track of when an action was performed
+    private JButton previousTileButton;
 
 
     /**
@@ -43,7 +42,7 @@ public class PlayerRackPanel extends JPanel implements Serializable {
         this.rack = rack;
         this.scrabbleView = view;  // Set the reference to ScrabbleView
         this.exchangeButtons = new ArrayList<>(); // Initialize exchangeButtons list
-        this.selectedTilesForExchange = new ArrayList<>(); // Initialize selectedTilesForExchange list
+        this.selectedTilesForExchange = new LinkedHashMap<>(); // Initialize selectedTilesForExchange list
         this.tileButtons = new ArrayList<>(); // Initialize tileButtons list
         actionsPerformed = new HashMap<>();
         actionCounter = 0;
@@ -59,8 +58,8 @@ public class PlayerRackPanel extends JPanel implements Serializable {
         playButton.addActionListener(e -> view.handlePlayAction());
         passButton.addActionListener(e -> view.handlePassAction());
         swapButton.addActionListener(e -> view.handleSwapAction());
-        undoButton.addActionListener(e -> view.handleUndoAction()); // to be done for milestone 4
-        //redoButton.addActionListener(e -> view.handleRedoAction());
+        undoButton.addActionListener(e -> view.handleUndoAction());
+        redoButton.addActionListener(e -> view.handleRedoAction());
 
         // Initialize layout and sub-panels
         setLayout(new GridBagLayout());
@@ -164,7 +163,7 @@ public class PlayerRackPanel extends JPanel implements Serializable {
      *
      * @return List of selected tiles
      */
-    public List<Tile> getSelectedTilesForExchange() {
+    public LinkedHashMap<Integer, Tile> getSelectedTilesForExchange() {
         return selectedTilesForExchange;
     }
 
@@ -197,6 +196,13 @@ public class PlayerRackPanel extends JPanel implements Serializable {
      */
     public void decrementActionCounter(){
         actionCounter--;
+    }
+
+    /**
+     * increments the action counter so tact actions taken after a redo is performed start from the correct index
+     */
+    public void incrementActionCounter(){
+        actionCounter++;
     }
 
     /**
@@ -235,6 +241,12 @@ public class PlayerRackPanel extends JPanel implements Serializable {
          */
         @Override
         public void actionPerformed(ActionEvent e) {
+            if (scrabbleView.getSelectedTile() != null){
+                previousTileButton.setEnabled(true);
+                actionCounter--;
+            }
+            previousTileButton = tileButton;
+
             scrabbleView.setSelectedTile(tile);
             tileButton.setEnabled(false);
             actionCounter++;
@@ -270,8 +282,8 @@ public class PlayerRackPanel extends JPanel implements Serializable {
             Tile tile = scrabbleView.getSelectedTile();
             if (tile != null) {
 
-                exchangeButtons.get(index).placeTile(tile);
-                selectedTilesForExchange.add(tile);
+                exchangeButtons.get(index).placeTile(tile, true);
+                selectedTilesForExchange.put(index, tile);
 
                 // create new action performed hashmap to store tile
                 HashMap<Tile, Boolean> actionPerformed = new HashMap<Tile, Boolean>();

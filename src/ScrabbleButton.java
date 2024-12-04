@@ -80,12 +80,12 @@ public class ScrabbleButton extends JButton implements Serializable {
     /**
      * Sets the tile that this button stores, so that it may be used to update the button
      */
-    public void placeTile(Tile t) {
+    public void placeTile(Tile t, boolean isExchange) {
         if (empty) {
             //Stores Tile
             this.tile = t;
             //Code for blank tile letter selection (works but gives null pointer)
-            if (this.tile.getLetter() == ' ') {
+            if (this.tile.getLetter() == ' ' && !isExchange) {
                 char blankLetter = ' ';
                 String blankInput;
                 //Ask to enter a letter, continuously
@@ -160,4 +160,14 @@ public class ScrabbleButton extends JButton implements Serializable {
     public Position getPosition(){
         return this.position;
     }
+
+    /**
+     * Getter for if a button is empty or not
+     * @return true if button is empty, false otherwise
+     */
+    public boolean isEmpty() {
+        return empty;
+    }
 }
+
+

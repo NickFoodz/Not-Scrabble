@@ -72,7 +72,7 @@ public class ScrabbleBoardPanel extends JPanel implements Serializable {
 
                 //If the board position has a tile, make the boardbutton have that tile
                 if (board.getPosition(row, col).getTile() != null) {
-                    boardButtons[row][col].placeTile(board.getPosition(row, col).getTile());
+                    boardButtons[row][col].placeTile(board.getPosition(row, col).getTile(), false);
                     boardButtons[row][col].setEnabled(false);
                 }
 
@@ -108,7 +108,7 @@ public class ScrabbleBoardPanel extends JPanel implements Serializable {
             Tile tile = scrabbleView.getSelectedTile();
             if (tile != null) {
                 // Place tile in GUI board
-                boardButtons[row][col].placeTile(tile);
+                boardButtons[row][col].placeTile(tile, false);
 
                 // Disable button to prevent further modification
                 boardButtons[row][col].setEnabled(false);
@@ -122,6 +122,7 @@ public class ScrabbleBoardPanel extends JPanel implements Serializable {
                 HashMap<Tile, Boolean> actionPerformed = new HashMap<Tile, Boolean>();
                 actionPerformed.put(tile, false);
                 scrabbleView.getGame().getCurrentPlayer().addActionPerformed(actionPerformed); // add action to hashmap of actions performed by the player
+                scrabbleView.getGame().getCurrentPlayer().addActionPerformedPosition(position); // add position of action performed this move
             }
         }
     }
