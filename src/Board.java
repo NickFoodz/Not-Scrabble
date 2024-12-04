@@ -28,7 +28,6 @@ import java.util.Map;
 public class Board implements Serializable {
     private Position[][] board;
     private HashMap<String, Integer> premiumPositions = new HashMap<>();
-    private boolean customBoard;
 
     public Board() {
         board = new Position[15][15];
@@ -127,8 +126,6 @@ public class Board implements Serializable {
             return false;
         }
     }
-
-    //I think this is where we are getting index out of bounds exceptions when trying to play a character
 
     /**
      * Converts the position from a string to a place on the array
@@ -370,10 +367,6 @@ public class Board implements Serializable {
      */
     public HashMap<String,Integer> getPremiumPositions(){
         return premiumPositions;
-    }
-
-    private void setPremiumPositions(HashMap<String,Integer> customBoard){
-        premiumPositions = customBoard;
     }
 
     /**
