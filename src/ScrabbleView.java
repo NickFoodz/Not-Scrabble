@@ -514,7 +514,7 @@ public class ScrabbleView extends JFrame implements Serializable {
 
         if (timeRemaining <= 0) {
             turnTimer.stop();
-            JOptionPane.showMessageDialog(this, game.getCurrentPlayer() + " has run out of time, turn passed.");
+            JOptionPane.showMessageDialog(this, game.getCurrentPlayer().getName() + " has run out of time, turn passed.");
             handlePassAction();
         }
     }
