@@ -379,4 +379,54 @@ public class ScrabbleModelTest {
         assertEquals(game.getPlayers(), playerList);
         System.out.println("getPlayers test successful\n");
     }
+
+    @Test
+/**
+ * Tests that the Bingo bonus is correctly applied when a player uses all 7 tiles in a single turn.
+ */
+    public void testBingoBonus() {
+        // Create a list of players
+        ArrayList<Player> playerList = new ArrayList<Player>();
+        Player player1 = new Player("Andrew");
+        Player player2 = new Player("Nick");
+        playerList.add(player1);
+        playerList.add(player2);
+
+        // Create a new game
+        ScrabbleModel game = new ScrabbleModel(playerList);
+
+        // Assert that player 1 is the current player
+        assertEquals(game.getCurrentPlayer(), player1);
+
+        // Create tiles for the player (7 tiles)
+        Tile a = new Tile('A', 1, false);
+        Tile a2 = new Tile('A', 1, false);
+        Tile r = new Tile('R', 1, false);
+        Tile r2 = new Tile('R', 1, false);
+        Tile g = new Tile('G', 2, false);
+        Tile h = new Tile('H', 4, false);
+        Tile h2 = new Tile('H', 4, false);
+
+        // Create a valid play with all 7 tiles
+        LinkedHashMap<Position, Tile> map = new LinkedHashMap<>();
+        map.put(new Position(7, 7), a);
+        map.put(new Position(7, 8), a2);
+        map.put(new Position(7, 9), r);
+        map.put(new Position(7, 10), r2);
+        map.put(new Position(7, 11), g);
+        map.put(new Position(7, 12), h);
+        map.put(new Position(7, 13), h2);
+
+        // Set the player's tiles for this turn
+        game.getCurrentPlayer().setTilesPlayed(map);
+
+        // Make the move
+        game.handlePlay(game.getCurrentPlayer());
+        game.handlePass(game.getCurrentPlayer());
+
+        // Check if Bingo bonus has been applied
+        assertEquals(game.getCurrentPlayer().getScore(), 82);
+        System.out.println("Bingo bonus test successful\n");
+    }
+
 }

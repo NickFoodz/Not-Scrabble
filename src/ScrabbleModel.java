@@ -20,7 +20,7 @@ public class ScrabbleModel implements Serializable {
     private List<String> wordsInPlay;
     private ArrayList<String> dictionary;
     private int turnNumber;
-    private ScrabbleView view;
+    private transient ScrabbleView view;
     private boolean isTest;
 
     /**
@@ -447,6 +447,9 @@ public class ScrabbleModel implements Serializable {
                 }
             }
             score *= multiplier;
+        }
+        if (getCurrentPlayer().getTilesPlayed().keySet().size() == 7){
+            score += 50; // bingo bonus
         }
         return score;
     }

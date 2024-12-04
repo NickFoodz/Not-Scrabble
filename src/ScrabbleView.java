@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.io.File;
 
 /**
  * The main GUI class for a game of Scrabble. Contains the Frame with the necessary components to play
@@ -23,6 +24,12 @@ public class ScrabbleView extends JFrame implements Serializable {
     private JPanel scores = new JPanel();
     private HashMap<Integer, Character> blankRedo; // stores the letter chosen for a blank tile before undoing it
     private Integer numBlanks; // number of blanks played in a turn
+    private Timer turnTimer; // Swing Timer for countdown
+    private int timeRemaining; // Time left for the current turn
+    private JLabel timerLabel; // Label to display the timer
+    private static int TURN_TIME_LIMIT = 0; // Time limit in seconds (adjustable)
+    private boolean timedMode; // true if timed mode selected, false otherwise
+
 
     /**
      * Constructor for class ScrabbleView
@@ -38,51 +45,18 @@ public class ScrabbleView extends JFrame implements Serializable {
         frame.setSize(1200, 1000);
 
         //Get the number of players, reject non-integer inputs
-        int numPlayers = 0;
-        while (numPlayers <= 0 | numPlayers > 4) {
-            String getPlayers = (JOptionPane.showInputDialog(frame, "Enter the number of human players"));
-            try {
-                numPlayers = Integer.parseInt(getPlayers);
-                if (numPlayers > 4) {
-                    JOptionPane.showMessageDialog(frame, "Only 4 players or fewer can play at a time");
-                }
-            } catch (NumberFormatException e) {
-                if (getPlayers == null) {
-                    System.exit(0);
-                }
-                JOptionPane.showMessageDialog(frame, "Value must be an integer");
-            }
-        }
-
-        int numAI = 0;
-        boolean retry = false;
-        String getNumAI;
-        do {
-            getNumAI = (JOptionPane.showInputDialog(frame, "Enter the number of AI Players?"));
-            try {
-                numAI = Integer.parseInt(getNumAI);
-                if (numAI + numPlayers > 4) {
-                    JOptionPane.showMessageDialog(frame, "Only 4 players or fewer can play at a time");
-                    retry = true;
-                } else {
-                    retry = false;
-                }
-            } catch (NumberFormatException e) {
-                if (getNumAI == null) {
-                    System.exit(0);
-                }
-                JOptionPane.showMessageDialog(frame, "Value must be an integer");
-                retry = true;
-            }
-        } while ((numPlayers + numAI) > 4 | retry);
+        int[] playerAndAI = getPlayerAndAISelection(frame);
+        int numPlayers = playerAndAI[0];
+        int numAI = playerAndAI[1];
 
         // initialize game with specified number of players
         this.game = new ScrabbleModel(numPlayers, this, numAI);
 
 
-        // initialize player rack, score, and board panels
+        // initialize player rack, score, and board panels and timer
         playerRackPanel = new PlayerRackPanel(game.getCurrentPlayer().getRack(), this);
         boardPanel = new ScrabbleBoardPanel(playerRackPanel, this);
+        turnTimer = new Timer(1000, e -> handleTimerTick());
 
         //Player scores panel
         scores.setLayout(new GridLayout(game.getPlayers().size(), 0));
@@ -116,9 +90,36 @@ public class ScrabbleView extends JFrame implements Serializable {
         saveLoad.add(save);
         saveLoad.add(load);
 
+        timedMode = JOptionPane.showConfirmDialog(
+                frame, "Enable Timed Mode?", "Game Mode", JOptionPane.YES_NO_OPTION
+        ) == JOptionPane.YES_OPTION;
+
+        if (timedMode) {
+            while (TURN_TIME_LIMIT < 15) {
+                String getTimeLimit = (JOptionPane.showInputDialog(frame, "Enter the time given for each turn"));
+                try {
+                    TURN_TIME_LIMIT = Integer.parseInt(getTimeLimit);
+                    if (TURN_TIME_LIMIT < 15) {
+                        JOptionPane.showMessageDialog(frame, "Timer must be at least 15 seconds");
+                    }
+                } catch (NumberFormatException e) {
+                    if (getTimeLimit == null) {
+                        System.exit(0);
+                    }
+                    JOptionPane.showMessageDialog(frame, "Value must be an integer");
+                }
+            }
+            // Timer display panel
+            timerLabel = new JLabel("Time Remaining: " + TURN_TIME_LIMIT + "s");
+            JPanel timerPanel = new JPanel();
+            timerPanel.add(timerLabel);
+            frame.add(timerPanel, BorderLayout.NORTH);
+            startTurnTimer();
+        }
+
         // set up rest of frame
-        frame.add(saveLoad, BorderLayout.WEST);
-        frame.add(scores, BorderLayout.EAST);
+        frame.add(saveLoad, BorderLayout.EAST);
+        frame.add(scores, BorderLayout.WEST);
         frame.add(playerRackPanel, BorderLayout.SOUTH);
         frame.add(boardPanel, BorderLayout.CENTER);
         frame.setVisible(true);
@@ -194,6 +195,9 @@ public class ScrabbleView extends JFrame implements Serializable {
             playerRackPanel.clearExchangePanel(); // clear exchange panel
             updateViewForCurrentPlayer();  // refresh display after pass
         }
+        if (timedMode) {
+            startTurnTimer();
+        }
     }
 
     /**
@@ -217,6 +221,9 @@ public class ScrabbleView extends JFrame implements Serializable {
             game.handleAI(game.getCurrentPlayer());
             playerRackPanel.clearExchangePanel(); // clear exchange panel
             updateViewForCurrentPlayer();  // refresh display after pass
+        }
+        if (timedMode) {
+            startTurnTimer();
         }
     }
 
@@ -253,6 +260,9 @@ public class ScrabbleView extends JFrame implements Serializable {
             playerRackPanel.clearExchangePanel(); // clear exchange panel
             updateViewForCurrentPlayer();  // refresh display after pass
         }
+        if (timedMode) {
+            startTurnTimer();
+        }
     }
 
     /**
@@ -280,7 +290,7 @@ public class ScrabbleView extends JFrame implements Serializable {
                     int col = position.getCol();
                     boardPanel.getBoardButtons()[row][col].revertTile();
                     game.getCurrentPlayer().getTilesPlayed().remove(position);
-                    if (tile.isBlank()){
+                    if (tile.isBlank()) {
                         numBlanks++;
                         blankRedo.put(numBlanks, tile.getLetter());
                         tile.setLetter(' ');
@@ -327,7 +337,7 @@ public class ScrabbleView extends JFrame implements Serializable {
                 if (position != null) {
                     int row = position.getRow();
                     int col = position.getCol();
-                    if (tile.isBlank()){
+                    if (tile.isBlank()) {
                         tile.setLetter(blankRedo.get(numBlanks));
                         numBlanks--;
                     }
@@ -411,10 +421,7 @@ public class ScrabbleView extends JFrame implements Serializable {
      */
     public int showGameOverDialog(int scorelessTurns) {
         // Create a custom Yes/No confirmation dialog
-        return JOptionPane.showConfirmDialog(
-                this, scorelessTurns + " scoreless turns have passed, would you like to continue the game?", "Game Over Confirmation",
-                JOptionPane.YES_NO_OPTION
-        );
+        return JOptionPane.showConfirmDialog(this, scorelessTurns + " scoreless turns have passed, would you like to continue the game?", "Game Over Confirmation", JOptionPane.YES_NO_OPTION);
     }
 
     /**
@@ -424,9 +431,15 @@ public class ScrabbleView extends JFrame implements Serializable {
      * @throws ClassNotFoundException if Class is not found
      */
     private void loadGame() throws IOException, ClassNotFoundException {
-        String fileName = JOptionPane.showInputDialog("Please enter the name of the save game file.");
-        game.loadGame(fileName);
-        updateFromLoad();
+        // create a file chooser for loading a game file
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Load Game");
+        int result = fileChooser.showOpenDialog(frame);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            game.loadGame(selectedFile.getAbsolutePath()); // pass the file path to load method
+            updateFromLoad(); // update GUI
+        }
     }
 
     /**
@@ -435,8 +448,20 @@ public class ScrabbleView extends JFrame implements Serializable {
      * @throws IOException
      */
     private void saveGame() throws IOException {
-        String fileName = JOptionPane.showInputDialog("Please enter a name for the Save");
-        game.saveGame(fileName);
+        // Create a file chooser for saving a game file
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save Game");
+
+        // Show the dialog and get the user's selection
+        int result = fileChooser.showSaveDialog(frame); // 'frame' is your main JFrame
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+
+            String filePath = selectedFile.getAbsolutePath();
+
+            game.saveGame(filePath); // Pass the file path to the save method
+        }
     }
 
     /**
@@ -466,10 +491,89 @@ public class ScrabbleView extends JFrame implements Serializable {
     /**
      * method to reset the info regarding blank tiles played for undo redo
      */
-    private void clearBlankRedo(){
+    private void clearBlankRedo() {
         blankRedo.clear();
         numBlanks = 0;
     }
+
+    private void startTurnTimer() {
+        timeRemaining = TURN_TIME_LIMIT;
+        timerLabel.setText("Time Remaining: " + timeRemaining + "s");
+        turnTimer.start();
+        timerLabel.repaint();
+    }
+
+    private void handleTimerTick() {
+        timeRemaining--;
+        timerLabel.setText("Time Remaining: " + timeRemaining + "s");
+        timerLabel.repaint();
+
+        if (timeRemaining <= 0) {
+            turnTimer.stop();
+            JOptionPane.showMessageDialog(this, game.getCurrentPlayer() + " has run out of time, turn passed.");
+            handlePassAction();
+        }
+    }
+
+    // Function to get the number of players using drop-down menus
+    private int[] getPlayerAndAISelection(JFrame frame) {
+        // Options for number of human players (1-4)
+        Integer[] playerOptions = {1, 2, 3, 4};
+        JComboBox<Integer> playerDropdown = new JComboBox<>(playerOptions);
+
+        // Panel for the first selection (number of human players)
+        JPanel playerPanel = new JPanel();
+        playerPanel.add(new JLabel("Select the number of human players:"));
+        playerPanel.add(playerDropdown);
+
+        // Show the dialog and get the number of human players
+        int result = JOptionPane.showConfirmDialog(
+                frame,
+                playerPanel,
+                "Select Number of Players",
+                JOptionPane.OK_CANCEL_OPTION
+        );
+
+        // Exit if the user cancels
+        if (result != JOptionPane.OK_OPTION) {
+            System.exit(0);
+        }
+
+        // Get the selected number of players
+        int numPlayers = (int) playerDropdown.getSelectedItem();
+
+        // Options for number of AI players based on the number of human players
+        Integer[] aiOptions = new Integer[5 - numPlayers];
+        for (int i = 0; i < aiOptions.length; i++) {
+            aiOptions[i] = i; // 0 to max AI possible
+        }
+
+        JComboBox<Integer> aiDropdown = new JComboBox<>(aiOptions);
+
+        // Panel for the second selection (number of AI players)
+        JPanel aiPanel = new JPanel();
+        aiPanel.add(new JLabel("Select the number of AI players:"));
+        aiPanel.add(aiDropdown);
+
+        // Show the dialog and get the number of AI players
+        result = JOptionPane.showConfirmDialog(
+                frame,
+                aiPanel,
+                "Select Number of AI Players",
+                JOptionPane.OK_CANCEL_OPTION
+        );
+
+        // Exit if the user cancels
+        if (result != JOptionPane.OK_OPTION) {
+            System.exit(0);
+        }
+
+        // Get the selected number of AI players
+        int numAI = (int) aiDropdown.getSelectedItem();
+
+        return new int[]{numPlayers, numAI};
+    }
+
 
     /**
      * Main method to run and test a game
