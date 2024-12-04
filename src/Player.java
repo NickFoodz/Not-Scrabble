@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -15,7 +16,8 @@ public class Player implements Serializable {
     protected int score; //the players score
     protected Map<Position, Tile> tilesPlayed; // tiles played in current turn
     protected ArrayList<String> tilesToExchange; // tiles the play wishes to exchange
-    protected LinkedHashMap<Tile, Boolean> actionsPerformed; // actions the play took before click play, pass or swap, boolean indicates whether its in exchange panel (0) or board (1)
+    protected HashMap<Integer,HashMap<Tile, Boolean>> actionsPerformed; // actions the play took before click play, pass or swap, boolean indicates whether its in exchange panel (0) or board (1)
+    protected Integer actionCounter; // int to keep track of when an action was performed
 
     /**
      * Creates new player object with corresponding name
@@ -28,7 +30,8 @@ public class Player implements Serializable {
         score = 0;
         tilesPlayed = new HashMap<>();
         tilesToExchange = new ArrayList<>();
-        actionsPerformed = new LinkedHashMap<>();
+        actionsPerformed = new HashMap<>();
+        actionCounter = 0;
     }
 
     /**
@@ -185,18 +188,33 @@ public class Player implements Serializable {
      *
      * @return hashmap of actions
      */
-    public LinkedHashMap<Tile, Boolean> getActionsPerformed() {
+    public HashMap<Integer, HashMap<Tile, Boolean>> getActionsPerformed() {
         return actionsPerformed;
     }
 
     /**
      * adds an action to the linked hashmap
      *
-     * @param tilePlaced  the tile placed
-     * @param isExecution true if action was an execution, false otherwise
+     * @param actionPerformed the tile placed and a boolean indicating if it was an exchange move or not
      */
-    public void addActionPerformed(Tile tilePlaced, Boolean isExecution) {
-        actionsPerformed.put(tilePlaced, isExecution);
+    public void addActionPerformed(HashMap<Tile, Boolean> actionPerformed) {
+        actionsPerformed.put(actionCounter, actionPerformed);
+        actionCounter++;
+
+        // TEST
+        System.out.println("ACTIONS PERFORMED: " + actionPerformed);
+    }
+
+    public Integer getActionCounter() {
+        return actionCounter;
+    }
+
+    /**
+     * Clears the actions performed in preparation for next turn
+     */
+    public void clearActionsPerformed(){
+        actionsPerformed.clear();
+        actionCounter = 0;
     }
 
     /**
@@ -205,13 +223,6 @@ public class Player implements Serializable {
      */
     public boolean checkAIPlayer(){
         return false;
-    }
-
-    /**
-     * Removes last action in linked hash map
-     */
-    public void removeLastAction() {
-        actionsPerformed.remove(actionsPerformed.lastEntry().getKey());
     }
 
     /**

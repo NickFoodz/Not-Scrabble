@@ -223,9 +223,13 @@ public class PlayerRackPanel extends JPanel implements Serializable {
 
                 exchangeButtons.get(index).placeTile(tile);
                 selectedTilesForExchange.add(tile);
-                scrabbleView.getGame().getCurrentPlayer().addActionPerformed(tile, true); // add action to hashmap of actions performed by the player
-                scrabbleView.setSelectedTile(null); // Clear selected tile after adding
 
+                // create new action performed hashmap to store tile
+                HashMap<Tile, Boolean> actionPerformed = new HashMap<Tile, Boolean>();
+                actionPerformed.put(tile, true);
+                scrabbleView.getGame().getCurrentPlayer().addActionPerformed(actionPerformed); // add action to hashmap of actions performed by the player
+
+                scrabbleView.setSelectedTile(null); // Clear selected tile after adding
             }
         }
     }

@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.lang.Character;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Class ScrabbleBoardPanel represents the Scrabble Board in a game of scrabble. It provides
@@ -116,7 +117,11 @@ public class ScrabbleBoardPanel extends JPanel implements Serializable {
                 // Add tile to playedTiles field for current player and add it to placedTiles
                 Position position = model.getGameBoard().getPosition(row, col);
                 scrabbleView.getGame().getCurrentPlayer().addTilesPlayed(tile, position);
-                scrabbleView.getGame().getCurrentPlayer().addActionPerformed(tile, false); // add action to hashmap of actions performed by the player
+
+                // create new action performed hashmap to store tile
+                HashMap<Tile, Boolean> actionPerformed = new HashMap<Tile, Boolean>();
+                actionPerformed.put(tile, false);
+                scrabbleView.getGame().getCurrentPlayer().addActionPerformed(actionPerformed); // add action to hashmap of actions performed by the player
             }
         }
     }
