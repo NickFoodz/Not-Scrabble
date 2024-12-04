@@ -2,6 +2,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -110,7 +111,7 @@ public class ScrabbleModelTest {
         assertEquals(game.getCurrentPlayer(), (player1));
         Tile h = new Tile('H', 2, false);
         Tile i = new Tile('I', 1, false);
-        Map<Position, Tile> map = new HashMap<>();
+        LinkedHashMap<Position, Tile> map = new LinkedHashMap<>();
         Position h8 = new Position(7, 7);
         Position i8 = new Position(7, 8);
         Position i9 = new Position(8, 8);
@@ -149,7 +150,7 @@ public class ScrabbleModelTest {
         Tile h = new Tile('H', 2, false);
         Tile i = new Tile('I', 1, false);
         Tile t = new Tile('T', 3, false);
-        Map<Position, Tile> map = new HashMap<>();
+        LinkedHashMap<Position, Tile> map = new LinkedHashMap<>();
 
         //Positions for top left corner of board
         //vertical word (won't work first turn and if no tiles attached)
@@ -227,7 +228,7 @@ public class ScrabbleModelTest {
         //Test that current player is player 1
         assertEquals(game.getCurrentPlayer(), (player1));
         //Map to set current player's tiles to
-        Map<Position, Tile> map = new HashMap<>();
+        LinkedHashMap<Position, Tile> map = new LinkedHashMap<>();
         Tile t1 = new Tile('T', 2, false);
         Tile e = new Tile('E', 1, false);
         Tile s = new Tile('S', 2, false);

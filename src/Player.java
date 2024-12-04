@@ -14,7 +14,7 @@ public class Player implements Serializable {
     protected String name; // the player's name
     protected ArrayList<Tile> rack; //the tiles the player currently holds
     protected int score; //the players score
-    protected Map<Position, Tile> tilesPlayed; // tiles played in current turn
+    protected LinkedHashMap<Position, Tile> tilesPlayed; // tiles played in current turn
     protected ArrayList<String> tilesToExchange; // tiles the play wishes to exchange
     protected HashMap<Integer,HashMap<Tile, Boolean>> actionsPerformed; // actions the play took before click play, pass or swap, boolean indicates whether its in exchange panel (0) or board (1)
     protected Integer actionCounter; // int to keep track of when an action was performed
@@ -28,7 +28,7 @@ public class Player implements Serializable {
         this.name = name;
         rack = new ArrayList<Tile>();
         score = 0;
-        tilesPlayed = new HashMap<>();
+        tilesPlayed = new LinkedHashMap<>();
         tilesToExchange = new ArrayList<>();
         actionsPerformed = new HashMap<>();
         actionCounter = 0;
@@ -138,7 +138,7 @@ public class Player implements Serializable {
      *
      * @return Map with the tiles and position for the turn
      */
-    public Map<Position, Tile> getTilesPlayed() {
+    public LinkedHashMap<Position, Tile> getTilesPlayed() {
         return tilesPlayed;
     }
 
@@ -161,7 +161,7 @@ public class Player implements Serializable {
     /**
      * Sets tiles played for player; for testing purposes
      */
-    public void setTilesPlayed(Map<Position, Tile> playTiles) {
+    public void setTilesPlayed(LinkedHashMap<Position, Tile> playTiles) {
         tilesPlayed = playTiles;
     }
 
@@ -198,15 +198,23 @@ public class Player implements Serializable {
      * @param actionPerformed the tile placed and a boolean indicating if it was an exchange move or not
      */
     public void addActionPerformed(HashMap<Tile, Boolean> actionPerformed) {
-        actionsPerformed.put(actionCounter, actionPerformed);
         actionCounter++;
-
-        // TEST
-        System.out.println("ACTIONS PERFORMED: " + actionPerformed);
+        actionsPerformed.put(actionCounter, actionPerformed);
     }
 
+    /**
+     * getter for player action counter
+     * @return the player's action counter
+     */
     public Integer getActionCounter() {
         return actionCounter;
+    }
+
+    /**
+     * decrements the action counter so that actions taken after an undo is performed overwrite previously undone actions
+     */
+    public void decrementActionCounter(){
+        actionCounter--;
     }
 
     /**

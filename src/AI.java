@@ -136,7 +136,7 @@ public class AI extends Player implements Serializable {
      * @author Andrew Roberts
      */
     private boolean tryWordPlacement(String word, Position start, boolean isHorizontal) {
-        Map<Position, Tile> tilesToPlay = new LinkedHashMap<>();
+        LinkedHashMap<Position, Tile> tilesToPlay = new LinkedHashMap<>();
 
         int row = start.getRow();
         int col = start.getCol();

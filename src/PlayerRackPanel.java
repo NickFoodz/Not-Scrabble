@@ -22,12 +22,15 @@ public class PlayerRackPanel extends JPanel implements Serializable {
     private JButton passButton;
     private JButton swapButton;
     private JButton undoButton;
+    private JButton redoButton;
     private JLabel playerName;
     private JPanel tilePanel;  // Panel for holding tile buttons
     private JPanel exchangePanel; // panel to handle exchanges
     private List<ScrabbleButton> exchangeButtons; // Track exchange buttons for tile placement
     private List<Tile> selectedTilesForExchange; // Track selected tiles
     private List<JButton> tileButtons; // List to store references to rack buttons
+    private HashMap<Integer, JButton> actionsPerformed; // store a map of what buttons where pressed in the rack
+    private Integer actionCounter; // int to keep track of when an action was performed
 
 
     /**
@@ -42,6 +45,8 @@ public class PlayerRackPanel extends JPanel implements Serializable {
         this.exchangeButtons = new ArrayList<>(); // Initialize exchangeButtons list
         this.selectedTilesForExchange = new ArrayList<>(); // Initialize selectedTilesForExchange list
         this.tileButtons = new ArrayList<>(); // Initialize tileButtons list
+        actionsPerformed = new HashMap<>();
+        actionCounter = 0;
 
         playerName = new JLabel(view.getGame().getCurrentPlayer().getName()); // add player's name
 
@@ -50,10 +55,12 @@ public class PlayerRackPanel extends JPanel implements Serializable {
         passButton = new JButton("Pass");
         swapButton = new JButton("Swap");
         undoButton = new JButton("Undo");
+        redoButton = new JButton("Redo");
         playButton.addActionListener(e -> view.handlePlayAction());
         passButton.addActionListener(e -> view.handlePassAction());
         swapButton.addActionListener(e -> view.handleSwapAction());
-        //undoButton.addActionListener(e -> view.handleUndoAction()); // to be done for milestone 4
+        undoButton.addActionListener(e -> view.handleUndoAction()); // to be done for milestone 4
+        //redoButton.addActionListener(e -> view.handleRedoAction());
 
         // Initialize layout and sub-panels
         setLayout(new GridBagLayout());
@@ -80,6 +87,7 @@ public class PlayerRackPanel extends JPanel implements Serializable {
         buttonPanel.add(swapButton);
         buttonPanel.add(passButton);
         buttonPanel.add(undoButton);
+        buttonPanel.add(redoButton);
 
         // Add button panel after the tile panel in gridx = 2
         constraints.gridx = 2;
@@ -161,6 +169,45 @@ public class PlayerRackPanel extends JPanel implements Serializable {
     }
 
     /**
+     * Getter for exchange buttons in teh players rack
+     * @return exchange buttons in teh players rack
+     */
+    public List<ScrabbleButton> getExchangeButtons() {
+        return exchangeButtons;
+    }
+
+    /**
+     * Getter for rack actions performed this turn
+     * @return the actions performed on the player's rack
+     */
+    public HashMap<Integer, JButton> getActionsPerformed() {
+        return actionsPerformed;
+    }
+
+    /**
+     * getter for player action counter
+     * @return the player's action counter
+     */
+    public Integer getActionCounter() {
+        return actionCounter;
+    }
+
+    /**
+     * decrements the action counter so that actions taken after an undo is performed overwrite previously undone actions
+     */
+    public void decrementActionCounter(){
+        actionCounter--;
+    }
+
+    /**
+     * Clears the actions performed in preparation for next turn
+     */
+    public void clearActionsPerformed(){
+        actionsPerformed.clear();
+        actionCounter = 0;
+    }
+
+    /**
      * Helper Class for TileButtons
      *
      * @author Andrew Roberts
@@ -190,6 +237,8 @@ public class PlayerRackPanel extends JPanel implements Serializable {
         public void actionPerformed(ActionEvent e) {
             scrabbleView.setSelectedTile(tile);
             tileButton.setEnabled(false);
+            actionCounter++;
+            actionsPerformed.put(actionCounter, tileButton);
         }
     }
 

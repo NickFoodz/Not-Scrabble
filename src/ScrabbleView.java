@@ -12,7 +12,6 @@ import java.util.LinkedHashMap;
  * @author Andrew Roberts
  * @author Nick Fuda
  * @version 1
- *
  */
 public class ScrabbleView extends JFrame implements Serializable {
     private JFrame frame; // main frame for the game
@@ -20,11 +19,11 @@ public class ScrabbleView extends JFrame implements Serializable {
     private Tile selectedTile; // tile the player currently has selected
     private PlayerRackPanel playerRackPanel; // the players' rack
     private ScrabbleModel game; // the game instance
-    private HashMap<Player, JLabel> playerScoreLabel = new HashMap<>() {};
+    private HashMap<Player, JLabel> playerScoreLabel = new HashMap<>() {
+    };
     private JPanel scores = new JPanel();
 
     /**
-     *
      * Constructor for class ScrabbleView
      */
     public ScrabbleView() {
@@ -35,15 +34,15 @@ public class ScrabbleView extends JFrame implements Serializable {
 
         //Get the number of players, reject non-integer inputs
         int numPlayers = 0;
-        while(numPlayers <= 0 | numPlayers >4) {
+        while (numPlayers <= 0 | numPlayers > 4) {
             String getPlayers = (JOptionPane.showInputDialog(frame, "Enter the number of human players"));
             try {
                 numPlayers = Integer.parseInt(getPlayers);
-                if (numPlayers > 4){
+                if (numPlayers > 4) {
                     JOptionPane.showMessageDialog(frame, "Only 4 players or fewer can play at a time");
                 }
             } catch (NumberFormatException e) {
-                if(getPlayers == null){
+                if (getPlayers == null) {
                     System.exit(0);
                 }
                 JOptionPane.showMessageDialog(frame, "Value must be an integer");
@@ -60,7 +59,9 @@ public class ScrabbleView extends JFrame implements Serializable {
                 if (numAI + numPlayers > 4) {
                     JOptionPane.showMessageDialog(frame, "Only 4 players or fewer can play at a time");
                     retry = true;
-                } else {retry=false;}
+                } else {
+                    retry = false;
+                }
             } catch (NumberFormatException e) {
                 if (getNumAI == null) {
                     System.exit(0);
@@ -68,7 +69,7 @@ public class ScrabbleView extends JFrame implements Serializable {
                 JOptionPane.showMessageDialog(frame, "Value must be an integer");
                 retry = true;
             }
-        }while((numPlayers + numAI) > 4 | retry);
+        } while ((numPlayers + numAI) > 4 | retry);
 
         // initialize game with specified number of players
         this.game = new ScrabbleModel(numPlayers, this, numAI);
@@ -180,7 +181,7 @@ public class ScrabbleView extends JFrame implements Serializable {
             displayWinnerScreen();
         }
         //Handle AI at the end of the turn after the player is switched
-        while(game.getCurrentPlayer().checkAIPlayer()){
+        while (game.getCurrentPlayer().checkAIPlayer()) {
             game.handleAI(game.getCurrentPlayer());
             playerRackPanel.clearExchangePanel(); // clear exchange panel
             updateViewForCurrentPlayer();  // refresh display after pass
@@ -201,7 +202,7 @@ public class ScrabbleView extends JFrame implements Serializable {
             displayWinnerScreen();
         }
         //Handle AI at the end of the turn after the player is switched
-        while(game.getCurrentPlayer().checkAIPlayer()){
+        while (game.getCurrentPlayer().checkAIPlayer()) {
             game.handleAI(game.getCurrentPlayer());
             playerRackPanel.clearExchangePanel(); // clear exchange panel
             updateViewForCurrentPlayer();  // refresh display after pass
@@ -233,45 +234,47 @@ public class ScrabbleView extends JFrame implements Serializable {
             displayWinnerScreen();
         }
         //Handle AI at the end of the turn after the player is switched
-        while(game.getCurrentPlayer().checkAIPlayer()){
+        while (game.getCurrentPlayer().checkAIPlayer()) {
             game.handleAI(game.getCurrentPlayer());
             playerRackPanel.clearExchangePanel(); // clear exchange panel
             updateViewForCurrentPlayer();  // refresh display after pass
         }
     }
 
-//    /**
-//     * Handle Undo (INCOMPLETE)
-//     */
-//    public void handleUndoAction() {
-//        if (game.getCurrentPlayer().getActionsPerformed() != null) {
-//            LinkedHashMap<Tile, Boolean> actionMap = game.getCurrentPlayer().getActionsPerformed();
-//            Tile tile = actionMap.lastEntry().getKey();
-//            Boolean isExecution = actionMap.lastEntry().getValue();
-//
-//            game.getCurrentPlayer().removeLastAction();
-//
-//            if (isExecution) {
-//                int index = playerRackPanel.getSelectedTilesForExchange().indexOf(tile);
-//                if (index != -1) {
-//                    playerRackPanel.getExchangeButtons().get(index).revertExchangeTile();
-//                    playerRackPanel.getSelectedTilesForExchange().remove(tile);
-//                    game.getCurrentPlayer().getTilesToExchange().remove(String.valueOf(tile.getLetter()));
-//                }
-//            } else {
-//                // Undo action was on the board
-//                Position position = game.getCurrentPlayer().getTilesPlayed().get(tile);
-//                if (position != null) {
-//                    int row = position.getRow();
-//                    int col = position.getCol();
-//                    boardPanel.getBoardButtons()[row][col].revertTile();
-//                    game.getCurrentPlayer().getTilesPlayed().remove(tile);
-//                }
-//            }
-//            // Re-enable the corresponding button on the player's rack, to be completed in future milestones
-//
-//        }
-//    }
+    /**
+     * Handle Undo
+     */
+    public void handleUndoAction() {
+        if (game.getCurrentPlayer().getActionsPerformed() != null) {
+            HashMap<Integer, HashMap<Tile, Boolean>> actionMap = game.getCurrentPlayer().getActionsPerformed();
+            Tile tile = actionMap.get(game.getCurrentPlayer().getActionCounter()).keySet().iterator().next();
+            Boolean isExecution = actionMap.get(game.getCurrentPlayer().getActionCounter()).get(tile);
+
+            if (isExecution) {
+                int index = playerRackPanel.getSelectedTilesForExchange().indexOf(tile);
+                if (index != -1) {
+                    playerRackPanel.getExchangeButtons().get(index).revertExchangeTile();
+                    playerRackPanel.getSelectedTilesForExchange().remove(tile);
+                    game.getCurrentPlayer().getTilesToExchange().remove(String.valueOf(tile.getLetter()));
+                }
+            } else {
+                // Undo action was on the board
+                Position position = game.getCurrentPlayer().getTilesPlayed().lastEntry().getKey();
+                if (position != null) {
+                    int row = position.getRow();
+                    int col = position.getCol();
+                    boardPanel.getBoardButtons()[row][col].revertTile();
+                    game.getCurrentPlayer().getTilesPlayed().remove(position);
+                }
+            }
+            game.getCurrentPlayer().decrementActionCounter();
+            // Re-enable the corresponding button on the player's rack
+            HashMap<Integer, JButton> rackButtonActions = playerRackPanel.getActionsPerformed();
+            JButton buttonToEnable = rackButtonActions.get(playerRackPanel.getActionCounter());
+            buttonToEnable.setEnabled(true);
+            playerRackPanel.decrementActionCounter();
+        }
+    }
 
     /**
      * Getter for frame
@@ -347,7 +350,8 @@ public class ScrabbleView extends JFrame implements Serializable {
 
     /**
      * Loads the game from a java serialization using the filename
-     * @throws IOException if file is not found
+     *
+     * @throws IOException            if file is not found
      * @throws ClassNotFoundException if Class is not found
      */
     private void loadGame() throws IOException, ClassNotFoundException {
@@ -358,9 +362,10 @@ public class ScrabbleView extends JFrame implements Serializable {
 
     /**
      * Saves the game using the model's serialization method
+     *
      * @throws IOException
      */
-    private void saveGame() throws IOException{
+    private void saveGame() throws IOException {
         String fileName = JOptionPane.showInputDialog("Please enter a name for the Save");
         game.saveGame(fileName);
     }
@@ -368,7 +373,7 @@ public class ScrabbleView extends JFrame implements Serializable {
     /**
      * Updates the GUI from a load.
      */
-    public void updateFromLoad(){
+    public void updateFromLoad() {
         boardPanel.updateBoard();
         updatePlayerScoreLabel();
         updateViewForCurrentPlayer();
@@ -379,7 +384,7 @@ public class ScrabbleView extends JFrame implements Serializable {
     /**
      * Updates the scores panel
      */
-    private void updatePlayerScoreLabel(){
+    private void updatePlayerScoreLabel() {
         scores.removeAll();
         for (Player player : game.getPlayers()) {
             JLabel playerScore = new JLabel(player.getName() + " score: " + player.getScore());
