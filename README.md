@@ -42,15 +42,15 @@ looking up two letters that don't go beside each other in the dictionary, not fi
 ***************************************************************************************************************
 Known Bugs:
 Milestone 2
-- When inputting a non integer input for number of players, the game can crash.
+- When inputting a non integer input for number of players, the game can crash. *FIXED*
 - An invalid placement of 2 or more tiles sometimes registers as valid if they are in the same row/column
 - Clicking a button twice may cause the input to read invalid until you pass. Next player should have it work.
-- Undo button does not re-enable the selected tile from the player's rack.
+- Undo button does not re-enable the selected tile from the player's rack. *FIXED*
 
 Milestone 3
 - Entering a blank tile sometimes does not show the placed tile's letter *FIXED*
-- Selecting a tile from the rack and then selecting a second tile from the rack without placement will disable the first
-- Selecting exchange while not selecting tiles to swap may cause your turn to pass with nothing being exchanged.
+- Selecting a tile from the rack and then selecting a second tile from the rack without placement will disable the first *FIXED*
+- Selecting exchange while not selecting tiles to swap may cause your turn to pass with nothing being exchanged. *FIXED*
 
 ***************************************************************************************************************
 
@@ -258,6 +258,23 @@ Milestone 3
     - Cyan tiles are double letter score tiles
     - Blue tiles are triple letter score tiles.
 
+###############################################################################################################
+Milestone 4/Bonus
+
+- Added a save/load feature that allows the user to select/create a file to load/save their game from
+  - Implemented using java serialization
+
+- Added the option to import custom boards from an XML 
+
+- Added multi-level Undo/Redo buttons to the game
+  - Currently, you cannot undo/redo a move if you have a tile selected, you must first place it somewhere 
+    before undo redoing a move
+
+- Added a timer mode option for players, they can specify the length of time they get for each turn
+  - their turn will be automatically passed if the timer runs out
+
+- Changed how the number of players/AI is taken from the player to a drop-down menu to improve simplicity
+  for the user
 ***************************************************************************************************************
 
 Future Goals;
@@ -318,3 +335,9 @@ saved our confidence in being able to present something that is somewhat functio
 Milestone 3: 
 
 Thus far, we have everyone in the Git repository, though this milestone was completed by only Nick and Andrew.
+
+#################################################################################################################
+
+Milestone 4/Bonus:
+
+Milestone 4 & the bonus was completed exclusively by Nick and Andrew.
