@@ -385,6 +385,7 @@ public class Board implements Serializable {
     }
 
     public void importCustomBoardXML(String fileName){
+        premiumPositions.clear();
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();

@@ -49,8 +49,12 @@ public class ScrabbleView extends JFrame implements Serializable {
         int numPlayers = playerAndAI[0];
         int numAI = playerAndAI[1];
 
+
+
         // initialize game with specified number of players
         this.game = new ScrabbleModel(numPlayers, this, numAI);
+
+        askForXML();
 
 
         // initialize player rack, score, and board panels and timer
@@ -59,12 +63,32 @@ public class ScrabbleView extends JFrame implements Serializable {
         turnTimer = new Timer(1000, e -> handleTimerTick());
 
         //Player scores panel
-        scores.setLayout(new GridLayout(game.getPlayers().size(), 0));
+        scores.setLayout(new GridLayout(game.getPlayers().size()+4, 0));
         for (Player player : game.getPlayers()) {
             JLabel playerScore = new JLabel(player.getName() + " score: " + player.getScore());
             playerScoreLabel.put(player, playerScore);
             scores.add(playerScore);
         }
+
+        //Legend for premium tiles added to scoreboard
+        JLabel doubleLetter = new JLabel("2x Letter Score: Cyan");
+        doubleLetter.setOpaque(true);
+        doubleLetter.setBackground(Color.cyan);
+        JLabel doubleWord = new JLabel("2x Word Score: Pink");
+        doubleWord.setOpaque(true);
+        doubleWord.setBackground(Color.PINK);
+        JLabel tripleLetter = new JLabel("3x Letter Score: Blue");
+        tripleLetter.setOpaque(true);
+        tripleLetter.setBackground(Color.blue);
+        tripleLetter.setForeground(Color.white);
+        JLabel tripleWord = new JLabel("3x Word Score: Red");
+        tripleWord.setOpaque(true);
+        tripleWord.setBackground(Color.red);
+        tripleWord.setForeground(Color.white);
+        scores.add(doubleLetter);
+        scores.add(doubleWord);
+        scores.add(tripleLetter);
+        scores.add(tripleWord);
 
         JPanel saveLoad = new JPanel();
         JButton save = new JButton("Save Game");
@@ -576,6 +600,27 @@ public class ScrabbleView extends JFrame implements Serializable {
         int numAI = (int) aiDropdown.getSelectedItem();
 
         return new int[]{numPlayers, numAI};
+    }
+
+    private void askForXML(){
+        int ask = JOptionPane.showConfirmDialog(frame, "Use a custom board?");
+
+        if(ask == JOptionPane.YES_OPTION) {
+
+            //Ask user to select an XML file
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Import Board");
+
+            int result = fileChooser.showSaveDialog(frame); // 'frame' is your main JFrame
+
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+
+                String filePath = selectedFile.getAbsolutePath();
+
+                game.getGameBoard().importCustomBoardXML(filePath); // Pass the file path to the save method
+            }
+        }
     }
 
 

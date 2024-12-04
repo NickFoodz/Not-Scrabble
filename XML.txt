@@ -1,26 +1,121 @@
 <board>
-	<square>
-		<pos>8H</pos>
-		<type>5</type>
-	</square>
-	<square>
-    	<pos>9H</pos>
+    <square>
+	<pos>7A</pos>
+	<type>2</type>
+    </square>
+    <square>
+    	<pos>8A</pos>
     	<type>2</type>
     </square>
     <square>
-        <pos>10H</pos>
-        <type>3</type>
+        <pos>9A</pos>
+        <type>2</type>
     </square>
      <square>
-         <pos>11H</pos>
-         <type>4</type>
+         <pos>9B</pos>
+         <type>2</type>
      </square>
      <square>
-          <pos>1H</pos>
-          <type>0</type>
+          <pos>9C</pos>
+          <type>2</type>
      </square>
      <square>
-          <pos>2H</pos>
-          <type>1</type>
+          <pos>7B</pos>
+          <type>2</type>
      </square>
+     <square>
+           <pos>7C</pos>
+           <type>2</type>
+     </square>
+     <square>
+           <pos>7B</pos>
+           <type>2</type>
+     </square>
+     <square>
+     	<pos>7E</pos>
+     	<type>3</type>
+     </square>
+     <square>
+     	<pos>7F</pos>
+     	<type>3</type>
+     </square>
+     <square>
+     	<pos>7G</pos>
+     	<type>3</type>
+     </square>
+     <square>
+     	<pos>8E</pos>
+     	<type>3</type>
+     </square>
+     <square>
+     	<pos>8G</pos>
+     	<type>3</type>
+     </square>
+     <square>
+     	<pos>9F</pos>
+     	<type>3</type>
+     </square>
+     <square>
+     	<pos>9E</pos>
+     	<type>3</type>
+     </square>
+     <square>
+     	<pos>9G</pos>
+     	<type>3</type>
+     </square>
+     <square>
+     	<pos>7I</pos>
+     	<type>4</type>
+     </square>
+     <square>
+     	<pos>7J</pos>
+     	<type>4</type>
+     </square>
+     <square>
+     	<pos>7K</pos>
+     	<type>4</type>
+     </square>
+     <square>
+     	<pos>8I</pos>
+     	<type>4</type>
+     </square>
+     <square>
+     	<pos>8K</pos>
+     	<type>4</type>
+     </square>
+     <square>
+     	<pos>9I</pos>
+     	<type>4</type>
+     </square>
+     <square>
+     	<pos>9J</pos>
+     	<type>4</type>
+     </square>
+     <square>
+     	<pos>9K</pos>
+     	<type>4</type>
+     </square>
+     <square>
+     	<pos>7M</pos>
+     	<type>5</type>
+     </square>
+     <square>
+     	<pos>8M</pos>
+     	<type>5</type>
+     </square>
+     <square>
+     	<pos>9M</pos>
+     	<type>5</type>
+     </square>
+     <square>
+     	<pos>9N</pos>
+     	<type>5</type>
+     </square>
+     <square>
+     	<pos>9O</pos>
+     	<type>5</type>
+     </square>
+
+
+
 </board>
