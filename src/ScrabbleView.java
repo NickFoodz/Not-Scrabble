@@ -238,6 +238,10 @@ public class ScrabbleView extends JFrame implements Serializable {
         for (Tile tile : playerRackPanel.getSelectedTilesForExchange().values()) {
             tilesToExchange.add(String.valueOf(tile.getLetter()));
         }
+        if (tilesToExchange.isEmpty()){
+            JOptionPane.showMessageDialog(this, "You have not selected any tiles to swap");
+            return;
+        }
         // set tiles to exchange
         game.getCurrentPlayer().setTilesToExchange(tilesToExchange);
 
@@ -269,7 +273,7 @@ public class ScrabbleView extends JFrame implements Serializable {
      * Handle Undo
      */
     public void handleUndoAction() {
-        if (game.getCurrentPlayer().getActionsPerformed() != null && game.getCurrentPlayer().getActionCounter() != 0) {
+        if (game.getCurrentPlayer().getActionsPerformed() != null && game.getCurrentPlayer().getActionCounter() != 0 && selectedTile == null) {
 
             HashMap<Integer, HashMap<Tile, Boolean>> actionMap = game.getCurrentPlayer().getActionsPerformed();
             Tile tile = actionMap.get(game.getCurrentPlayer().getActionCounter()).keySet().iterator().next();
@@ -311,7 +315,7 @@ public class ScrabbleView extends JFrame implements Serializable {
      * Handle Redo
      */
     public void handleRedoAction() {
-        if (game.getCurrentPlayer().getActionsPerformed() != null && game.getCurrentPlayer().getActionsPerformed().containsKey(game.getCurrentPlayer().getActionCounter() + 1)) {
+        if (game.getCurrentPlayer().getActionsPerformed() != null && game.getCurrentPlayer().getActionsPerformed().containsKey(game.getCurrentPlayer().getActionCounter() + 1) && selectedTile == null) {
 
             HashMap<Integer, HashMap<Tile, Boolean>> actionMap = game.getCurrentPlayer().getActionsPerformed();
             Tile tile = actionMap.get(game.getCurrentPlayer().getActionCounter() + 1).keySet().iterator().next();
