@@ -623,7 +623,6 @@ public class ScrabbleView extends JFrame implements Serializable {
         }
     }
 
-
     /**
      * Main method to run and test a game
      *
