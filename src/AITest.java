@@ -27,13 +27,13 @@ public class AITest {
         assertEquals(ai.play(), "exchange");
         //assertEquals(ai.play(), "pass");
         ArrayList<Tile> AIT = new ArrayList<Tile>();
-        AIT.add(new Tile('C', 2));
-        AIT.add(new Tile('H', 1));
-        AIT.add(new Tile('E', 2));
-        AIT.add(new Tile('E', 1));
-        AIT.add(new Tile('S', 2));
-        AIT.add(new Tile('E', 1));
-        AIT.add(new Tile('Y', 2));
+        AIT.add(new Tile('C', 2, false));
+        AIT.add(new Tile('H', 1, false));
+        AIT.add(new Tile('E', 2, false));
+        AIT.add(new Tile('E', 1, false));
+        AIT.add(new Tile('S', 2, false));
+        AIT.add(new Tile('E', 1, false));
+        AIT.add(new Tile('Y', 2, false));
         ai.setRack(AIT);
         tc.clear();
         for (Tile t : ai.getRack()) {
@@ -67,24 +67,24 @@ public class AITest {
         assertEquals(ai.play(), "exchange");
         //Now check that a full rack of blank tiles all gets exchanged
         ArrayList<Tile> AIT = new ArrayList<Tile>();
-        AIT.add(new Tile(' ', 2));
-        AIT.add(new Tile(' ', 1));
-        AIT.add(new Tile(' ', 2));
-        AIT.add(new Tile(' ', 1));
-        AIT.add(new Tile(' ', 2));
-        AIT.add(new Tile(' ', 1));
-        AIT.add(new Tile(' ', 2));
+        AIT.add(new Tile(' ', 2, true));
+        AIT.add(new Tile(' ', 1, true));
+        AIT.add(new Tile(' ', 2, true));
+        AIT.add(new Tile(' ', 1, true));
+        AIT.add(new Tile(' ', 2, true));
+        AIT.add(new Tile(' ', 1, true));
+        AIT.add(new Tile(' ', 2, true));
         ai.setRack(AIT);
         assertEquals(ai.checkForBlankTile(),7);
         assertEquals(ai.play(), "exchange");
         AIT.clear();
-        AIT.add(new Tile('C', 2));
-        AIT.add(new Tile('H', 1));
-        AIT.add(new Tile('E', 2));
-        AIT.add(new Tile('E', 1));
-        AIT.add(new Tile('S', 2));
-        AIT.add(new Tile('E', 1));
-        AIT.add(new Tile('Y', 2));
+        AIT.add(new Tile('C', 2, false));
+        AIT.add(new Tile('H', 1, false));
+        AIT.add(new Tile('E', 2, false));
+        AIT.add(new Tile('E', 1, false));
+        AIT.add(new Tile('S', 2, false));
+        AIT.add(new Tile('E', 1, false));
+        AIT.add(new Tile('Y', 2, false));
         ai.setRack(AIT);
         tc.clear();
         for (Tile t : ai.getRack()) {
@@ -107,13 +107,13 @@ public class AITest {
         ScrabbleModel game = new ScrabbleModel(playerList);
         //Set tiles to be known
         ArrayList<Tile> AIT = new ArrayList<Tile>();
-        AIT.add(new Tile('C', 2));
-        AIT.add(new Tile('H', 1));
-        AIT.add(new Tile('E', 2));
-        AIT.add(new Tile('E', 1));
-        AIT.add(new Tile('S', 2));
-        AIT.add(new Tile('E', 1));
-        AIT.add(new Tile('Y', 2));
+        AIT.add(new Tile('C', 2, false));
+        AIT.add(new Tile('H', 1, false));
+        AIT.add(new Tile('E', 2, false));
+        AIT.add(new Tile('E', 1, false));
+        AIT.add(new Tile('S', 2, false));
+        AIT.add(new Tile('E', 1, false));
+        AIT.add(new Tile('Y', 2, false));
         ai.setRack(AIT);
         //System.out.println(ai.getValidWordCombinations());
         //Words contained
@@ -148,20 +148,20 @@ public class AITest {
         ScrabbleModel game = new ScrabbleModel(playerList);
         //Set tiles to be known
         ArrayList<Tile> AIT = new ArrayList<Tile>();
-        AIT.add(new Tile('C', 2));
-        AIT.add(new Tile('H', 2));
-        AIT.add(new Tile('E', 1));
-        AIT.add(new Tile('E', 1));
-        AIT.add(new Tile('S', 2));
-        AIT.add(new Tile('E', 1));
-        AIT.add(new Tile('Y', 3));
+        AIT.add(new Tile('C', 2, false));
+        AIT.add(new Tile('H', 2, false));
+        AIT.add(new Tile('E', 1, false));
+        AIT.add(new Tile('E', 1, false));
+        AIT.add(new Tile('S', 2, false));
+        AIT.add(new Tile('E', 1, false));
+        AIT.add(new Tile('Y', 3, false));
         ai.setRack(AIT);
 
         ArrayList<String> rankedWords = ai.getHighestScoringWordList();
         //Longest, highest scoring word is cheesy. Words with same points ranked in order of appearance
         assertEquals(rankedWords.get(0), "cheesy");
-        assertEquals(rankedWords.get(1), "sychee");
-        assertEquals(rankedWords.get(5), "cheese");
+        assertEquals(rankedWords.get(1), "yechs");
+        assertEquals(rankedWords.get(5), "yeesh");
     }
 
     /**
@@ -179,13 +179,13 @@ public class AITest {
 
         // Set the rack to contain tiles for a valid word
         ArrayList<Tile> AIT = new ArrayList<>();
-        AIT.add(new Tile('C', 2));
-        AIT.add(new Tile('H', 4));
-        AIT.add(new Tile('E', 1));
-        AIT.add(new Tile('E', 1));
-        AIT.add(new Tile('S', 1));
-        AIT.add(new Tile('E', 1));
-        AIT.add(new Tile('Y', 4));
+        AIT.add(new Tile('C', 2, false));
+        AIT.add(new Tile('H', 4, false));
+        AIT.add(new Tile('E', 1, false));
+        AIT.add(new Tile('E', 1, false));
+        AIT.add(new Tile('S', 1, false));
+        AIT.add(new Tile('E', 1, false));
+        AIT.add(new Tile('Y', 4, false));
         ai.setRack(AIT);
 
         // AI should play a valid word (e.g., "CHEESY")
@@ -208,13 +208,13 @@ public class AITest {
 
         // Set the rack to contain tiles that cannot form a word
         ArrayList<Tile> AIT = new ArrayList<>();
-        AIT.add(new Tile('Q', 10));
-        AIT.add(new Tile('Q', 10));
-        AIT.add(new Tile('Q', 10));
-        AIT.add(new Tile('Q', 10));
-        AIT.add(new Tile('Q', 10));
-        AIT.add(new Tile('Q', 10));
-        AIT.add(new Tile('Q', 10));
+        AIT.add(new Tile('Q', 10, false));
+        AIT.add(new Tile('Q', 10, false));
+        AIT.add(new Tile('Q', 10, false));
+        AIT.add(new Tile('Q', 10, false));
+        AIT.add(new Tile('Q', 10, false));
+        AIT.add(new Tile('Q', 10, false));
+        AIT.add(new Tile('Q', 10, false));
         ai.setRack(AIT);
 
         // AI should pass
@@ -239,13 +239,13 @@ public class AITest {
 
         // Set the rack to contain tiles that cannot form a word
         ArrayList<Tile> AIT = new ArrayList<>();
-        AIT.add(new Tile('Q', 10));
-        AIT.add(new Tile('Q', 10));
-        AIT.add(new Tile('Q', 10));
-        AIT.add(new Tile('Q', 10));
-        AIT.add(new Tile('Q', 10));
-        AIT.add(new Tile('Q', 10));
-        AIT.add(new Tile('Q', 10));
+        AIT.add(new Tile('Q', 10, false));
+        AIT.add(new Tile('Q', 10, false));
+        AIT.add(new Tile('Q', 10, false));
+        AIT.add(new Tile('Q', 10, false));
+        AIT.add(new Tile('Q', 10, false));
+        AIT.add(new Tile('Q', 10, false));
+        AIT.add(new Tile('Q', 10, false));
         ai.setRack(AIT);
 
         // AI should pass as bag is empty
@@ -269,13 +269,13 @@ public class AITest {
 
         // Set the rack to contain tiles that cannot form a word
         ArrayList<Tile> AIT = new ArrayList<>();
-        AIT.add(new Tile('C', 2));
-        AIT.add(new Tile('H', 4));
-        AIT.add(new Tile('E', 1));
-        AIT.add(new Tile('E', 1));
-        AIT.add(new Tile('S', 1));
-        AIT.add(new Tile('E', 1));
-        AIT.add(new Tile('Y', 4));
+        AIT.add(new Tile('C', 2, false));
+        AIT.add(new Tile('H', 4, false));
+        AIT.add(new Tile('E', 1, false));
+        AIT.add(new Tile('E', 1, false));
+        AIT.add(new Tile('S', 1, false));
+        AIT.add(new Tile('E', 1, false));
+        AIT.add(new Tile('Y', 4, false));
         ai.setRack(AIT);
 
         // AI should pass as it can form a word it just can't place it this turn

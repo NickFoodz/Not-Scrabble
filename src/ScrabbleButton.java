@@ -133,7 +133,7 @@ public class ScrabbleButton extends JButton implements Serializable {
     }
 
     /**
-     * reverts the exchange board tile to its default state in teh event of an invalid play or pass
+     * reverts the exchange board tile to its default state in the event of an invalid play or pass
      */
     public void revertExchangeTile() {
         this.empty = true;

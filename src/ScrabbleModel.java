@@ -380,7 +380,9 @@ public class ScrabbleModel implements Serializable {
         for (Map.Entry<Position, Tile> tile : tilesToPlay.entrySet()) {
             Position position = tile.getKey();
             position.setTile(null); // reset the position to empty
-            //GUI to revert tile
+            if (tile.getValue().isBlank()){
+                tile.getValue().setLetter(' ');
+            }
         }
     }
 

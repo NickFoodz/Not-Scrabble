@@ -7,8 +7,9 @@ import java.util.HashMap;
 
 /**
  * Represents the game bag containing all tiles in a game of "Not Scrabble"
- * @version 1
+ *
  * @author Andrew Roberts
+ * @version 1
  */
 public class Bag implements Serializable {
     private List<Tile> tiles; // a list containing all the available tiles
@@ -21,10 +22,9 @@ public class Bag implements Serializable {
     public Bag(boolean isTest) {
         tiles = new ArrayList<>(); // initialize the tiles list
         // initialize letter frequencies and points
-        if(!isTest) {
+        if (!isTest) {
             initializeLetterFrequencies();
-        }
-        else if(isTest){
+        } else if (isTest) {
             testLetterFrequencies();
         }
         initializeLetterPoints();
@@ -35,8 +35,15 @@ public class Bag implements Serializable {
             int count = entry.getValue();
             int points = letterPoints.get(letter);
 
-            for (int i = 0; i < count; i++) {
-                tiles.add(new Tile(letter, points));
+            // initiates blank tiles isBlank field to true
+            if (letter == ' ') {
+                for (int i = 0; i < count; i++) {
+                    tiles.add(new Tile(letter, points, true));
+                }
+            } else {
+                for (int i = 0; i < count; i++) {
+                    tiles.add(new Tile(letter, points, false));
+                }
             }
         }
         Collections.shuffle(tiles); //  randomize tile order
@@ -73,7 +80,7 @@ public class Bag implements Serializable {
         letterFrequencies.put('Q', 1);
         letterFrequencies.put('Z', 1);
         //blank tile
-        letterFrequencies.put(' ',2);
+        letterFrequencies.put(' ', 2);
     }
 
     /**
@@ -107,7 +114,7 @@ public class Bag implements Serializable {
         letterPoints.put('Q', 10);
         letterPoints.put('Z', 10);
         //Blank tile points
-        letterPoints.put(' ',0);
+        letterPoints.put(' ', 0);
     }
 
     /**

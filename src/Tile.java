@@ -8,15 +8,19 @@ import java.io.Serializable;
 public class Tile implements Serializable {
     private char letter; // the letter on the tile
     private int pointValue; // how much the tile is worth
+    private boolean isBlank; // true if tile is a blank tile, false otherwise
 
     /**
      * Creates a new tile with the specified letter and point value
-     * @param letter the letter for the tile
+     *
+     * @param letter     the letter for the tile
      * @param pointValue the letter's corresponding point value
+     * @param isBlank
      */
-    public Tile(char letter, int pointValue) {
+    public Tile(char letter, int pointValue, boolean isBlank) {
         this.letter = letter;
         this.pointValue = pointValue;
+        this.isBlank = isBlank;
     }
 
     /**
@@ -47,6 +51,14 @@ public class Tile implements Serializable {
      */
     public void setPointValue(int pointValue) {
         this.pointValue = pointValue;
+    }
+
+    /**
+     * Getter to return if a tile is a blank tile or not
+     * @return true if tile is blank tile, false otherwise
+     */
+    public boolean isBlank() {
+        return isBlank;
     }
 
     /**

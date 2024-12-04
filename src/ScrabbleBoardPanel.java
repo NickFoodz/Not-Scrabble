@@ -58,9 +58,9 @@ public class ScrabbleBoardPanel extends JPanel implements Serializable {
     }
 
     /**
-    * Updates from a load
-    */
-    public void updateBoard(){
+     * Updates from a load
+     */
+    public void updateBoard() {
         Board board = scrabbleView.getGame().getGameBoard();
         for (int row = 0; row < 15; row++) {
             for (int col = 0; col < 15; col++) {
@@ -70,14 +70,14 @@ public class ScrabbleBoardPanel extends JPanel implements Serializable {
                 boardButtons[row][col].revertTile();
 
                 //If the board position has a tile, make the boardbutton have that tile
-                if(board.getPosition(row,col).getTile()!=null){
-                    boardButtons[row][col].placeTile(board.getPosition(row,col).getTile());
+                if (board.getPosition(row, col).getTile() != null) {
+                    boardButtons[row][col].placeTile(board.getPosition(row, col).getTile());
                     boardButtons[row][col].setEnabled(false);
                 }
 
             }
         }
-               }
+    }
 
     // helper class for button click action listener
     private class BoardButtonClickListener implements ActionListener {
@@ -129,9 +129,6 @@ public class ScrabbleBoardPanel extends JPanel implements Serializable {
     public ScrabbleButton[][] getBoardButtons() {
         return boardButtons;
     }
-
-
-
 
     /**
      * Reverts Tiles if move was invalid

@@ -2,7 +2,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -109,8 +108,8 @@ public class ScrabbleModelTest {
         ScrabbleModel game = new ScrabbleModel(playerList);
         //confirm player 1 is the first player
         assertEquals(game.getCurrentPlayer(), (player1));
-        Tile h = new Tile('H', 2);
-        Tile i = new Tile('I', 1);
+        Tile h = new Tile('H', 2, false);
+        Tile i = new Tile('I', 1, false);
         Map<Position, Tile> map = new HashMap<>();
         Position h8 = new Position(7, 7);
         Position i8 = new Position(7, 8);
@@ -147,9 +146,9 @@ public class ScrabbleModelTest {
         ScrabbleModel game = new ScrabbleModel(playerList);
         //confirm player 1 is the first player
         assertEquals(game.getCurrentPlayer(), (player1));
-        Tile h = new Tile('H', 2);
-        Tile i = new Tile('I', 1);
-        Tile t = new Tile('T', 3);
+        Tile h = new Tile('H', 2, false);
+        Tile i = new Tile('I', 1, false);
+        Tile t = new Tile('T', 3, false);
         Map<Position, Tile> map = new HashMap<>();
 
         //Positions for top left corner of board
@@ -203,8 +202,8 @@ public class ScrabbleModelTest {
         //Let player 2 play same word, vertically, only needs to place h and t at i7 and i9
         Position i7 = new Position(6, 8);
         Position i9 = new Position(6, 8);
-        Tile h2 = new Tile('H', 2);
-        Tile t2 = new Tile('T', 3);
+        Tile h2 = new Tile('H', 2, false);
+        Tile t2 = new Tile('T', 3, false);
         map.clear();
         map.put(i7, h2);
         map.put(i9, t2);
@@ -229,11 +228,11 @@ public class ScrabbleModelTest {
         assertEquals(game.getCurrentPlayer(), (player1));
         //Map to set current player's tiles to
         Map<Position, Tile> map = new HashMap<>();
-        Tile t1 = new Tile('T', 2);
-        Tile e = new Tile('E', 1);
-        Tile s = new Tile('S', 2);
-        Tile t2 = new Tile('T', 2);
-        Tile s2 = new Tile('S', 2);
+        Tile t1 = new Tile('T', 2, false);
+        Tile e = new Tile('E', 1, false);
+        Tile s = new Tile('S', 2, false);
+        Tile t2 = new Tile('T', 2, false);
+        Tile s2 = new Tile('S', 2, false);
         //Writes out "Tests" horizontally from h8 to l8
         Position h8 = new Position(7, 7);
         Position i8 = new Position(7, 8);
@@ -252,8 +251,8 @@ public class ScrabbleModelTest {
         map.clear();
         Position g8 = new Position(7, 6);
         Position f8 = new Position(7, 5);
-        Tile a = new Tile('A', 1);
-        Tile t3 = new Tile('T', 2);
+        Tile a = new Tile('A', 1, false);
+        Tile t3 = new Tile('T', 2, false);
         map.put(f8, a);
         map.put(g8, t3);
         game.getCurrentPlayer().setTilesPlayed(map);
@@ -267,10 +266,10 @@ public class ScrabbleModelTest {
         assertEquals(game.getCurrentPlayer().getScore(), 12);
         game.handlePass(game.getCurrentPlayer());
         //Back to player one, who will play the word Fists through 2 triple letters
-        Tile f = new Tile('F', 3);
-        Tile i = new Tile('I', 1);
-        Tile s3 = new Tile('S', 2);
-        Tile t4 = new Tile('T', 2);
+        Tile f = new Tile('F', 3, false);
+        Tile i = new Tile('I', 1, false);
+        Tile s3 = new Tile('S', 2, false);
+        Tile t4 = new Tile('T', 2, false);
         //Positions in order
         Position j6 = new Position(5, 9);
         Position j7 = new Position(6, 9);
@@ -289,11 +288,11 @@ public class ScrabbleModelTest {
         //clear map and give player tiles to Play "SLEEPY" from J10->O10 (I am sleepy its 3:33 a.m.)
         map.clear();
         assertEquals(game.getCurrentPlayer(), player2);
-        Tile l = new Tile('L', 3);
-        Tile e2 = new Tile('E', 1);
-        Tile e3 = new Tile('E', 1);
-        Tile p = new Tile('P', 2);
-        Tile y = new Tile('Y', 4);
+        Tile l = new Tile('L', 3, false);
+        Tile e2 = new Tile('E', 1, false);
+        Tile e3 = new Tile('E', 1, false);
+        Tile p = new Tile('P', 2, false);
+        Tile y = new Tile('Y', 4, false);
         Position k10 = new Position(9, 10);
         Position l10 = new Position(9, 11);
         Position m10 = new Position(9, 12);
@@ -314,8 +313,8 @@ public class ScrabbleModelTest {
         map.clear();
         Position o8 = new Position(7, 14);
         Position o9 = new Position(8, 14);
-        Tile t5 = new Tile('T', 2);
-        Tile r = new Tile('R', 3);
+        Tile t5 = new Tile('T', 2, false);
+        Tile r = new Tile('R', 3, false);
         map.put(o8, t5);
         map.put(o9, r);
         game.getCurrentPlayer().setTilesPlayed(map);

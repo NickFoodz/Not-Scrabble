@@ -33,13 +33,13 @@ public class AI extends Player implements Serializable {
         super(name);
         this.dictionary = createDictionary();
         ArrayList<Tile> AIT = new ArrayList<Tile>();
-        AIT.add(new Tile('C', 2));
-        AIT.add(new Tile('H', 1));
-        AIT.add(new Tile('E', 2));
-        AIT.add(new Tile('E', 1));
-        AIT.add(new Tile('S', 2));
-        AIT.add(new Tile('E', 1));
-        AIT.add(new Tile(' ', 2));
+        AIT.add(new Tile('C', 2, false));
+        AIT.add(new Tile('H', 1, false));
+        AIT.add(new Tile('E', 2, false));
+        AIT.add(new Tile('E', 1, false));
+        AIT.add(new Tile('S', 2, false));
+        AIT.add(new Tile('E', 1, false));
+        AIT.add(new Tile(' ', 2, true));
         setRack(AIT);
         isTest = true;
     }
@@ -72,13 +72,6 @@ public class AI extends Player implements Serializable {
      */
     @Override
     public String play() {
-//        //Checks tiles letters for debugging
-//        ArrayList<Character> tc = new ArrayList<>();
-//        for (Tile t : getRack()) {
-//            tc.add(t.getLetter());
-//        }
-//        System.out.println(tc);
-
         //First, check if there are blank tiles in rack. The logic is too complex to have the AI play that for now
         if (checkForBlankTile() > 0) {
             int numBlanks = checkForBlankTile();
@@ -227,7 +220,7 @@ public class AI extends Player implements Serializable {
         int numBlankTiles = 0;
         for (Tile tile : rack) {
             //If there is a blank tile
-            if (tile.getLetter() == ' ') {
+            if (tile.isBlank()) {
                 numBlankTiles++;
             }
         }
