@@ -1,9 +1,7 @@
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -429,4 +427,62 @@ public class ScrabbleModelTest {
         System.out.println("Bingo bonus test successful\n");
     }
 
+    @Test
+    /**
+     * Tests save and load function
+     */
+    public void saveAndLoad() throws IOException, ClassNotFoundException {
+        //base of each test
+        ArrayList<Player> playerList = new ArrayList<Player>();
+        Player player1 = new Player("Andrew");
+        Player player2 = new Player("Nick");
+        playerList.add(player1);
+        playerList.add(player2);
+
+        //Create new game
+        ScrabbleModel game = new ScrabbleModel(playerList);
+        //confirm player 1 is the first player
+        assertEquals(game.getCurrentPlayer(), (player1));
+        Tile h = new Tile('H', 2, false);
+        Tile i = new Tile('I', 1, false);
+        Tile t = new Tile('T', 4, false);
+        LinkedHashMap<Position, Tile> map = new LinkedHashMap<>();
+        Position h8 = new Position(7, 7);
+        Position i8 = new Position(7, 8);
+        Position i9 = new Position(8, 8);
+        //First test invalid move
+        map.put(i8, h);
+        map.put(i9, i);
+        game.getCurrentPlayer().setTilesPlayed(map);
+        assertFalse(game.handlePlay(game.getCurrentPlayer()));
+        //Now test valid move
+        map.clear();
+        map.put(h8, h);
+        map.put(i8, i);
+        game.getCurrentPlayer().setTilesPlayed(map);
+        assertTrue(game.handlePlay(game.getCurrentPlayer()));
+
+        //Save game, current player is player 2, get words in play
+        List<String> wip = game.getWordsInPlay();
+        game.saveGame("testSave");
+
+        //Play word "hit"
+        map.clear();
+        map.put(i9, t);
+        game.getCurrentPlayer().setTilesPlayed(map);
+        game.handlePlay(game.getCurrentPlayer());
+
+        List<String> hitWIP = game.getWordsInPlay();
+        int score = game.getCurrentPlayer().getScore();
+
+        //Load game
+        game.loadGame("testSave");
+        assertEquals(game.getWordsInPlay(), wip);
+        assertTrue(game.getWordsInPlay().contains("HI"));
+        assertFalse(game.getWordsInPlay().contains("HIT"));
+        assertEquals(game.getCurrentPlayer().getName(), player2.getName());
+        game.handlePass(game.getCurrentPlayer());
+        assertEquals(score, game.getCurrentPlayer().getScore());
+    }
 }
+
