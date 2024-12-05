@@ -22,8 +22,6 @@ public class ScrabbleView extends JFrame implements Serializable {
     private HashMap<Player, JLabel> playerScoreLabel = new HashMap<>() {
     };
     private JPanel scores = new JPanel();
-    private HashMap<Integer, Character> blankRedo; // stores the letter chosen for a blank tile before undoing it
-    private Integer numBlanks; // number of blanks played in a turn
     private Timer turnTimer; // Swing Timer for countdown
     private int timeRemaining; // Time left for the current turn
     private JLabel timerLabel; // Label to display the timer
@@ -35,10 +33,6 @@ public class ScrabbleView extends JFrame implements Serializable {
      * Constructor for class ScrabbleView
      */
     public ScrabbleView() {
-        // initiate variables for blank undo/redo information
-        blankRedo = new HashMap<>();
-        numBlanks = 0;
-
         // partially set up frame
         frame = new JFrame("Not Scrabble"); // create JFrame with title of main window
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -48,7 +42,6 @@ public class ScrabbleView extends JFrame implements Serializable {
         int[] playerAndAI = getPlayerAndAISelection(frame);
         int numPlayers = playerAndAI[0];
         int numAI = playerAndAI[1];
-
 
 
         // initialize game with specified number of players
@@ -63,7 +56,7 @@ public class ScrabbleView extends JFrame implements Serializable {
         turnTimer = new Timer(1000, e -> handleTimerTick());
 
         //Player scores panel
-        scores.setLayout(new GridLayout(game.getPlayers().size()+4, 0));
+        scores.setLayout(new GridLayout(game.getPlayers().size() + 4, 0));
         for (Player player : game.getPlayers()) {
             JLabel playerScore = new JLabel(player.getName() + " score: " + player.getScore());
             playerScoreLabel.put(player, playerScore);
@@ -207,7 +200,6 @@ public class ScrabbleView extends JFrame implements Serializable {
         updateViewForCurrentPlayer();  // refresh display after play
         playerRackPanel.clearActionsPerformed(); // clears actions performed for next turn
         game.getCurrentPlayer().clearActionsPerformed(); // clears actions performed for next turn
-        clearBlankRedo(); // clears information for blanks played this turn in prep for next turn
 
         // check if game is over
         if (game.isGameOver()) {
@@ -234,7 +226,6 @@ public class ScrabbleView extends JFrame implements Serializable {
         updateViewForCurrentPlayer();  // refresh display after pass
         playerRackPanel.clearActionsPerformed(); // clears actions performed for next turn
         game.getCurrentPlayer().clearActionsPerformed(); // clears actions performed for next turn
-        clearBlankRedo(); // clears information for blanks played this turn in prep for next turn
 
         // check if game is over
         if (game.isGameOver()) {
@@ -262,7 +253,7 @@ public class ScrabbleView extends JFrame implements Serializable {
         for (Tile tile : playerRackPanel.getSelectedTilesForExchange().values()) {
             tilesToExchange.add(String.valueOf(tile.getLetter()));
         }
-        if (tilesToExchange.isEmpty()){
+        if (tilesToExchange.isEmpty()) {
             JOptionPane.showMessageDialog(this, "You have not selected any tiles to swap");
             return;
         }
@@ -276,7 +267,6 @@ public class ScrabbleView extends JFrame implements Serializable {
         updateViewForCurrentPlayer();  // refresh display after swap
         playerRackPanel.clearActionsPerformed(); // clears actions performed for next turn
         game.getCurrentPlayer().clearActionsPerformed(); // clears actions performed for next turn
-        clearBlankRedo(); // clears information for blanks played this turn in prep for next turn
 
         // check if game is over
         if (game.isGameOver()) {
@@ -297,41 +287,17 @@ public class ScrabbleView extends JFrame implements Serializable {
      * Handle Undo
      */
     public void handleUndoAction() {
-        if (game.getCurrentPlayer().getActionsPerformed() != null && game.getCurrentPlayer().getActionCounter() != 0 && selectedTile == null) {
+        if (selectedTile == null) {
+            // handleUndo in scrabble model is called
+            if (game.handleUndo(game.getCurrentPlayer())) {
 
-            HashMap<Integer, HashMap<Tile, Boolean>> actionMap = game.getCurrentPlayer().getActionsPerformed();
-            Tile tile = actionMap.get(game.getCurrentPlayer().getActionCounter()).keySet().iterator().next();
-            Boolean isExchange = actionMap.get(game.getCurrentPlayer().getActionCounter()).get(tile);
+                // Re-enable the corresponding button on the player's rack
+                HashMap<Integer, JButton> rackButtonActions = playerRackPanel.getActionsPerformed();
+                JButton buttonToEnable = rackButtonActions.get(playerRackPanel.getActionCounter());
+                buttonToEnable.setEnabled(true);
 
-            if (isExchange) {
-                int index = playerRackPanel.getSelectedTilesForExchange().lastEntry().getKey();
-                if (index != -1) {
-                    playerRackPanel.getExchangeButtons().get(index).revertExchangeTile();
-                    playerRackPanel.getSelectedTilesForExchange().remove(index);
-                    game.getCurrentPlayer().getTilesToExchange().remove(String.valueOf(tile.getLetter()));
-                }
-            } else {
-                // Undo action was on the board
-                Position position = game.getCurrentPlayer().getTilesPlayed().lastEntry().getKey();
-                if (position != null) {
-                    int row = position.getRow();
-                    int col = position.getCol();
-                    boardPanel.getBoardButtons()[row][col].revertTile();
-                    game.getCurrentPlayer().getTilesPlayed().remove(position);
-                    if (tile.isBlank()) {
-                        numBlanks++;
-                        blankRedo.put(numBlanks, tile.getLetter());
-                        tile.setLetter(' ');
-                    }
-                }
+                playerRackPanel.decrementActionCounter();
             }
-            // Re-enable the corresponding button on the player's rack
-            HashMap<Integer, JButton> rackButtonActions = playerRackPanel.getActionsPerformed();
-            JButton buttonToEnable = rackButtonActions.get(playerRackPanel.getActionCounter());
-            buttonToEnable.setEnabled(true);
-
-            game.getCurrentPlayer().decrementActionCounter();
-            playerRackPanel.decrementActionCounter();
         }
     }
 
@@ -339,47 +305,17 @@ public class ScrabbleView extends JFrame implements Serializable {
      * Handle Redo
      */
     public void handleRedoAction() {
-        if (game.getCurrentPlayer().getActionsPerformed() != null && game.getCurrentPlayer().getActionsPerformed().containsKey(game.getCurrentPlayer().getActionCounter() + 1) && selectedTile == null) {
+        if (selectedTile == null) {
+            // handleRedo in scrabble model is called
+            if (game.handleRedo(game.getCurrentPlayer())) {
 
-            HashMap<Integer, HashMap<Tile, Boolean>> actionMap = game.getCurrentPlayer().getActionsPerformed();
-            Tile tile = actionMap.get(game.getCurrentPlayer().getActionCounter() + 1).keySet().iterator().next();
-            Boolean isExchange = actionMap.get(game.getCurrentPlayer().getActionCounter() + 1).get(tile);
+                // Re-disable the corresponding button on the player's rack
+                HashMap<Integer, JButton> rackButtonActions = playerRackPanel.getActionsPerformed();
+                JButton buttonToDisable = rackButtonActions.get(playerRackPanel.getActionCounter() + 1);
+                buttonToDisable.setEnabled(false);
 
-            if (isExchange) {
-                int index = -1;
-                for (ScrabbleButton currentButton : playerRackPanel.getExchangeButtons()) {
-                    if (currentButton.isEmpty()) {
-                        index = playerRackPanel.getExchangeButtons().indexOf(currentButton);
-                        playerRackPanel.getExchangeButtons().get(index).placeTile(tile, true);
-                        break;
-                    }
-                }
-                if (index != -1) {
-                    playerRackPanel.getSelectedTilesForExchange().put(index, tile);
-                    game.getCurrentPlayer().getTilesToExchange().add(String.valueOf(tile.getLetter()));
-                }
-            } else {
-                // Redo action was on the board
-                HashMap<Integer, Position> actionPosition = game.getCurrentPlayer().getActionsPerformedPositions();
-                Position position = actionPosition.get(game.getCurrentPlayer().getActionCounter() + 1);
-                if (position != null) {
-                    int row = position.getRow();
-                    int col = position.getCol();
-                    if (tile.isBlank()) {
-                        tile.setLetter(blankRedo.get(numBlanks));
-                        numBlanks--;
-                    }
-                    boardPanel.getBoardButtons()[row][col].placeTile(tile, false);
-                    game.getCurrentPlayer().getTilesPlayed().put(position, tile);
-                }
+                playerRackPanel.incrementActionCounter();
             }
-            // Re-disable the corresponding button on the player's rack
-            HashMap<Integer, JButton> rackButtonActions = playerRackPanel.getActionsPerformed();
-            JButton buttonToDisable = rackButtonActions.get(playerRackPanel.getActionCounter() + 1);
-            buttonToDisable.setEnabled(false);
-
-            game.getCurrentPlayer().incrementActionCounter();
-            playerRackPanel.incrementActionCounter();
         }
     }
 
@@ -516,14 +452,6 @@ public class ScrabbleView extends JFrame implements Serializable {
         scores.repaint();
     }
 
-    /**
-     * method to reset the info regarding blank tiles played for undo redo
-     */
-    private void clearBlankRedo() {
-        blankRedo.clear();
-        numBlanks = 0;
-    }
-
     private void startTurnTimer() {
         timeRemaining = TURN_TIME_LIMIT;
         timerLabel.setText("Time Remaining: " + timeRemaining + "s");
@@ -602,10 +530,10 @@ public class ScrabbleView extends JFrame implements Serializable {
         return new int[]{numPlayers, numAI};
     }
 
-    private void askForXML(){
+    private void askForXML() {
         int ask = JOptionPane.showConfirmDialog(frame, "Use a custom board?");
 
-        if(ask == JOptionPane.YES_OPTION) {
+        if (ask == JOptionPane.YES_OPTION) {
 
             //Ask user to select an XML file
             JFileChooser fileChooser = new JFileChooser();

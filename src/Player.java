@@ -253,6 +253,29 @@ public class Player implements Serializable {
     }
 
     /**
+     * Method to set the action counter fo the player for tests
+     */
+    public void setActionCounter(Integer count){
+        actionCounter = count;
+    }
+
+    /**
+     * Method to set the actions performed by the player for tests
+     * @param actionsPerformed the hash of actions performed
+     */
+    public void setActionsPerformed(HashMap<Integer, HashMap<Tile, Boolean>> actionsPerformed) {
+        this.actionsPerformed = actionsPerformed;
+    }
+
+    /**
+     * Method to set the actions performed positions by the player for tests
+     * @param actionsPerformedPositions the hash of actions performed positions
+     */
+    public void setActionsPerformedPositions(HashMap<Integer, Position> actionsPerformedPositions) {
+        this.actionsPerformedPositions = actionsPerformedPositions;
+    }
+
+    /**
      * Method to be overwritten by child, AI. Returning false for this player has no bearing on the game
      *
      * @return false, as this class is for human players

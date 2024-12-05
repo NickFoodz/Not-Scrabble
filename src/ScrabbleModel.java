@@ -11,9 +11,9 @@ import java.util.*;
  */
 public class ScrabbleModel implements Serializable {
     private static final long serialVersionUID = 1L;
-    private  Board gameBoard;
-    private  List<Player> players;
-    private  Bag gameBag;
+    private Board gameBoard;
+    private List<Player> players;
+    private Bag gameBag;
     private int currentPlayerIndex;
     private boolean gameOver;
     private int successiveScorelessTurns;
@@ -22,6 +22,8 @@ public class ScrabbleModel implements Serializable {
     private int turnNumber;
     private transient ScrabbleView view;
     private boolean isTest;
+    private HashMap<Integer, Character> blankRedo; // stores the letter chosen for a blank tile before undoing it
+    private Integer numBlanks; // number of blanks played in a turn
 
     /**
      * Constructor for Game class
@@ -40,6 +42,10 @@ public class ScrabbleModel implements Serializable {
         this.view = view;
         dictionary = new ArrayList<String>();
         dictionary = createDictionary();
+
+        // initiate variables for blank undo/redo information
+        blankRedo = new HashMap<>();
+        numBlanks = 0;
 
         //Set up human players
         for (int i = 1; i <= numPlayers; i++) {
@@ -86,6 +92,10 @@ public class ScrabbleModel implements Serializable {
         this.wordsInPlay = new ArrayList<>();
         dictionary = new ArrayList<String>();
         dictionary = createDictionary();
+
+        // initiate variables for blank undo/redo information
+        blankRedo = new HashMap<>();
+        numBlanks = 0;
 
         for (Player player : players) {
             player.drawTiles(gameBag, 7, this);
@@ -138,6 +148,7 @@ public class ScrabbleModel implements Serializable {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         successiveScorelessTurns++;
         turnNumber++;
+        clearBlankRedo(); // clears information for blanks played this turn in prep for next turn
         checkGameOver();
     }
 
@@ -164,6 +175,7 @@ public class ScrabbleModel implements Serializable {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         successiveScorelessTurns++;
         turnNumber++;
+        clearBlankRedo(); // clears information for blanks played this turn in prep for next turn
         checkGameOver();
 
         return true;
@@ -204,6 +216,7 @@ public class ScrabbleModel implements Serializable {
             currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
             turnNumber++;
             successiveScorelessTurns = 0; // reset successive scoreless turns counter
+            clearBlankRedo(); // clears information for blanks played this turn in prep for next turn
             checkGameOver();
             return true;
         }
@@ -383,7 +396,7 @@ public class ScrabbleModel implements Serializable {
         for (Map.Entry<Position, Tile> tile : tilesToPlay.entrySet()) {
             Position position = tile.getKey();
             position.setTile(null); // reset the position to empty
-            if (tile.getValue().isBlank()){
+            if (tile.getValue().isBlank()) {
                 tile.getValue().setLetter(' ');
             }
         }
@@ -448,7 +461,7 @@ public class ScrabbleModel implements Serializable {
             }
             score *= multiplier;
         }
-        if (getCurrentPlayer().getTilesPlayed().keySet().size() == 7){
+        if (getCurrentPlayer().getTilesPlayed().keySet().size() == 7) {
             score += 50; // bingo bonus
         }
         return score;
@@ -548,6 +561,7 @@ public class ScrabbleModel implements Serializable {
 
     /**
      * getter for view reference
+     *
      * @return view reference
      */
     public ScrabbleView getView() {
@@ -556,6 +570,7 @@ public class ScrabbleModel implements Serializable {
 
     /**
      * getter for game bag
+     *
      * @return the game bag
      */
     public Bag getGameBag() {
@@ -565,15 +580,16 @@ public class ScrabbleModel implements Serializable {
     /**
      * Getter for current player index
      */
-    private int getPlayerIndex(){return currentPlayerIndex;}
+    private int getPlayerIndex() {
+        return currentPlayerIndex;
+    }
 
     /**
      * Saves the game using Serialization
      */
 
     public void saveGame(String fileName) throws IOException {
-        try (FileOutputStream f = new FileOutputStream(fileName);
-             ObjectOutputStream s = new ObjectOutputStream(f)) {
+        try (FileOutputStream f = new FileOutputStream(fileName); ObjectOutputStream s = new ObjectOutputStream(f)) {
             s.writeObject(this);
             s.flush();
             s.close();
@@ -586,29 +602,130 @@ public class ScrabbleModel implements Serializable {
 
     public void loadGame(String fileName) throws FileNotFoundException, IOException, ClassNotFoundException {
         ScrabbleModel loadGame = null;
-        try (FileInputStream inputStream = new FileInputStream(fileName);
-             ObjectInputStream s = new ObjectInputStream(inputStream)) {
-                loadGame = (ScrabbleModel) s.readObject();
-                gameBoard = loadGame.getGameBoard();
-                players = loadGame.getPlayers();
-                gameBag = loadGame.getGameBag();
-                currentPlayerIndex = loadGame.getPlayerIndex();
-                gameOver = isGameOver();
-                successiveScorelessTurns = loadGame.successiveScorelessTurns;
-                wordsInPlay = loadGame.getWordsInPlay();
-                turnNumber = loadGame.turnNumber;
-                isTest = loadGame.isTest;
-                //Show that the model is successfully imported
-                System.out.println(getPlayers());
-                gameBoard.displayBoard();
-                System.out.println(getCurrentPlayer().getRack());
-        } catch (FileNotFoundException e){
+        try (FileInputStream inputStream = new FileInputStream(fileName); ObjectInputStream s = new ObjectInputStream(inputStream)) {
+            loadGame = (ScrabbleModel) s.readObject();
+            gameBoard = loadGame.getGameBoard();
+            players = loadGame.getPlayers();
+            gameBag = loadGame.getGameBag();
+            currentPlayerIndex = loadGame.getPlayerIndex();
+            gameOver = isGameOver();
+            successiveScorelessTurns = loadGame.successiveScorelessTurns;
+            wordsInPlay = loadGame.getWordsInPlay();
+            turnNumber = loadGame.turnNumber;
+            isTest = loadGame.isTest;
+            //Show that the model is successfully imported
+            System.out.println(getPlayers());
+            gameBoard.displayBoard();
+            System.out.println(getCurrentPlayer().getRack());
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
             showMessage("Save File not Found");
         } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("Loaded Game");
+    }
 
+    /**
+     * Handle Undo
+     */
+    public boolean handleUndo(Player currentPlayer) {
+        if (currentPlayer.getActionsPerformed() != null && currentPlayer.getActionCounter() != 0) {
+
+            HashMap<Integer, HashMap<Tile, Boolean>> actionMap = currentPlayer.getActionsPerformed();
+            Tile tile = actionMap.get(currentPlayer.getActionCounter()).keySet().iterator().next();
+            Boolean isExchange = actionMap.get(currentPlayer.getActionCounter()).get(tile);
+
+            if (isExchange) {
+                if (!isTest) {
+                    int index = view.getPlayerRackPanel().getSelectedTilesForExchange().lastEntry().getKey();
+                    if (index != -1) {
+                        view.getPlayerRackPanel().getExchangeButtons().get(index).revertExchangeTile();
+                        view.getPlayerRackPanel().getSelectedTilesForExchange().remove(index);
+                    }
+                }
+                currentPlayer.getTilesToExchange().remove(String.valueOf(tile.getLetter()));
+
+            } else {
+                // Undo action was on the board
+                Position position = currentPlayer.getTilesPlayed().lastEntry().getKey();
+                if (position != null) {
+                    int row = position.getRow();
+                    int col = position.getCol();
+
+                    // revert gui tile
+                    if (!isTest) {
+                        view.getBoardPanel().getBoardButtons()[row][col].revertTile();
+                    }
+                    currentPlayer.getTilesPlayed().remove(position);
+                    if (tile.isBlank()) {
+                        numBlanks++;
+                        blankRedo.put(numBlanks, tile.getLetter());
+                        tile.setLetter(' ');
+                    }
+                }
+            }
+            currentPlayer.decrementActionCounter();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Handle Redo
+     */
+    public boolean handleRedo(Player currentPlayer) {
+        if (currentPlayer.getActionsPerformed() != null && currentPlayer.getActionsPerformed().containsKey(currentPlayer.getActionCounter() + 1)) {
+
+            HashMap<Integer, HashMap<Tile, Boolean>> actionMap = currentPlayer.getActionsPerformed();
+            Tile tile = actionMap.get(currentPlayer.getActionCounter() + 1).keySet().iterator().next();
+            Boolean isExchange = actionMap.get(currentPlayer.getActionCounter() + 1).get(tile);
+
+            if (isExchange) {
+                // reconfigure gui if not a unit test
+                if (!isTest) {
+                    int index = -1;
+                    for (ScrabbleButton currentButton : view.getPlayerRackPanel().getExchangeButtons()) {
+                        if (currentButton.isEmpty()) {
+                            index = view.getPlayerRackPanel().getExchangeButtons().indexOf(currentButton);
+                            view.getPlayerRackPanel().getExchangeButtons().get(index).placeTile(tile, true);
+                            break;
+                        }
+                    }
+                    if (index != -1) {
+                        view.getPlayerRackPanel().getSelectedTilesForExchange().put(index, tile);
+                    }
+                }
+                // add tile to tiles to be exchanged this turn
+                currentPlayer.getTilesToExchange().add(String.valueOf(tile.getLetter()));
+            } else {
+                // Redo action was on the board
+                HashMap<Integer, Position> actionPosition = currentPlayer.getActionsPerformedPositions();
+                Position position = actionPosition.get(currentPlayer.getActionCounter() + 1);
+                if (position != null) {
+                    int row = position.getRow();
+                    int col = position.getCol();
+                    if (tile.isBlank()) {
+                        tile.setLetter(blankRedo.get(numBlanks));
+                        numBlanks--;
+                    }
+                    if (!isTest) {
+                        view.getBoardPanel().getBoardButtons()[row][col].placeTile(tile, false);
+                    }
+                    currentPlayer.getTilesPlayed().put(position, tile);
+                }
+            }
+            currentPlayer.incrementActionCounter();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * method to reset the info regarding blank tiles played for undo redo
+     */
+    private void clearBlankRedo() {
+        blankRedo.clear();
+        numBlanks = 0;
     }
 }

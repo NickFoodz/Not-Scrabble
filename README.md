@@ -302,7 +302,6 @@ Milestone 4/Bonus
 - Changed how the number of players/AI is taken from the player to a drop-down menu to improve simplicity
   for the user
 
-- Added FileChooser GUI for the 
 ***************************************************************************************************************
 
 Future Goals;

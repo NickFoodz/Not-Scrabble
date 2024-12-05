@@ -484,5 +484,193 @@ public class ScrabbleModelTest {
         game.handlePass(game.getCurrentPlayer());
         assertEquals(score, game.getCurrentPlayer().getScore());
     }
+
+    @Test
+    /**
+     * Test for the undo and redo functions for the game
+     */
+    public void TestUndoRedo() {
+        // Create a list of players
+        ArrayList<Player> playerList = new ArrayList<Player>();
+        Player player1 = new Player("Andrew");
+        Player player2 = new Player("Nick");
+        playerList.add(player1);
+        playerList.add(player2);
+
+        // Create a new game
+        ScrabbleModel game = new ScrabbleModel(playerList);
+
+        // Assert that player 1 is the current player
+        assertEquals(game.getCurrentPlayer(), player1);
+
+        //Map to set current player's tiles to
+        LinkedHashMap<Position, Tile> map = new LinkedHashMap<>();
+        Tile t1 = new Tile('T', 2, false);
+        Tile e = new Tile('E', 1, false);
+        Tile s = new Tile('S', 2, false);
+        Tile t2 = new Tile('T', 2, false);
+        Tile s2 = new Tile('S', 2, false);
+
+        //Writes out "Tests" horizontally from h8 to l8
+        Position h8 = new Position(7, 7);
+        Position i8 = new Position(7, 8);
+        Position j8 = new Position(7, 9);
+        Position k8 = new Position(7, 10);
+        Position l8 = new Position(7, 11);
+
+        //Place in map
+        map.put(h8, t1);
+        map.put(i8, e);
+        map.put(j8, s);
+        map.put(k8, t2);
+        map.put(l8, s2);
+        game.getCurrentPlayer().setTilesPlayed(map);
+
+        // create action maps for player
+        // create new action performed hashmap to store tile
+        HashMap<Tile, Boolean> actionPerformed;
+
+        // Add the first action
+        actionPerformed = new HashMap<>();
+        actionPerformed.put(t1, false);
+        game.getCurrentPlayer().addActionPerformed(actionPerformed);
+        game.getCurrentPlayer().addActionPerformedPosition(h8);
+
+        // Add the second action
+        actionPerformed = new HashMap<>();
+        actionPerformed.put(e, false);
+        game.getCurrentPlayer().addActionPerformed(actionPerformed);
+        game.getCurrentPlayer().addActionPerformedPosition(i8);
+
+        // Add the third action
+        actionPerformed = new HashMap<>();
+        actionPerformed.put(s, false);
+        game.getCurrentPlayer().addActionPerformed(actionPerformed);
+        game.getCurrentPlayer().addActionPerformedPosition(j8);
+
+        // Add the fourth action
+        actionPerformed = new HashMap<>();
+        actionPerformed.put(t2, false);
+        game.getCurrentPlayer().addActionPerformed(actionPerformed);
+        game.getCurrentPlayer().addActionPerformedPosition(k8);
+
+        // Add the fifth action
+        actionPerformed = new HashMap<>();
+        actionPerformed.put(s2, false);
+        game.getCurrentPlayer().addActionPerformed(actionPerformed);
+        game.getCurrentPlayer().addActionPerformedPosition(l8);
+
+        // perform undos, checking that the players played tiles does not contain the undone tile
+        assertTrue(game.getCurrentPlayer().getTilesPlayed().containsKey(l8));
+        game.handleUndo(game.getCurrentPlayer());
+        assertFalse(game.getCurrentPlayer().getTilesPlayed().containsKey(l8));
+
+        assertTrue(game.getCurrentPlayer().getTilesPlayed().containsKey(k8));
+        game.handleUndo(game.getCurrentPlayer());
+        assertFalse(game.getCurrentPlayer().getTilesPlayed().containsKey(k8));
+
+        assertTrue(game.getCurrentPlayer().getTilesPlayed().containsKey(j8));
+        game.handleUndo(game.getCurrentPlayer());
+        assertFalse(game.getCurrentPlayer().getTilesPlayed().containsKey(j8));
+
+        assertTrue(game.getCurrentPlayer().getTilesPlayed().containsKey(i8));
+        game.handleUndo(game.getCurrentPlayer());
+        assertFalse(game.getCurrentPlayer().getTilesPlayed().containsKey(i8));
+
+        assertTrue(game.getCurrentPlayer().getTilesPlayed().containsKey(h8));
+        game.handleUndo(game.getCurrentPlayer());
+        assertFalse(game.getCurrentPlayer().getTilesPlayed().containsKey(h8));
+
+        // should not be able to undo as tiles played is empty
+        assertTrue(game.getCurrentPlayer().getTilesPlayed().isEmpty());
+        assertFalse(game.handleUndo(game.getCurrentPlayer()));
+
+        // perform redos, checking that the players played tiles now contains the redone tile
+        game.handleRedo(game.getCurrentPlayer());
+        assertTrue(game.getCurrentPlayer().getTilesPlayed().containsKey(h8));
+
+        game.handleRedo(game.getCurrentPlayer());
+        assertTrue(game.getCurrentPlayer().getTilesPlayed().containsKey(i8));
+
+        game.handleRedo(game.getCurrentPlayer());
+        assertTrue(game.getCurrentPlayer().getTilesPlayed().containsKey(j8));
+
+        game.handleRedo(game.getCurrentPlayer());
+        assertTrue(game.getCurrentPlayer().getTilesPlayed().containsKey(k8));
+
+        game.handleRedo(game.getCurrentPlayer());
+        assertTrue(game.getCurrentPlayer().getTilesPlayed().containsKey(l8));
+
+        // should not be able to redo as the player does not have a move to redo
+        assertFalse(game.getCurrentPlayer().getTilesPlayed().isEmpty());
+        assertFalse(game.handleRedo(game.getCurrentPlayer()));
+
+        // test blank tiles undo/redo
+        Tile blank = new Tile(' ', 0, true);
+        Position m8 = new Position(7, 12);
+        blank.setLetter('X');
+        assertEquals(blank.getLetter(), 'X');
+
+        // clear old action list
+        game.getCurrentPlayer().clearTilesPlayed();
+        game.getCurrentPlayer().clearActionsPerformed();
+        actionPerformed = new HashMap<>();
+        map.clear();
+
+        // add blank tile to played tiles and actions performed
+        map.put(m8, blank);
+        game.getCurrentPlayer().setTilesPlayed(map);
+        actionPerformed.put(blank, false);
+        game.getCurrentPlayer().addActionPerformed(actionPerformed);
+        game.getCurrentPlayer().addActionPerformedPosition(m8);
+
+        // undo should revert its text to ' '
+        game.handleUndo(game.getCurrentPlayer());
+        assertFalse(game.getCurrentPlayer().tilesPlayed.containsKey(m8));
+        assertEquals(blank.getLetter(), ' ');
+
+        // redo should add it back with the previous letter (X in this case)
+        game.handleRedo(game.getCurrentPlayer());
+        assertTrue(game.getCurrentPlayer().tilesPlayed.containsKey(m8));
+        assertEquals(blank.getLetter(), 'X');
+
+        // Test undo redo for exchange
+        // clear old action list
+        game.getCurrentPlayer().clearTilesPlayed();
+        game.getCurrentPlayer().clearActionsPerformed();
+
+        ArrayList<String> toExchange = new ArrayList<>();
+        toExchange.add(String.valueOf(t1.getLetter()));
+        toExchange.add(String.valueOf(e.getLetter()));
+
+        //Set tiles to exchange and adds it to actions performed
+        game.getCurrentPlayer().setTilesToExchange(toExchange);
+
+        actionPerformed = new HashMap<>();
+        actionPerformed.put(t1, true);
+        game.getCurrentPlayer().addActionPerformed(actionPerformed);
+
+        actionPerformed = new HashMap<>();
+        actionPerformed.put(e, true);
+        game.getCurrentPlayer().addActionPerformed(actionPerformed);
+
+        // test undo
+        game.handleUndo(game.getCurrentPlayer());
+        assertFalse(game.getCurrentPlayer().getTilesToExchange().contains(String.valueOf(e.getLetter())));
+        assertTrue(game.getCurrentPlayer().getTilesToExchange().contains(String.valueOf(t1.getLetter())));
+
+        game.handleUndo(game.getCurrentPlayer());
+        assertFalse(game.getCurrentPlayer().getTilesToExchange().contains(String.valueOf(t1.getLetter())));
+
+        assertTrue(game.getCurrentPlayer().getTilesToExchange().isEmpty());
+
+        // test redo
+        game.handleRedo(game.getCurrentPlayer());
+        assertTrue(game.getCurrentPlayer().getTilesToExchange().contains(String.valueOf(t1.getLetter())));
+
+        game.handleRedo(game.getCurrentPlayer());
+        assertTrue(game.getCurrentPlayer().getTilesToExchange().contains(String.valueOf(e.getLetter())));
+        assertTrue(game.getCurrentPlayer().getTilesToExchange().contains(String.valueOf(t1.getLetter())));
+    }
 }
 
