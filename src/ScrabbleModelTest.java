@@ -489,7 +489,7 @@ public class ScrabbleModelTest {
     /**
      * Test for the undo and redo functions for the game
      */
-    public void TestUndoRedo() {
+    public void testUndoRedo() {
         // Create a list of players
         ArrayList<Player> playerList = new ArrayList<Player>();
         Player player1 = new Player("Andrew");
