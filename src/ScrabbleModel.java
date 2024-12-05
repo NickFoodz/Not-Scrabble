@@ -600,6 +600,14 @@ public class ScrabbleModel implements Serializable {
         System.out.println("Saved Game");
     }
 
+    /**
+     * Loads a saved game state from a specified file
+     *
+     * @param fileName the name of the file from which the game state should be loaded.
+     * @throws FileNotFoundException if the specified file does not exist.
+     * @throws IOException if an I/O error occurs while reading the file.
+     * @throws ClassNotFoundException if the class of the serialized object cannot be found.
+     */
     public void loadGame(String fileName) throws FileNotFoundException, IOException, ClassNotFoundException {
         ScrabbleModel loadGame = null;
         try (FileInputStream inputStream = new FileInputStream(fileName); ObjectInputStream s = new ObjectInputStream(inputStream)) {
