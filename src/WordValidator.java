@@ -5,8 +5,6 @@ import java.util.List;
 /**
  * Class WordValidator checks if a word placement is valid on the board
  * @version 2
- * @author Andrew Roberts
- * @author Nick Fuda
  */
 public class WordValidator implements Serializable {
     private Board board;
@@ -15,7 +13,7 @@ public class WordValidator implements Serializable {
     /**
      * Constructor for class WordValidator
      * @param board the game board
-     * @param gameDict the path to the dictionary (scrabblewords.txt)
+     * @param gameDict the path to the dictionary
      */
     public WordValidator(Board board, ArrayList<String> gameDict) {
         this.board = board;

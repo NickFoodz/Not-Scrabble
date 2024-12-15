@@ -9,8 +9,6 @@ import java.io.File;
 /**
  * The main GUI class for a game of Scrabble. Contains the Frame with the necessary components to play
  *
- * @author Andrew Roberts
- * @author Nick Fuda
  * @version 1
  */
 public class ScrabbleView extends JFrame implements Serializable {

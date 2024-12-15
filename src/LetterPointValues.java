@@ -5,7 +5,6 @@ import java.util.Map;
 /**
  * Class LetterPointValues assigned points to each tile letter
  * @version 1
- * @author Andrew Roberts
  */
 public class LetterPointValues implements Serializable {
     private static final Map<Character, Integer> letterPoints = new HashMap<>();

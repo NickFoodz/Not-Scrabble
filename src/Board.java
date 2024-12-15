@@ -1,8 +1,6 @@
 /**
  * Represents the Board in a game of scrabble, with 15 rows and columns
  * @version 1
- * @author Nick Fuda
- * @author Andrew Roberts
  */
 
 import org.xml.sax.Attributes;

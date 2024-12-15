@@ -3,7 +3,7 @@
 ***************************************************IMPORTANT***************************************************
 
 This is a school project for SYSC3110.
-Created by Nick Fuda and Andrew Roberts
+Created by ____ ____ and ______ _______
 
 ***************************************************************************************************************
 Configuration:
@@ -74,10 +74,10 @@ Milestone 3
 ***************************************************************************************************************
 
 Contributions:
-Andrew Roberts: Position, Bag, Player, Game, WordValidator, Board, LetterPointValues, PlayerRackPanel,
+______ _______: Position, Bag, Player, Game, WordValidator, Board, LetterPointValues, PlayerRackPanel,
 ScrabbleBoardPanel, ScrabbleView, readme, AI, Timer, Undo/Redo features, Save/Load GUI.
 
-Nick Fuda: Board, Game, Position, WordValidator classes, javadocs, scrabblewords.txt, readme, ScrabbleButton, AI,
+____ ____: Board, Game, Position, WordValidator classes, javadocs, scrabblewords.txt, readme, ScrabbleButton, AI,
 ScrabbleBoardPanel, ScrabbleView, XML, CustomBoard methods, and UML, Save/Load feature.
 
 Both of us also committed many times, with many iterations of ideas pushed to GitHub as we collaborated and 
@@ -351,7 +351,7 @@ Thank you, we hope you enjoy our recreation of a classic game!
 Milestone 2:
 
 We still have not heard back from our third group member, and the actual delegation of work has been harder now
-that the project is picking up. Andrew and I are both relatively new to creating GUI, so we got hung up on trying 
+that the project is picking up. ______ and I are both relatively new to creating GUI, so we got hung up on trying 
 to make the GUI work and did not follow the proper MVC format. Now that we are closing in on having the majority
 of the GUI made and mostly need to work on the model, we are hoping this allows us to create a better foundation.
 We unfortunately could not meet the Sunday deadline, but thankfully the professor put an announcement out that
@@ -361,11 +361,11 @@ saved our confidence in being able to present something that is somewhat functio
 
 Milestone 3: 
 
-Thus far, we have everyone in the Git repository, though this milestone was completed by only Nick and Andrew.
+Thus far, we have everyone in the Git repository, though this milestone was completed by only ____ and ______.
 
 #################################################################################################################
 
 Milestone 4/Bonus:
 
-Milestone 4, the bonus was completed exclusively by Nick and Andrew. 
-As this is the last milestone, this entire project was created by Nick and Andrew.
+Milestone 4, the bonus was completed exclusively by ____ and ______. 
+As this is the last milestone, this entire project was created by ____ and ______.

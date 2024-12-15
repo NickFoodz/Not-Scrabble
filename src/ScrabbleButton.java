@@ -7,7 +7,6 @@ import java.lang.String;
  * Class Scrabble button represents the button the board to be replaced with tiles.
  * It allows the color, score, and coordinates to be stored in the button itself.
  *
- * @author Nick Fuda
  * @version 0.1
  */
 public class ScrabbleButton extends JButton implements Serializable {

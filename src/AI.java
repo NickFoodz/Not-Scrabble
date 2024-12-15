@@ -8,7 +8,6 @@ import static java.util.Collections.min;
 /**
  * AI class is an implementation of an AI player for the game of Scrabble
  *
- * @author Nick Fuda
  * @version 1
  */
 public class AI extends Player implements Serializable {

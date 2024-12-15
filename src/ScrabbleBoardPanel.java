@@ -11,8 +11,6 @@ import java.util.HashMap;
  * Class ScrabbleBoardPanel represents the Scrabble Board in a game of scrabble. It provides
  * the necessary GUI and methods to play the game with an interactive board
  *
- * @author Andrew Roberts
- * @author Nick Fuda
  * @version 1
  */
 public class ScrabbleBoardPanel extends JPanel implements Serializable {

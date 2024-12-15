@@ -2,7 +2,6 @@ import java.io.Serializable;
 
 /**
  * Class Tile represents the Tiles in a game of Scrabble
- * @author Andrew Roberts
  * @version 1
  */
 public class Tile implements Serializable {

@@ -9,7 +9,6 @@ import java.util.List;
 /**
  * PlayerRackPanel is a JPanel that shows the player rack
  *
- * @author Andrew Roberts
  * @version 1
  */
 public class PlayerRackPanel extends JPanel implements Serializable {

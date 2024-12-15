@@ -6,8 +6,6 @@ import java.util.*;
  * Class Player represents a player in "Not Scrabble" games. Deals with actions
  * such as drawing tiles
  *
- * @author Andrew Roberts
- * @author Nick Fuda
  * @version 2
  */
 public class Player implements Serializable {

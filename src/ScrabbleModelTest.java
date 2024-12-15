@@ -8,7 +8,6 @@ import static org.junit.Assert.*;
 /**
  * Tests main methods in ScrabbleModel
  *
- * @author Nick Fuda
  * @version 1
  */
 public class ScrabbleModelTest {

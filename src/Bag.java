@@ -8,7 +8,6 @@ import java.util.HashMap;
 /**
  * Represents the game bag containing all tiles in a game of "Not Scrabble"
  *
- * @author Andrew Roberts
  * @version 1
  */
 public class Bag implements Serializable {

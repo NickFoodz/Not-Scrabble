@@ -5,8 +5,6 @@ import java.util.*;
 /**
  * Main class of scrabble game. Handles play, exchange, pass, and if the game continues or not.
  *
- * @author Andrew Roberts
- * @author Nick Fuda
  * @version 1
  */
 public class ScrabbleModel implements Serializable {

@@ -3,8 +3,6 @@ import java.io.Serializable;
 /**
  * Position class is used for positional methods using the board in the game
  * @version 1
- * @author Andrew Roberts
- * @author Nick Fuda
  */
 
 public class Position implements Serializable {
